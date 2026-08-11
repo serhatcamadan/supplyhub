@@ -1,0 +1,78 @@
+import type { Product } from '@/types'
+
+export const products: Product[] = [
+  {
+    id: 'product-1',
+    seller_id: 'company-seller-1',
+    name: 'Organik Zeytinyağı (5L)',
+    description: 'Soğuk sıkım, sertifikalı organik zeytinyağı. Ege bölgesi.',
+    category: 'Yağlar',
+    min_order_qty: 10,
+    price_tiers: [
+      { min_qty: 10, max_qty: 49, price: 185 },
+      { min_qty: 50, max_qty: 199, price: 165 },
+      { min_qty: 200, max_qty: null, price: 145 },
+    ],
+    image_url: null,
+    status: 'active',
+  },
+  {
+    id: 'product-2',
+    seller_id: 'company-seller-1',
+    name: 'Tam Buğday Unu (25kg)',
+    description: 'Değirmenden doğrudan, gluten oranı yüksek ekmeklik un.',
+    category: 'Tahıllar',
+    min_order_qty: 20,
+    price_tiers: [
+      { min_qty: 20, max_qty: 99, price: 42 },
+      { min_qty: 100, max_qty: 499, price: 38 },
+      { min_qty: 500, max_qty: null, price: 34 },
+    ],
+    image_url: null,
+    status: 'active',
+  },
+  {
+    id: 'product-3',
+    seller_id: 'company-seller-1',
+    name: 'Doğal Bal (1kg)',
+    description: 'Karadeniz yayla balı, saf ve katkısız.',
+    category: 'Doğal Ürünler',
+    min_order_qty: 12,
+    price_tiers: [
+      { min_qty: 12, max_qty: 59, price: 220 },
+      { min_qty: 60, max_qty: 299, price: 195 },
+      { min_qty: 300, max_qty: null, price: 175 },
+    ],
+    image_url: null,
+    status: 'active',
+  },
+  {
+    id: 'product-4',
+    seller_id: 'company-seller-1',
+    name: 'Taze Makarna (500g)',
+    description: 'Yumurtalı ev yapımı makarna, günlük üretim.',
+    category: 'Baklagiller & Makarna',
+    min_order_qty: 24,
+    price_tiers: [
+      { min_qty: 24, max_qty: 119, price: 28 },
+      { min_qty: 120, max_qty: null, price: 24 },
+    ],
+    image_url: null,
+    status: 'draft',
+  },
+  {
+    id: 'product-5',
+    seller_id: 'company-seller-2',
+    name: 'Paslanmaz Çelik Konteyner (10L)',
+    description: 'Gıda sınıfı 304 paslanmaz çelik saklama konteyneri.',
+    category: 'Ekipman',
+    min_order_qty: 5,
+    price_tiers: [
+      { min_qty: 5, max_qty: 24, price: 480 },
+      { min_qty: 25, max_qty: 99, price: 420 },
+      { min_qty: 100, max_qty: null, price: 370 },
+    ],
+    image_url: null,
+    status: 'active',
+  },
+]

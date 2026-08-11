@@ -17,6 +17,11 @@
 /.next/
 /out/
 
+#claude
+CLAUDE.md
+AGENTS.md
+supplyhub-proje-brief.md
+
 # production
 /build
 
