@@ -2,100 +2,82 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import {
-  LayoutDashboard,
-  Package,
-  MessageSquare,
-  ShoppingCart,
-  Search,
-  ClipboardList,
-  CheckSquare,
-  LogOut,
-} from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-interface NavItem {
-  href: string
-  label: string
-  icon: React.ReactNode
-}
-
-const sellerNav: NavItem[] = [
-  { href: '/seller/dashboard', label: 'Dashboard', icon: <LayoutDashboard size={18} /> },
-  { href: '/seller/products', label: 'Ürünlerim', icon: <Package size={18} /> },
-  { href: '/seller/quotes', label: 'Teklif Talepleri', icon: <MessageSquare size={18} /> },
-  { href: '/seller/orders', label: 'Siparişler', icon: <ClipboardList size={18} /> },
+const SELLER_NAV = [
+  { href: '/seller/dashboard', label: 'Dashboard', icon: 'grid_view' },
+  { href: '/seller/products', label: 'Products', icon: 'inventory_2' },
+  { href: '/seller/quotes', label: 'Quote Requests', icon: 'request_quote' },
+  { href: '/seller/orders', label: 'Orders', icon: 'shopping_bag' },
 ]
 
-const buyerNav: NavItem[] = [
-  { href: '/buyer/discover', label: 'Ürün Keşfi', icon: <Search size={18} /> },
-  { href: '/buyer/cart', label: 'Sepet', icon: <ShoppingCart size={18} /> },
-  { href: '/buyer/orders', label: 'Siparişlerim', icon: <ClipboardList size={18} /> },
-  { href: '/buyer/approvals', label: 'Onay Bekleyenler', icon: <CheckSquare size={18} /> },
+const BUYER_NAV = [
+  { href: '/buyer/discover', label: 'Discovery', icon: 'search' },
+  { href: '/buyer/cart', label: 'Shopping Cart', icon: 'shopping_cart' },
+  { href: '/buyer/orders', label: 'Order History', icon: 'history' },
+  { href: '/buyer/approvals', label: 'Quote Requests', icon: 'outgoing_mail' },
 ]
 
-interface SidebarProps {
-  portalType: 'seller' | 'buyer'
-  companyName: string
-  userName: string
-}
-
-export function Sidebar({ portalType, companyName, userName }: SidebarProps) {
+export function Sidebar() {
   const pathname = usePathname()
   const router = useRouter()
-  const navItems = portalType === 'seller' ? sellerNav : buyerNav
 
   function handleLogout() {
     document.cookie = 'mock-session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
     router.push('/login')
   }
 
+  function navLink(item: { href: string; label: string; icon: string }) {
+    const active = pathname === item.href || pathname.startsWith(item.href + '/')
+    return (
+      <Link
+        key={item.href}
+        href={item.href}
+        className={cn(
+          'flex items-center px-4 py-2.5 text-sm transition-colors rounded-lg',
+          active
+            ? 'bg-primary-container text-on-primary-container border-l-2 border-secondary-fixed'
+            : 'text-on-primary hover:bg-primary-container/40'
+        )}
+      >
+        <span className="material-symbols-outlined mr-3" style={{ fontSize: '20px' }}>
+          {item.icon}
+        </span>
+        {item.label}
+      </Link>
+    )
+  }
+
   return (
-    <aside className="w-60 shrink-0 flex flex-col bg-[#1e3a5f] min-h-screen">
-      {/* Logo */}
-      <div className="px-6 py-5 border-b border-white/10">
-        <p className="text-white font-bold text-lg tracking-tight">SupplyHub</p>
-        <p className="text-white/50 text-xs mt-0.5">
-          {portalType === 'seller' ? 'Satıcı Paneli' : 'Alıcı Paneli'}
-        </p>
+    <aside className="fixed left-0 top-0 h-screen w-72 bg-primary text-on-primary border-r border-outline-variant/10 z-50 flex flex-col overflow-y-auto">
+      <div className="p-6 flex items-center gap-3 border-b border-primary-container/30">
+        <span className="text-xl font-bold tracking-tight">SupplyHub</span>
       </div>
 
-      {/* Company info */}
-      <div className="px-6 py-4 border-b border-white/10">
-        <p className="text-white/90 text-sm font-medium truncate">{companyName}</p>
-        <p className="text-white/50 text-xs mt-0.5 truncate">{userName}</p>
-      </div>
-
-      {/* Nav */}
-      <nav className="flex-1 px-3 py-4 space-y-1">
-        {navItems.map((item) => {
-          const active = pathname === item.href || pathname.startsWith(item.href + '/')
-          return (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={cn(
-                'flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors',
-                active
-                  ? 'bg-white/15 text-white font-medium'
-                  : 'text-white/60 hover:bg-white/10 hover:text-white'
-              )}
-            >
-              {item.icon}
-              {item.label}
-            </Link>
-          )
-        })}
+      <nav className="flex-1 py-6 px-4 space-y-8">
+        <section>
+          <p className="px-4 mb-3 text-xs font-semibold uppercase tracking-wider text-on-primary-container/60">
+            Seller Portal
+          </p>
+          <div className="space-y-1">{SELLER_NAV.map(navLink)}</div>
+        </section>
+        <section>
+          <p className="px-4 mb-3 text-xs font-semibold uppercase tracking-wider text-on-primary-container/60">
+            Buyer Portal
+          </p>
+          <div className="space-y-1">{BUYER_NAV.map(navLink)}</div>
+        </section>
       </nav>
 
-      {/* Logout */}
-      <div className="px-3 pb-4">
+      <div className="p-4 border-t border-primary-container/30">
         <button
           onClick={handleLogout}
-          className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm text-white/60 hover:bg-white/10 hover:text-white transition-colors"
+          className="w-full flex items-center px-4 py-3 text-sm hover:bg-error/10 hover:text-error transition-colors rounded-lg"
         >
-          <LogOut size={18} />
-          Çıkış Yap
+          <span className="material-symbols-outlined mr-3" style={{ fontSize: '20px' }}>
+            logout
+          </span>
+          Sign Out
         </button>
       </div>
     </aside>
