@@ -41,7 +41,7 @@ export default function SellerDashboardPage() {
         <div className="flex gap-3">
           <button className="px-4 py-2 bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors rounded-xl flex items-center gap-2 text-sm">
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>calendar_month</span>
-            Last 30 Days
+            Last 30 Dayss
             <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>expand_more</span>
           </button>
           <button className="px-4 py-2 bg-primary text-on-primary hover:bg-primary-container transition-colors rounded-xl flex items-center gap-2 text-sm shadow-sm">
