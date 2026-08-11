@@ -1,0 +1,48 @@
+import type { QuoteRequest } from '@/types'
+
+export const quoteRequests: QuoteRequest[] = [
+  {
+    id: 'quote-1',
+    buyer_id: 'company-buyer-1',
+    product_id: 'product-1',
+    quantity: 80,
+    buyer_note: '6 aylık periyodik alım planlıyoruz, indirim yapabilir misiniz?',
+    status: 'pending',
+    seller_response_price: null,
+    seller_message: null,
+    created_at: '2026-07-28T10:00:00Z',
+  },
+  {
+    id: 'quote-2',
+    buyer_id: 'company-buyer-2',
+    product_id: 'product-2',
+    quantity: 300,
+    buyer_note: 'Haftalık düzenli sipariş için özel fiyat talep ediyoruz.',
+    status: 'responded',
+    seller_response_price: 33,
+    seller_message: '300 adet için 33 TL/kg öneriyoruz, 500 adet olursa 31 yapabiliriz.',
+    created_at: '2026-07-25T14:30:00Z',
+  },
+  {
+    id: 'quote-3',
+    buyer_id: 'company-buyer-1',
+    product_id: 'product-3',
+    quantity: 150,
+    buyer_note: null,
+    status: 'accepted',
+    seller_response_price: 188,
+    seller_message: '150 adet için 188 TL yapabiliriz.',
+    created_at: '2026-07-20T09:15:00Z',
+  },
+  {
+    id: 'quote-4',
+    buyer_id: 'company-buyer-2',
+    product_id: 'product-1',
+    quantity: 30,
+    buyer_note: 'Numune amaçlı ilk siparişimiz.',
+    status: 'declined',
+    seller_response_price: null,
+    seller_message: 'Minimum sipariş adedimiz bu ürün için 50 adettir.',
+    created_at: '2026-07-18T16:00:00Z',
+  },
+]
