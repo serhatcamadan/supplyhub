@@ -24,79 +24,59 @@ export default function LoginPage() {
       companyId: company.id,
     })}; path=/`
 
-    if (company.type === 'seller') {
-      router.push('/seller/dashboard')
-    } else {
-      router.push('/buyer/discover')
-    }
+    router.push(company.type === 'seller' ? '/seller/dashboard' : '/buyer/discover')
   }
 
   return (
-    <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-8">
-      <h2 className="text-xl font-semibold text-slate-900 mb-1">Giriş Yap</h2>
-      <p className="text-sm text-slate-500 mb-6">Hesabınıza erişin</p>
+    <div className="min-h-screen flex items-center justify-center px-4">
+      <div className="w-full max-w-md">
+        <div className="text-center mb-8">
+          <p className="text-2xl font-bold text-primary tracking-tight">SupplyHub</p>
+          <p className="text-sm text-on-surface-variant mt-1">B2B Toptan Tedarik Platformu</p>
+        </div>
 
-      {/* Mock login shortcuts for UI development */}
-      <div className="space-y-2 mb-6">
-        <p className="text-xs font-medium text-slate-400 uppercase tracking-wider mb-3">
-          Demo Girişleri
-        </p>
-        <button
-          onClick={() => handleMockLogin(MOCK_SELLER_USER.id)}
-          disabled={loading}
-          className="w-full flex items-center justify-between px-4 py-3 rounded-lg border border-slate-200 hover:border-[#1e3a5f] hover:bg-slate-50 transition-colors group"
-        >
-          <div className="text-left">
-            <p className="text-sm font-medium text-slate-900 group-hover:text-[#1e3a5f]">
-              {MOCK_SELLER_USER.name}
+        <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-8">
+          <h2 className="text-xl font-semibold text-on-surface mb-1">Giriş Yap</h2>
+          <p className="text-sm text-on-surface-variant mb-6">Hesabınıza erişin</p>
+
+          <div className="space-y-2 mb-6">
+            <p className="text-xs font-semibold tracking-wider text-on-surface-variant/50 uppercase mb-3">
+              Demo Girişleri
             </p>
-            <p className="text-xs text-slate-500">Satıcı · FreshFarm Gıda A.Ş.</p>
-          </div>
-          <span className="text-xs bg-blue-50 text-blue-700 px-2 py-0.5 rounded-full font-medium">
-            Satıcı
-          </span>
-        </button>
 
-        <button
-          onClick={() => handleMockLogin(MOCK_BUYER_ADMIN.id)}
-          disabled={loading}
-          className="w-full flex items-center justify-between px-4 py-3 rounded-lg border border-slate-200 hover:border-[#1e3a5f] hover:bg-slate-50 transition-colors group"
-        >
-          <div className="text-left">
-            <p className="text-sm font-medium text-slate-900 group-hover:text-[#1e3a5f]">
-              {MOCK_BUYER_ADMIN.name}
+            {[
+              { user: MOCK_SELLER_USER, label: 'Satıcı', sub: 'FreshFarm Gıda A.Ş.', badge: 'bg-blue-50 text-blue-700' },
+              { user: MOCK_BUYER_ADMIN, label: 'Alıcı Admin', sub: 'Güneş Market Zinciri', badge: 'bg-green-50 text-green-700' },
+              { user: MOCK_BUYER_STAFF, label: 'Alıcı Staff', sub: 'Güneş Market Zinciri', badge: 'bg-amber-50 text-amber-700' },
+            ].map(({ user, label, sub, badge }) => (
+              <button
+                key={user.id}
+                onClick={() => handleMockLogin(user.id)}
+                disabled={loading}
+                className="w-full flex items-center justify-between px-4 py-3 rounded-lg border border-outline-variant hover:border-primary-container hover:bg-surface-container-low transition-colors group"
+              >
+                <div className="text-left">
+                  <p className="text-sm font-medium text-on-surface group-hover:text-primary-container transition-colors">
+                    {user.name}
+                  </p>
+                  <p className="text-xs text-on-surface-variant">{sub}</p>
+                </div>
+                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${badge}`}>
+                  {label}
+                </span>
+              </button>
+            ))}
+          </div>
+
+          <div className="border-t border-outline-variant/50 pt-4 text-center">
+            <p className="text-xs text-on-surface-variant/60">
+              Hesabınız yok mu?{' '}
+              <Link href="/signup" className="text-primary-container font-semibold hover:underline">
+                Kayıt Ol
+              </Link>
             </p>
-            <p className="text-xs text-slate-500">Alıcı Admin · Güneş Market Zinciri</p>
           </div>
-          <span className="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded-full font-medium">
-            Alıcı Admin
-          </span>
-        </button>
-
-        <button
-          onClick={() => handleMockLogin(MOCK_BUYER_STAFF.id)}
-          disabled={loading}
-          className="w-full flex items-center justify-between px-4 py-3 rounded-lg border border-slate-200 hover:border-[#1e3a5f] hover:bg-slate-50 transition-colors group"
-        >
-          <div className="text-left">
-            <p className="text-sm font-medium text-slate-900 group-hover:text-[#1e3a5f]">
-              {MOCK_BUYER_STAFF.name}
-            </p>
-            <p className="text-xs text-slate-500">Alıcı Çalışan · Güneş Market Zinciri</p>
-          </div>
-          <span className="text-xs bg-amber-50 text-amber-700 px-2 py-0.5 rounded-full font-medium">
-            Alıcı Staff
-          </span>
-        </button>
-      </div>
-
-      <div className="border-t border-slate-100 pt-4 text-center">
-        <p className="text-xs text-slate-400">
-          Hesabınız yok mu?{' '}
-          <Link href="/signup" className="text-[#1e3a5f] font-medium hover:underline">
-            Kayıt Ol
-          </Link>
-        </p>
+        </div>
       </div>
     </div>
   )

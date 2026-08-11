@@ -82,6 +82,27 @@ order_items     id, order_id, product_id, quantity, unit_price
 - **Mock data:** `lib/mock-data/` klasörü, her entity için ayrı dosya; `index.ts` ile re-export
 - **Test dosyaları** `tsconfig.json`'dan exclude edilmiş — `**/*.test.ts` derlemeye dahil değil
 
+## Form Validasyonu
+
+**Kütüphaneler:** Zod v4 + react-hook-form + @hookform/resolvers
+
+**Yaklaşım:** Her step için ayrı `useForm` instance'ı; `zodResolver` ile şema bağlanır.
+
+**Zod v4 sözdizimi:**
+```typescript
+z.string().min(2, 'Mesaj')   // kısa sözdizimi çalışıyor
+z.string().email('Mesaj')    // e-posta
+```
+
+**Hata gösterimi:** `FormError` bileşeni (`components/ui/form-error.tsx`) — input altında kırmızı kutucuk, `*` öneki ile mesaj. `FormInput` ve `FormSelect` doğrudan `error?: string` prop'u alır; geçildiğinde border kırmızı olur ve `FormError` render edilir.
+
+**Rol validasyonu (Step 2):** Rol seçimi `useForm` dışında `useState` ile yönetilir; Continue butonuna basıldığında `roleError` state'i set edilir, `FormError` ekranda gösterilir.
+
+**Reusable bileşenler:**
+- `components/ui/form-input.tsx` — `forwardRef` + `InputHTMLAttributes` spread + `error?: string`
+- `components/ui/form-select.tsx` — `forwardRef` + `SelectHTMLAttributes` spread + `options: {value, label}[]` + `error?: string`
+- `components/ui/form-error.tsx` — hata kutucuğu (doğrudan kullanım veya yukarıdaki bileşenler aracılığıyla)
+
 ## Next.js 16 Kırıcı Değişiklikler
 
 | Eski | Yeni | Notlar |
