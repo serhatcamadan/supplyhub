@@ -17,6 +17,17 @@ export default function LoginPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [seeding, setSeeding] = useState(false)
+  const [seedMsg, setSeedMsg] = useState<string | null>(null)
+
+  async function handleSeed() {
+    setSeeding(true)
+    setSeedMsg(null)
+    const res = await fetch('/api/seed', { method: 'POST' })
+    const json = await res.json() as { success?: boolean; message?: string; error?: string }
+    setSeedMsg(json.success ? 'Demo veriler yüklendi! Giriş yapabilirsiniz.' : (json.message ?? json.error ?? 'Hata'))
+    setSeeding(false)
+  }
 
   async function handleDemoLogin(email: string) {
     setLoading(true)
@@ -118,6 +129,23 @@ export default function LoginPage() {
             Hesabınız yok mu?{' '}
             <Link href="/signup" className="text-primary font-semibold hover:underline">Kayıt Ol</Link>
           </p>
+
+          {/* İlk kurulum: demo verisi yükleme */}
+          <div className="border-t border-outline-variant/40 pt-4 flex flex-col gap-2">
+            <button
+              onClick={handleSeed}
+              disabled={seeding || loading}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-outline-variant text-xs text-on-surface-variant hover:border-primary/40 hover:text-primary transition-colors disabled:opacity-50"
+            >
+              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>database</span>
+              {seeding ? 'Demo veriler yükleniyor…' : 'Demo Hesapları Yükle (İlk Kurulum)'}
+            </button>
+            {seedMsg && (
+              <p className={`text-xs text-center ${seedMsg.includes('Hata') || seedMsg.includes('error') ? 'text-error' : 'text-secondary'}`}>
+                {seedMsg}
+              </p>
+            )}
+          </div>
         </div>
       </div>
     </div>
