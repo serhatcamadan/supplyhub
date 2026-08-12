@@ -1,50 +1,69 @@
-import { NextResponse } from 'next/server'
-import type { NextRequest } from 'next/server'
+import { createServerClient } from '@supabase/ssr'
+import { NextResponse, type NextRequest } from 'next/server'
 
-const PUBLIC_PATHS = ['/login', '/signup']
+export async function proxy(request: NextRequest) {
+  let supabaseResponse = NextResponse.next({ request })
 
-export function proxy(request: NextRequest) {
+  const supabase = createServerClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
+    {
+      cookies: {
+        getAll() {
+          return request.cookies.getAll()
+        },
+        setAll(cookiesToSet) {
+          cookiesToSet.forEach(({ name, value }) =>
+            request.cookies.set(name, value)
+          )
+          supabaseResponse = NextResponse.next({ request })
+          cookiesToSet.forEach(({ name, value, options }) =>
+            supabaseResponse.cookies.set(name, value, options)
+          )
+        },
+      },
+    }
+  )
+
+  // Session yenile — her zaman ilk çalıştırılmalı
+  const { data: { user } } = await supabase.auth.getUser()
+
   const { pathname } = request.nextUrl
+  const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/signup')
 
-  // Allow public auth routes
-  if (PUBLIC_PATHS.some((p) => pathname.startsWith(p))) {
-    return NextResponse.next()
-  }
-
-  // Read mock session cookie (will be replaced by Supabase session)
-  const sessionCookie = request.cookies.get('mock-session')
-
-  if (!sessionCookie) {
+  // Giriş yapılmamış → login'e yönlendir
+  if (!user && !isAuthPage) {
     return NextResponse.redirect(new URL('/login', request.url))
   }
 
-  let session: { role: string; companyType: string } | null = null
-  try {
-    session = JSON.parse(sessionCookie.value) as { role: string; companyType: string }
-  } catch {
-    return NextResponse.redirect(new URL('/login', request.url))
+  // Giriş yapılmış → auth sayfalarına izin verme
+  if (user && isAuthPage) {
+    const companyType = user.user_metadata?.company_type as string | undefined
+    const dest = companyType === 'seller' ? '/seller/dashboard' : '/buyer/discover'
+    return NextResponse.redirect(new URL(dest, request.url))
   }
 
-  if (!session) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  if (user) {
+    const companyType = user.user_metadata?.company_type as string | undefined
+    const role = user.user_metadata?.role as string | undefined
+
+    // Satıcı portal koruması
+    if (pathname.startsWith('/seller') && companyType !== 'seller') {
+      return NextResponse.redirect(new URL('/buyer/discover', request.url))
+    }
+
+    // Alıcı portal koruması
+    if (pathname.startsWith('/buyer') && companyType !== 'buyer') {
+      return NextResponse.redirect(new URL('/seller/dashboard', request.url))
+    }
+
+    // Onay sayfası sadece admin
+    if (pathname.startsWith('/buyer/approvals') && role !== 'admin') {
+      return NextResponse.redirect(new URL('/buyer/orders', request.url))
+    }
   }
 
-  // Seller can only access /seller routes
-  if (pathname.startsWith('/seller') && session.companyType !== 'seller') {
-    return NextResponse.redirect(new URL('/buyer/discover', request.url))
-  }
-
-  // Buyer can only access /buyer routes
-  if (pathname.startsWith('/buyer') && session.companyType !== 'buyer') {
-    return NextResponse.redirect(new URL('/seller/dashboard', request.url))
-  }
-
-  // Approval page restricted to admin buyers
-  if (pathname.startsWith('/buyer/approvals') && session.role !== 'admin') {
-    return NextResponse.redirect(new URL('/buyer/orders', request.url))
-  }
-
-  return NextResponse.next()
+  return supabaseResponse
 }
 
 export const config = {

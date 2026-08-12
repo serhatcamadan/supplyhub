@@ -1,170 +1,83 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
-import { Plus, Trash2 } from 'lucide-react'
+import Link from 'next/link'
 import type { PriceTier } from '@/types'
-import { formatCurrency } from '@/lib/utils'
+import { ProductBasicInfo } from '@/components/seller/product-basic-info'
+import { ProductPricingTiers } from '@/components/seller/product-pricing-tiers'
+import { ProductMedia } from '@/components/seller/product-media'
+import { ProductLogistics } from '@/components/seller/product-logistics'
 
 export default function NewProductPage() {
-  const router = useRouter()
+  const [description, setDescription] = useState('')
   const [tiers, setTiers] = useState<PriceTier[]>([
-    { min_qty: 1, max_qty: 49, price: 0 },
-    { min_qty: 50, max_qty: null, price: 0 },
+    { min_qty: 1, max_qty: 10, price: 0 },
+    { min_qty: 11, max_qty: 50, price: 0 },
+    { min_qty: 51, max_qty: null, price: 0 },
   ])
 
   function addTier() {
-    setTiers([...tiers, { min_qty: 0, max_qty: null, price: 0 }])
+    setTiers((prev) => {
+      const prevLastMax = prev[prev.length - 2]?.max_qty ?? 0
+      const newTier: PriceTier = { min_qty: prevLastMax + 1, max_qty: prevLastMax + 50, price: 0 }
+      return [...prev.slice(0, -1), newTier, prev[prev.length - 1]]
+    })
   }
 
   function removeTier(idx: number) {
-    setTiers(tiers.filter((_, i) => i !== idx))
+    setTiers((prev) => prev.filter((_, i) => i !== idx))
   }
 
-  function updateTier(idx: number, field: keyof PriceTier, value: number | null) {
-    setTiers(tiers.map((t, i) => (i === idx ? { ...t, [field]: value } : t)))
+  function updateMax(idx: number, value: number | null) {
+    setTiers((prev) => prev.map((t, i) => (i === idx ? { ...t, max_qty: value } : t)))
+  }
+
+  function updatePrice(idx: number, value: number) {
+    setTiers((prev) => prev.map((t, i) => (i === idx ? { ...t, price: value } : t)))
   }
 
   return (
-    <div className="p-8 max-w-2xl">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Yeni Ürün Ekle</h1>
-        <p className="text-sm text-slate-500 mt-1">Kademeli fiyatlandırmayla ürün oluşturun</p>
-      </div>
+    <div className="flex flex-col w-full min-h-full">
 
-      <div className="space-y-5">
-        {/* Basic info */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5 space-y-4">
-          <h2 className="text-sm font-semibold text-slate-700">Temel Bilgiler</h2>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-600 mb-1.5">Ürün Adı</label>
-            <input
-              type="text"
-              required
-              placeholder="Ürün adı"
-              className="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]/20 focus:border-[#1e3a5f]"
-            />
+      <div className="flex items-center justify-between px-8 py-8 border-b border-outline-variant/20 bg-surface">
+        <div>
+          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">
+            <Link href="/seller/products" className="hover:text-primary transition-colors">Products</Link>
+            <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+            <span className="text-on-surface">Add New Product</span>
           </div>
-
-          <div>
-            <label className="block text-sm font-medium text-slate-600 mb-1.5">Açıklama</label>
-            <textarea
-              rows={3}
-              placeholder="Ürün açıklaması"
-              className="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]/20 focus:border-[#1e3a5f] resize-none"
-            />
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-slate-600 mb-1.5">Kategori</label>
-              <input
-                type="text"
-                placeholder="ör. Yağlar, Tahıllar"
-                className="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]/20 focus:border-[#1e3a5f]"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-slate-600 mb-1.5">
-                Min. Sipariş Adedi
-              </label>
-              <input
-                type="number"
-                min={1}
-                placeholder="10"
-                className="w-full px-3 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]/20 focus:border-[#1e3a5f]"
-              />
-            </div>
-          </div>
+          <h1 className="text-2xl font-semibold text-on-surface tracking-tight">Create Product Listing</h1>
         </div>
-
-        {/* Price tiers */}
-        <div className="bg-white rounded-xl border border-slate-200 p-5">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-sm font-semibold text-slate-700">Kademeli Fiyatlandırma</h2>
-            <button
-              type="button"
-              onClick={addTier}
-              className="flex items-center gap-1.5 text-xs font-medium text-[#1e3a5f] hover:underline"
-            >
-              <Plus size={14} />
-              Kademe Ekle
-            </button>
-          </div>
-
-          <div className="space-y-2">
-            {tiers.map((tier, idx) => (
-              <div key={idx} className="flex items-center gap-2">
-                <div className="flex-1 grid grid-cols-3 gap-2">
-                  <div>
-                    <label className="block text-xs text-slate-400 mb-1">Min. Adet</label>
-                    <input
-                      type="number"
-                      value={tier.min_qty}
-                      onChange={(e) => updateTier(idx, 'min_qty', Number(e.target.value))}
-                      className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]/20 focus:border-[#1e3a5f]"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-slate-400 mb-1">Maks. Adet</label>
-                    <input
-                      type="number"
-                      value={tier.max_qty ?? ''}
-                      placeholder="Sınırsız"
-                      onChange={(e) =>
-                        updateTier(idx, 'max_qty', e.target.value ? Number(e.target.value) : null)
-                      }
-                      className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]/20 focus:border-[#1e3a5f]"
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-xs text-slate-400 mb-1">Birim Fiyat (₺)</label>
-                    <input
-                      type="number"
-                      value={tier.price || ''}
-                      onChange={(e) => updateTier(idx, 'price', Number(e.target.value))}
-                      className="w-full px-3 py-2 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]/20 focus:border-[#1e3a5f]"
-                    />
-                  </div>
-                </div>
-                {tiers.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeTier(idx)}
-                    className="mt-5 p-1.5 rounded-lg text-slate-300 hover:text-red-400 hover:bg-red-50 transition-colors"
-                  >
-                    <Trash2 size={15} />
-                  </button>
-                )}
-              </div>
-            ))}
-          </div>
-        </div>
-
-        {/* Actions */}
-        <div className="flex gap-3">
-          <button
-            type="submit"
-            className="px-5 py-2.5 bg-[#1e3a5f] text-white text-sm font-medium rounded-lg hover:bg-[#16304f] transition-colors"
-          >
-            Kaydet (Taslak)
-          </button>
-          <button
-            type="button"
-            className="px-5 py-2.5 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors"
-          >
-            Yayınla
-          </button>
-          <button
-            type="button"
-            onClick={() => router.back()}
-            className="px-5 py-2.5 border border-slate-200 text-slate-600 text-sm font-medium rounded-lg hover:bg-slate-50 transition-colors"
-          >
-            İptal
+        <div className="flex items-center gap-4">
+          <Link href="/seller/products" className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface hover:bg-surface-container-high transition-colors">
+            Cancel
+          </Link>
+          <button type="button" className="px-6 py-2 rounded-lg bg-secondary text-on-secondary text-sm font-semibold shadow-md hover:bg-secondary/90 transition-all active:scale-[0.98] flex items-center gap-2">
+            <span className="material-symbols-outlined text-[18px]">save</span>
+            Save Product
           </button>
         </div>
       </div>
+
+      <div className="flex-1 px-8 py-8">
+        <div className="grid grid-cols-12 gap-8 max-w-300 mx-auto">
+          <div className="col-span-12 lg:col-span-8 flex flex-col gap-8">
+            <ProductBasicInfo description={description} onDescriptionChange={setDescription} />
+            <ProductPricingTiers
+              tiers={tiers}
+              onAdd={addTier}
+              onRemove={removeTier}
+              onUpdateMax={updateMax}
+              onUpdatePrice={updatePrice}
+            />
+          </div>
+          <div className="col-span-12 lg:col-span-4 flex flex-col gap-8">
+            <ProductMedia />
+            <ProductLogistics />
+          </div>
+        </div>
+      </div>
+
     </div>
   )
 }

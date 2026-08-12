@@ -3,28 +3,58 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
-import { MOCK_SELLER_USER, MOCK_BUYER_ADMIN, MOCK_BUYER_STAFF } from '@/lib/mock-data'
-import { companies } from '@/lib/mock-data'
+import { createClient } from '@/lib/supabase/client'
+
+const DEMO_ACCOUNTS = [
+  { email: 'ali@freshfarm.com',    name: 'Ali Yılmaz',   sub: 'FreshFarm Gıda A.Ş.',     badge: 'bg-primary/10 text-primary',      label: 'Satıcı Admin' },
+  { email: 'ayse@gunespazar.com',  name: 'Ayşe Demir',   sub: 'Güneş Market Zinciri',     badge: 'bg-secondary/10 text-secondary',  label: 'Alıcı Admin' },
+  { email: 'fatma@gunespazar.com', name: 'Fatma Çelik',  sub: 'Güneş Market Zinciri',     badge: 'bg-on-tertiary-container/10 text-on-tertiary-container', label: 'Alıcı Staff' },
+] as const
+
+const DEMO_PASSWORD = 'Demo1234!'
 
 export default function LoginPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
 
-  function handleMockLogin(userId: string) {
+  async function handleDemoLogin(email: string) {
     setLoading(true)
-    const user = [MOCK_SELLER_USER, MOCK_BUYER_ADMIN, MOCK_BUYER_STAFF].find(
-      (u) => u.id === userId
-    )!
-    const company = companies.find((c) => c.id === user.company_id)!
+    setError(null)
+    const supabase = createClient()
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password: DEMO_PASSWORD })
 
-    document.cookie = `mock-session=${JSON.stringify({
-      userId: user.id,
-      role: user.role,
-      companyType: company.type,
-      companyId: company.id,
-    })}; path=/`
+    if (error || !data.user) {
+      setError(error?.message ?? 'Giriş başarısız.')
+      setLoading(false)
+      return
+    }
 
-    router.push(company.type === 'seller' ? '/seller/dashboard' : '/buyer/discover')
+    const companyType = data.user.user_metadata?.company_type as string | undefined
+    router.push(companyType === 'seller' ? '/seller/dashboard' : '/buyer/discover')
+    router.refresh()
+  }
+
+  async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault()
+    setError(null)
+    setLoading(true)
+    const form = new FormData(e.currentTarget)
+    const email = form.get('email') as string
+    const password = form.get('password') as string
+
+    const supabase = createClient()
+    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+
+    if (error || !data.user) {
+      setError(error?.message ?? 'E-posta veya şifre hatalı.')
+      setLoading(false)
+      return
+    }
+
+    const companyType = data.user.user_metadata?.company_type as string | undefined
+    router.push(companyType === 'seller' ? '/seller/dashboard' : '/buyer/discover')
+    router.refresh()
   }
 
   return (
@@ -35,47 +65,59 @@ export default function LoginPage() {
           <p className="text-sm text-on-surface-variant mt-1">B2B Toptan Tedarik Platformu</p>
         </div>
 
-        <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-8">
-          <h2 className="text-xl font-semibold text-on-surface mb-1">Giriş Yap</h2>
-          <p className="text-sm text-on-surface-variant mb-6">Hesabınıza erişin</p>
+        <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-8 flex flex-col gap-6">
+          <div>
+            <h2 className="text-xl font-semibold text-on-surface mb-1">Giriş Yap</h2>
+            <p className="text-sm text-on-surface-variant">Hesabınıza erişin</p>
+          </div>
 
-          <div className="space-y-2 mb-6">
-            <p className="text-xs font-semibold tracking-wider text-on-surface-variant/50 uppercase mb-3">
+          {/* E-posta / Şifre formu */}
+          <form onSubmit={handleFormSubmit} className="flex flex-col gap-4">
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="email" className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">E-posta</label>
+              <input id="email" name="email" type="email" required autoComplete="email"
+                className="w-full px-4 py-2.5 bg-surface border border-outline-variant/50 rounded-lg text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
+            </div>
+            <div className="flex flex-col gap-1.5">
+              <label htmlFor="password" className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Şifre</label>
+              <input id="password" name="password" type="password" required autoComplete="current-password"
+                className="w-full px-4 py-2.5 bg-surface border border-outline-variant/50 rounded-lg text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
+            </div>
+            {error && <p className="text-xs text-error">{error}</p>}
+            <button type="submit" disabled={loading}
+              className="w-full bg-primary text-on-primary py-2.5 rounded-lg text-sm font-semibold hover:bg-primary-container transition-colors disabled:opacity-60">
+              {loading ? 'Giriş yapılıyor…' : 'Giriş Yap'}
+            </button>
+          </form>
+
+          <div className="border-t border-outline-variant/40 pt-4">
+            <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant/50 mb-3">
               Demo Girişleri
             </p>
-
-            {[
-              { user: MOCK_SELLER_USER, label: 'Satıcı', sub: 'FreshFarm Gıda A.Ş.', badge: 'bg-blue-50 text-blue-700' },
-              { user: MOCK_BUYER_ADMIN, label: 'Alıcı Admin', sub: 'Güneş Market Zinciri', badge: 'bg-green-50 text-green-700' },
-              { user: MOCK_BUYER_STAFF, label: 'Alıcı Staff', sub: 'Güneş Market Zinciri', badge: 'bg-amber-50 text-amber-700' },
-            ].map(({ user, label, sub, badge }) => (
-              <button
-                key={user.id}
-                onClick={() => handleMockLogin(user.id)}
-                disabled={loading}
-                className="w-full flex items-center justify-between px-4 py-3 rounded-lg border border-outline-variant hover:border-primary-container hover:bg-surface-container-low transition-colors group"
-              >
-                <div className="text-left">
-                  <p className="text-sm font-medium text-on-surface group-hover:text-primary-container transition-colors">
-                    {user.name}
-                  </p>
-                  <p className="text-xs text-on-surface-variant">{sub}</p>
-                </div>
-                <span className={`text-xs px-2 py-0.5 rounded-full font-medium ${badge}`}>
-                  {label}
-                </span>
-              </button>
-            ))}
+            <div className="space-y-2">
+              {DEMO_ACCOUNTS.map((acc) => (
+                <button
+                  key={acc.email}
+                  onClick={() => handleDemoLogin(acc.email)}
+                  disabled={loading}
+                  className="w-full flex items-center justify-between px-4 py-3 rounded-lg border border-outline-variant hover:border-primary/30 hover:bg-surface-container-low transition-colors group disabled:opacity-60"
+                >
+                  <div className="text-left">
+                    <p className="text-sm font-medium text-on-surface">{acc.name}</p>
+                    <p className="text-xs text-on-surface-variant">{acc.sub}</p>
+                  </div>
+                  <span className={`text-xs px-2 py-0.5 rounded-full font-semibold ${acc.badge}`}>
+                    {acc.label}
+                  </span>
+                </button>
+              ))}
+            </div>
           </div>
 
-          <div className="border-t border-outline-variant/50 pt-4 text-center">
-            <p className="text-xs text-on-surface-variant/60">
-              Hesabınız yok mu?{' '}
-              <Link href="/signup" className="text-primary-container font-semibold hover:underline">
-                Kayıt Ol
-              </Link>
-            </p>
-          </div>
+          <p className="text-center text-xs text-on-surface-variant/60">
+            Hesabınız yok mu?{' '}
+            <Link href="/signup" className="text-primary font-semibold hover:underline">Kayıt Ol</Link>
+          </p>
         </div>
       </div>
     </div>

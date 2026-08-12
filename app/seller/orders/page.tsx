@@ -1,75 +1,121 @@
+'use client'
+
+import { useState } from 'react'
 import { getOrdersWithDetails } from '@/lib/mock-data'
-import { formatCurrency, formatDate } from '@/lib/utils'
+import { formatCurrency } from '@/lib/utils'
+import { OrderControls, type OrderTab } from '@/components/seller/order-controls'
+import { OrderTable } from '@/components/seller/order-table'
 
-const STATUS_LABEL: Record<string, string> = {
-  pending: 'Bekliyor',
-  confirmed: 'Onaylandı',
-  shipped: 'Kargoda',
-  delivered: 'Teslim Edildi',
-}
-
-const STATUS_COLOR: Record<string, string> = {
-  pending: 'bg-amber-50 text-amber-700',
-  confirmed: 'bg-blue-50 text-blue-700',
-  shipped: 'bg-purple-50 text-purple-700',
-  delivered: 'bg-green-50 text-green-700',
-}
+const SELLER_ID = 'company-seller-1'
 
 export default function SellerOrdersPage() {
-  const allOrders = getOrdersWithDetails().filter((o) => o.seller_id === 'company-seller-1')
+  const [tab, setTab] = useState<OrderTab>('all')
+  const [search, setSearch] = useState('')
+
+  const allOrders = getOrdersWithDetails().filter((o) => o.seller_id === SELLER_ID)
+
+  // Stats
+  const pendingCount = allOrders.filter((o) => o.status === 'pending').length
+  const shippedCount = allOrders.filter((o) => o.status === 'shipped').length
+  const totalRevenue = allOrders.reduce((sum, o) => sum + o.total, 0)
+
+  // Tab filter
+  const byTab = allOrders.filter((o) => tab === 'all' || o.status === tab)
+
+  // Search filter
+  const filtered = search
+    ? byTab.filter(
+        (o) =>
+          o.id.includes(search.toLowerCase()) ||
+          o.buyer.name.toLowerCase().includes(search.toLowerCase())
+      )
+    : byTab
 
   return (
-    <div className="p-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Siparişler</h1>
-        <p className="text-sm text-slate-500 mt-1">{allOrders.length} sipariş</p>
+    <div className="p-8 flex flex-col gap-8">
+
+      {/* Header */}
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <div>
+          <h1 className="text-4xl font-bold tracking-tight text-on-surface">Orders</h1>
+          <p className="text-sm text-on-surface-variant mt-2">
+            Manage and track wholesale orders from your buyers.
+          </p>
+        </div>
+        <div className="flex gap-3">
+          <button className="h-10 px-4 inline-flex items-center gap-2 bg-surface text-on-surface border border-outline-variant rounded-lg text-xs font-semibold uppercase tracking-wider hover:bg-surface-container-low transition-colors shadow-sm">
+            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>filter_list</span>
+            Filter
+          </button>
+          <button className="h-10 px-4 inline-flex items-center gap-2 bg-surface text-primary border border-outline-variant rounded-lg text-xs font-semibold uppercase tracking-wider hover:bg-surface-container-low transition-colors shadow-sm">
+            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>download</span>
+            Export CSV
+          </button>
+        </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-slate-200 overflow-hidden">
-        <table className="w-full text-sm">
-          <thead className="bg-slate-50 border-b border-slate-200">
-            <tr>
-              <th className="text-left py-3 px-4 text-xs font-medium text-slate-400 uppercase tracking-wider">Sipariş</th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-slate-400 uppercase tracking-wider">Alıcı</th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-slate-400 uppercase tracking-wider">Tarih</th>
-              <th className="text-left py-3 px-4 text-xs font-medium text-slate-400 uppercase tracking-wider">Ürünler</th>
-              <th className="text-right py-3 px-4 text-xs font-medium text-slate-400 uppercase tracking-wider">Tutar</th>
-              <th className="text-center py-3 px-4 text-xs font-medium text-slate-400 uppercase tracking-wider">Durum</th>
-            </tr>
-          </thead>
-          <tbody>
-            {allOrders.map((order) => (
-              <tr key={order.id} className="border-b border-slate-50 hover:bg-slate-50">
-                <td className="py-4 px-4 font-mono text-xs text-slate-500">
-                  #{order.id.slice(-6).toUpperCase()}
-                </td>
-                <td className="py-4 px-4">
-                  <p className="font-medium text-slate-900">{order.buyer.name}</p>
-                  <p className="text-xs text-slate-400">{order.created_by_user.name}</p>
-                </td>
-                <td className="py-4 px-4 text-slate-600">{formatDate(order.created_at)}</td>
-                <td className="py-4 px-4 text-slate-600">
-                  {order.items.length} kalem
-                  <p className="text-xs text-slate-400 mt-0.5 line-clamp-1">
-                    {order.items.map((i) => i.product.name).join(', ')}
-                  </p>
-                </td>
-                <td className="py-4 px-4 text-right font-semibold text-slate-900">
-                  {formatCurrency(order.total)}
-                </td>
-                <td className="py-4 px-4 text-center">
-                  <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLOR[order.status]}`}>
-                    {STATUS_LABEL[order.status]}
-                  </span>
-                  {order.needs_approval && !order.approved_by && (
-                    <p className="text-xs text-amber-600 mt-1">Onay bekliyor</p>
-                  )}
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+      {/* Stats Row */}
+      <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="bg-surface-container-lowest p-5 rounded-xl shadow-sm relative overflow-hidden group">
+          <div className="absolute right-0 top-0 w-24 h-24 bg-primary/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110" />
+          <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">
+            Total Orders
+          </p>
+          <p className="text-4xl font-bold text-on-surface">{allOrders.length}</p>
+        </div>
+
+        <div className="bg-surface-container-lowest p-5 rounded-xl shadow-sm relative overflow-hidden group">
+          <div className="absolute right-0 top-0 w-24 h-24 bg-tertiary-container/20 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110" />
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">
+                Awaiting Action
+              </p>
+              <p className="text-4xl font-bold text-on-surface">{pendingCount}</p>
+            </div>
+            <span className="material-symbols-outlined text-on-tertiary-container bg-tertiary-container/30 p-2 rounded-lg shrink-0">
+              schedule
+            </span>
+          </div>
+        </div>
+
+        <div className="bg-surface-container-lowest p-5 rounded-xl shadow-sm relative overflow-hidden group">
+          <div className="absolute right-0 top-0 w-24 h-24 bg-primary-fixed-dim/20 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110" />
+          <div className="flex justify-between items-start">
+            <div>
+              <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">
+                In Transit
+              </p>
+              <p className="text-4xl font-bold text-on-surface">{shippedCount}</p>
+            </div>
+            <span className="material-symbols-outlined text-on-primary-fixed-variant bg-primary-fixed-dim/30 p-2 rounded-lg shrink-0">
+              local_shipping
+            </span>
+          </div>
+        </div>
+
+        <div className="bg-primary p-5 rounded-xl shadow-md relative overflow-hidden text-on-primary">
+          <div className="absolute right-0 top-0 w-32 h-32 bg-white/10 rounded-full blur-xl -mr-10 -mt-10" />
+          <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-on-primary/80">
+            Total Revenue
+          </p>
+          <p className="text-4xl font-bold tracking-tight relative z-10">
+            {formatCurrency(totalRevenue)}
+          </p>
+        </div>
       </div>
+
+      {/* Table Card */}
+      <div className="bg-surface-container-lowest rounded-xl shadow-md flex flex-col overflow-hidden">
+        <OrderControls
+          tab={tab}
+          onTab={setTab}
+          search={search}
+          onSearch={setSearch}
+        />
+        <OrderTable orders={filtered} />
+      </div>
+
     </div>
   )
 }
