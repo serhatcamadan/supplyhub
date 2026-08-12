@@ -110,7 +110,13 @@ components/
     ├── quote-controls.tsx      → 'use client' — tab bar + arama
     ├── quote-table.tsx         → RFQ tablosu (EnrichedQuote tipi + pagination)
     ├── quote-detail-panel.tsx  → sol panel: alıcı bilgisi, ürün tablosu, mesaj
-    └── quote-response-form.tsx → 'use client' — sağ panel: fiyat/mesaj formu, canlı toplam
+    ├── quote-response-form.tsx → 'use client' — sağ panel: fiyat/mesaj formu, canlı toplam
+    ├── order-controls.tsx      → 'use client' — tab bar (All/Pending/Confirmed/Shipped/Delivered) + arama
+    ├── order-table.tsx         → sipariş tablosu (OrderWithDetails, StatusBadge, hover actions, pagination)
+    ├── product-basic-info.tsx  → ürün adı, kategori, min sipariş adedi, açıklama + char counter
+    ├── product-pricing-tiers.tsx → 'use client' içermiyor; tier tablosu, props: tiers + 4 handler
+    ├── product-media.tsx       → 'use client' — dropzone + resim önizleme (kendi state'i)
+    └── product-logistics.tsx   → 'use client' — aktif toggle + ağırlık + lead time (kendi state'i)
 ```
 
 ## Layout Sistemi
@@ -170,6 +176,16 @@ Async server component (`await params`). İki panel layout (`h-[calc(100vh-4rem)
 - **Sol panel** (`QuoteDetailPanel`): alıcı avatar+bilgi, ürün mini-tablosu, alıcı mesajı
 - **Sağ panel** (`QuoteResponseForm`, `'use client'`): birim fiyat input → canlı toplam, lead time select, geçerlilik tarihi, mesaj textarea, Save Draft / Send Quote. "Sent" başarı ekranı.
 
+### Orders (`/seller/orders`)
+`'use client'` (tab + search state). 4 stat kartı (total, awaiting action, in transit, total revenue). `OrderControls` (tab: All/Pending/Confirmed/Shipped/Delivered) + `OrderTable` (buyer avatar+email, order ID, tarih, items özeti, toplam, durum badge, hover action buttons: Confirm/Ship/Deliver statüye göre).
+
+### Products — New (`/seller/products/new`)
+`'use client'` (tiers + description state). Sayfa 75 satır — 4 bileşene bölünmüş:
+- **`ProductBasicInfo`**: ad, kategori seçimi, min sipariş adedi, açıklama (canlı char counter, 2000 limit)
+- **`ProductPricingTiers`**: tier tablosu — min_qty readonly (önceki max'tan türetilir), max_qty + birim fiyat editable, Add Tier (son açık-uçlu tier'dan önce ekler), ilk tier silinemez
+- **`ProductMedia`**: kendi state'i — dropzone file input, FileReader ile önizleme, Primary badge, sil
+- **`ProductLogistics`**: kendi state'i — "Available for Order" toggle (secondary renk), ağırlık + lead time
+
 ## Next.js 16 Kırıcı Değişiklikler
 
 | Eski | Yeni | Notlar |
@@ -185,15 +201,14 @@ Async server component (`await params`). İki panel layout (`h-[calc(100vh-4rem)
 **Tamamlanan:**
 - `types/index.ts`, `lib/mock-data/`, `lib/pricing.ts`, `proxy.ts`
 - Auth: Login (demo hesaplar) + Signup (çok adımlı, Zod validasyonlu)
-- Seller: Dashboard, Products, Quotes (liste + detay/yanıt)
+- Seller: Dashboard, Products (liste + new), Quotes (liste + detay/yanıt), Orders
 - Buyer: Discover, Discover/[id], Cart, Orders, Approvals — eski tasarım, yenilenmedi
 
 **Sıradaki (öncelik sırasıyla):**
-1. Seller Orders ekranını yenile (`/seller/orders`)
-2. Buyer portal ekranlarını yenile (Discover, Discover/[id], Cart, Orders, Approvals)
-3. Supabase entegrasyonu:
+1. Buyer portal ekranlarını yenile (Discover, Discover/[id], Cart, Orders, Approvals)
+2. Supabase entegrasyonu:
    - Supabase projesi oluştur, `.env.local` ayarla
    - DB şemasını SQL migration ile uygula
    - Mock data → Supabase sorguları
    - Supabase Auth + `proxy.ts` cookie kontrolü
-4. Realtime bildirim dropdown'ı
+3. Realtime bildirim dropdown'ı
