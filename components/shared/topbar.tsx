@@ -1,3 +1,5 @@
+import { ProfileButton } from './profile-button'
+
 interface TopbarProps {
   userName: string
   userRole: string
@@ -28,15 +30,7 @@ export function Topbar({ userName, userRole }: TopbarProps) {
           <span className="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-surface" />
         </button>
 
-        <div className="flex items-center gap-3 pl-6 border-l border-outline-variant">
-          <div className="text-right hidden sm:block">
-            <p className="text-sm font-semibold text-on-surface leading-none">{userName}</p>
-            <p className="text-xs text-on-surface-variant mt-1">{userRole}</p>
-          </div>
-          <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center text-on-primary text-sm font-bold shrink-0">
-            {userName.charAt(0).toUpperCase()}
-          </div>
-        </div>
+        <ProfileButton userName={userName} userRole={userRole} />
       </div>
     </header>
   )
