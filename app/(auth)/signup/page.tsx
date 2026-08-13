@@ -13,6 +13,7 @@ import { FormSelect } from '@/components/ui/form-select'
 import { FormError } from '@/components/ui/form-error'
 import { StepIndicator } from '@/components/ui/step-indicator'
 import { RoleCard } from '@/components/auth/role-card'
+import { Button } from '@/components/ui/button'
 
 type Step = 1 | 2 | 3
 type Role = 'seller' | 'buyer' | null
@@ -172,17 +173,18 @@ export default function SignupPage() {
               </div>
               {roleError && <div className="flex justify-center"><FormError message={roleError} /></div>}
               <div className="flex justify-between">
-                <button onClick={() => setStep(1)} className="px-6 py-2 rounded-lg text-base font-semibold text-on-surface-variant hover:bg-surface-container transition-colors flex items-center gap-2">
+                <Button variant="ghost" onClick={() => setStep(1)}>
                   <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_back</span>
                   Back
-                </button>
-                <button onClick={handleStep2Continue} className={cn(
-                  'px-8 py-3 rounded-lg text-base font-semibold transition-colors flex items-center gap-2',
-                  role ? 'bg-primary text-on-primary hover:bg-primary-container' : 'bg-surface-variant text-on-surface-variant opacity-50 cursor-not-allowed'
-                )}>
+                </Button>
+                <Button
+                  onClick={handleStep2Continue}
+                  disabled={!role}
+                  className="px-8 py-3 text-base"
+                >
                   Continue
                   <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_forward</span>
-                </button>
+                </Button>
               </div>
             </div>
           </StepPanel>
@@ -200,15 +202,13 @@ export default function SignupPage() {
                 </div>
                 {submitError && <FormError message={submitError} />}
                 <div className="flex items-center justify-between pt-4 border-t border-surface-container-high">
-                  <button type="button" onClick={() => setStep(2)} disabled={loading}
-                    className="p-2 rounded-lg text-on-surface-variant hover:bg-surface-container transition-colors">
+                  <Button type="button" variant="ghost" size="sm" onClick={() => setStep(2)} disabled={loading} className="p-2">
                     <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
-                  </button>
-                  <button type="submit" disabled={loading}
-                    className="flex-1 ml-4 bg-primary text-on-primary py-3 rounded-lg text-base font-semibold hover:bg-primary-container transition-colors flex items-center justify-center gap-2 disabled:opacity-60">
+                  </Button>
+                  <Button type="submit" disabled={loading} className="flex-1 ml-4 py-3 text-base">
                     {loading ? 'Hesap oluşturuluyor…' : 'Complete Setup'}
                     <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>check_circle</span>
-                  </button>
+                  </Button>
                 </div>
               </form>
             </div>

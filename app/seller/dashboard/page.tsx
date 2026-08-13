@@ -1,4 +1,5 @@
 import { orders, products, quoteRequests } from '@/lib/mock-data'
+import { Button } from '@/components/ui/button'
 import { RevenueChart } from '@/components/seller/revenue-chart'
 import { StatCards } from '@/components/seller/stat-cards'
 import { TopProducts } from '@/components/seller/top-products'
@@ -39,15 +40,15 @@ export default function SellerDashboardPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <button className="px-4 py-2 bg-surface-container-high text-on-surface hover:bg-surface-container-highest transition-colors rounded-xl flex items-center gap-2 text-sm">
+          <Button variant="ghost">
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>calendar_month</span>
             Last 30 Days
             <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>expand_more</span>
-          </button>
-          <button className="px-4 py-2 bg-primary text-on-primary hover:bg-primary-container transition-colors rounded-xl flex items-center gap-2 text-sm shadow-sm">
+          </Button>
+          <Button variant="primary">
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>download</span>
             Export Report
-          </button>
+          </Button>
         </div>
       </div>
 
@@ -67,12 +68,8 @@ export default function SellerDashboardPage() {
           <div className="flex justify-between items-center mb-6">
             <h3 className="text-xl font-semibold text-on-surface">Monthly Revenue</h3>
             <div className="flex gap-2">
-              <button className="px-3 py-1 text-xs font-semibold bg-surface-variant text-on-surface rounded-lg hover:bg-surface-container-high transition-colors">
-                Weekly
-              </button>
-              <button className="px-3 py-1 text-xs font-semibold bg-primary text-on-primary rounded-lg shadow-sm">
-                Monthly
-              </button>
+              <Button variant="ghost" size="sm">Weekly</Button>
+              <Button variant="primary" size="sm">Monthly</Button>
             </div>
           </div>
           <RevenueChart />
