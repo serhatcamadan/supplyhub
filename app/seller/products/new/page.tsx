@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import type { PriceTier } from '@/types'
+import { Button } from '@/components/ui/button'
 import { ProductBasicInfo } from '@/components/seller/product-basic-info'
 import { ProductPricingTiers } from '@/components/seller/product-pricing-tiers'
 import { ProductMedia } from '@/components/seller/product-media'
@@ -52,10 +53,10 @@ export default function NewProductPage() {
           <Link href="/seller/products" className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface hover:bg-surface-container-high transition-colors">
             Cancel
           </Link>
-          <button type="button" className="px-6 py-2 rounded-lg bg-secondary text-on-secondary text-sm font-semibold shadow-md hover:bg-secondary/90 transition-all active:scale-[0.98] flex items-center gap-2">
+          <Button type="button" variant="secondary" className="active:scale-[0.98]">
             <span className="material-symbols-outlined text-[18px]">save</span>
             Save Product
-          </button>
+          </Button>
         </div>
       </div>
 

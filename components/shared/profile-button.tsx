@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { Button } from '@/components/ui/button'
 
 interface ProfileButtonProps {
   userName: string
@@ -108,13 +109,10 @@ export function ProfileButton({ userName, userRole }: ProfileButtonProps) {
 
         {/* Sign Out */}
         <div className="p-6 border-t border-outline-variant/30">
-          <button
-            onClick={handleSignOut}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-error/10 text-error hover:bg-error hover:text-on-error transition-colors rounded-xl text-sm font-semibold"
-          >
+          <Button variant="destructive" size="lg" onClick={handleSignOut} className="w-full">
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>logout</span>
             Çıkış Yap
-          </button>
+          </Button>
         </div>
       </div>
     </>

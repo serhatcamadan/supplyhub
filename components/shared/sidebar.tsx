@@ -5,10 +5,11 @@ import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 const SELLER_NAV = [
-  { href: '/seller/dashboard', label: 'Dashboard', icon: 'grid_view' },
-  { href: '/seller/products', label: 'Products', icon: 'inventory_2' },
-  { href: '/seller/quotes', label: 'Quote Requests', icon: 'request_quote' },
-  { href: '/seller/orders', label: 'Orders', icon: 'shopping_bag' },
+  { href: '/seller/dashboard',  label: 'Dashboard',        icon: 'grid_view' },
+  { href: '/seller/products',   label: 'Products',         icon: 'inventory_2' },
+  { href: '/seller/quotes',     label: 'Quote Requests',   icon: 'request_quote' },
+  { href: '/seller/orders',     label: 'Orders',           icon: 'shopping_bag' },
+  { href: '/seller/discover',   label: 'Market Discovery', icon: 'query_stats' },
 ]
 
 const BUYER_NAV = [
