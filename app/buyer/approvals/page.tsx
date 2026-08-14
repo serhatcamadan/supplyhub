@@ -1,85 +1,57 @@
 import { getOrdersWithDetails } from '@/lib/mock-data'
-import { formatCurrency, formatDate } from '@/lib/utils'
-import { AlertCircle } from 'lucide-react'
+import { ApprovalCard } from '@/components/buyer/approval-card'
+import { ApprovalStatCards } from '@/components/buyer/approval-stat-cards'
+
+const BUYER_ID = 'company-buyer-1'
 
 export default function BuyerApprovalsPage() {
   const pendingApprovals = getOrdersWithDetails().filter(
-    (o) => o.buyer_id === 'company-buyer-1' && o.needs_approval && !o.approved_by
+    (o) => o.buyer_id === BUYER_ID && o.needs_approval && !o.approved_by
   )
 
+  const totalValue = pendingApprovals.reduce((sum, o) => sum + o.total, 0)
+  const totalItems = pendingApprovals.reduce((sum, o) => sum + o.items.length, 0)
+
   return (
-    <div className="p-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Onay Bekleyenler</h1>
-        <p className="text-sm text-slate-500 mt-1">
-          {pendingApprovals.length} sipariş yönetici onayı bekliyor
-        </p>
+    <div className="px-8 py-8 max-w-360 mx-auto space-y-8">
+
+      {/* Header */}
+      <div className="flex items-end justify-between flex-wrap gap-4">
+        <div>
+          <h1 className="text-4xl font-bold tracking-tight text-on-surface">Pending Approvals</h1>
+          <p className="text-sm text-on-surface-variant mt-2">
+            Review and approve orders submitted by staff members that exceed spending limits.
+          </p>
+        </div>
+        <div className="flex gap-3">
+          <button className="h-10 px-4 inline-flex items-center gap-2 bg-surface text-on-surface border border-outline-variant rounded-lg text-xs font-semibold uppercase tracking-wider hover:bg-surface-container-low transition-colors shadow-sm">
+            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>filter_list</span>
+            Filter
+          </button>
+        </div>
       </div>
 
+      <ApprovalStatCards
+        pendingCount={pendingApprovals.length}
+        totalItems={totalItems}
+        totalValue={totalValue}
+      />
+
+      {/* Approvals list */}
       {pendingApprovals.length === 0 ? (
-        <div className="bg-white rounded-xl border border-slate-200 p-12 text-center">
-          <p className="text-slate-400">Onay bekleyen sipariş yok.</p>
+        <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 py-20 flex flex-col items-center gap-4 text-center">
+          <div className="w-16 h-16 bg-secondary-fixed/20 rounded-full flex items-center justify-center">
+            <span className="material-symbols-outlined text-secondary text-[32px]">check_circle</span>
+          </div>
+          <div>
+            <p className="font-semibold text-on-surface text-lg">All caught up!</p>
+            <p className="text-sm text-on-surface-variant mt-1">No orders are waiting for your approval right now.</p>
+          </div>
         </div>
       ) : (
-        <div className="space-y-4">
+        <div className="space-y-5">
           {pendingApprovals.map((order) => (
-            <div
-              key={order.id}
-              className="bg-white rounded-xl border border-amber-200 p-5 shadow-sm"
-            >
-              <div className="flex items-start gap-3 mb-4">
-                <AlertCircle size={18} className="text-amber-500 mt-0.5 shrink-0" />
-                <div className="flex-1">
-                  <div className="flex items-center justify-between">
-                    <p className="font-semibold text-slate-900">
-                      Sipariş #{order.id.slice(-6).toUpperCase()}
-                    </p>
-                    <p className="text-xl font-bold text-slate-900">{formatCurrency(order.total)}</p>
-                  </div>
-                  <p className="text-sm text-slate-500 mt-0.5">
-                    {order.seller.name} · {formatDate(order.created_at)} ·{' '}
-                    Oluşturan: {order.created_by_user.name}
-                  </p>
-                </div>
-              </div>
-
-              {/* Items */}
-              <div className="border border-slate-100 rounded-lg overflow-hidden mb-4">
-                <table className="w-full text-sm">
-                  <thead className="bg-slate-50">
-                    <tr>
-                      <th className="text-left py-2 px-3 text-xs text-slate-400 font-medium">Ürün</th>
-                      <th className="text-right py-2 px-3 text-xs text-slate-400 font-medium">Adet</th>
-                      <th className="text-right py-2 px-3 text-xs text-slate-400 font-medium">Birim</th>
-                      <th className="text-right py-2 px-3 text-xs text-slate-400 font-medium">Toplam</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {order.items.map((item) => (
-                      <tr key={item.id} className="border-t border-slate-100">
-                        <td className="py-2.5 px-3 text-slate-700">{item.product.name}</td>
-                        <td className="py-2.5 px-3 text-right text-slate-600">{item.quantity}</td>
-                        <td className="py-2.5 px-3 text-right text-slate-600">
-                          {formatCurrency(item.unit_price)}
-                        </td>
-                        <td className="py-2.5 px-3 text-right font-medium text-slate-900">
-                          {formatCurrency(item.unit_price * item.quantity)}
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-
-              <div className="flex gap-2">
-                <button className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-700 transition-colors">
-                  Onayla
-                </button>
-                <button className="px-4 py-2 border border-red-200 text-red-600 text-sm font-medium rounded-lg hover:bg-red-50 transition-colors">
-                  Reddet
-                </button>
-              </div>
-            </div>
+            <ApprovalCard key={order.id} order={order} />
           ))}
         </div>
       )}
