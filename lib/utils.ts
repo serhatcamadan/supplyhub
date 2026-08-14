@@ -13,6 +13,15 @@ export function formatCurrency(amount: number): string {
   }).format(amount)
 }
 
+export function getInitials(name: string): string {
+  return name
+    .split(' ')
+    .filter((w) => w.length > 0)
+    .slice(0, 2)
+    .map((w) => w[0].toUpperCase())
+    .join('')
+}
+
 export function formatDate(iso: string): string {
   return new Intl.DateTimeFormat('tr-TR', {
     day: 'numeric',

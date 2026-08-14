@@ -1,11 +1,4 @@
-function initials(name: string) {
-  return name
-    .split(' ')
-    .map((w) => w[0])
-    .slice(0, 2)
-    .join('')
-    .toUpperCase()
-}
+import { Avatar } from '@/components/ui/avatar'
 
 interface SellerInfoCardProps {
   sellerName: string
@@ -19,9 +12,7 @@ export function SellerInfoCard({ sellerName }: SellerInfoCardProps) {
       </h3>
 
       <div className="flex items-center gap-4 mt-2">
-        <div className="w-12 h-12 bg-primary-container/20 rounded-full flex items-center justify-center text-primary font-bold text-lg shrink-0">
-          {initials(sellerName)}
-        </div>
+        <Avatar name={sellerName} size="lg" colorScheme="primary" />
         <div>
           <p className="text-sm font-semibold text-on-surface leading-tight">{sellerName}</p>
           <p className="text-xs text-on-surface-variant">Onaylı Tedarikçi</p>

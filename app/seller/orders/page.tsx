@@ -3,26 +3,31 @@
 import { useState } from 'react'
 import { getOrdersWithDetails } from '@/lib/mock-data'
 import { formatCurrency } from '@/lib/utils'
-import { OrderControls, type OrderTab } from '@/components/seller/order-controls'
+import { TableControls } from '@/components/seller/table-controls'
 import { OrderTable } from '@/components/seller/order-table'
+
+type OrderTab = 'all' | 'pending' | 'confirmed' | 'shipped' | 'delivered'
+
+const TABS = [
+  { value: 'all',       label: 'All Orders' },
+  { value: 'pending',   label: 'Pending' },
+  { value: 'confirmed', label: 'Confirmed' },
+  { value: 'shipped',   label: 'Shipped' },
+  { value: 'delivered', label: 'Delivered' },
+]
 
 const SELLER_ID = 'company-seller-1'
 
 export default function SellerOrdersPage() {
-  const [tab, setTab] = useState<OrderTab>('all')
+  const [tab, setTab]       = useState<OrderTab>('all')
   const [search, setSearch] = useState('')
 
-  const allOrders = getOrdersWithDetails().filter((o) => o.seller_id === SELLER_ID)
-
-  // Stats
+  const allOrders    = getOrdersWithDetails().filter((o) => o.seller_id === SELLER_ID)
   const pendingCount = allOrders.filter((o) => o.status === 'pending').length
   const shippedCount = allOrders.filter((o) => o.status === 'shipped').length
   const totalRevenue = allOrders.reduce((sum, o) => sum + o.total, 0)
 
-  // Tab filter
   const byTab = allOrders.filter((o) => tab === 'all' || o.status === tab)
-
-  // Search filter
   const filtered = search
     ? byTab.filter(
         (o) =>
@@ -34,7 +39,6 @@ export default function SellerOrdersPage() {
   return (
     <div className="p-8 flex flex-col gap-8">
 
-      {/* Header */}
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-4xl font-bold tracking-tight text-on-surface">Orders</h1>
@@ -54,13 +58,10 @@ export default function SellerOrdersPage() {
         </div>
       </div>
 
-      {/* Stats Row */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-surface-container-lowest p-5 rounded-xl shadow-sm relative overflow-hidden group">
           <div className="absolute right-0 top-0 w-24 h-24 bg-primary/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110" />
-          <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">
-            Total Orders
-          </p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">Total Orders</p>
           <p className="text-4xl font-bold text-on-surface">{allOrders.length}</p>
         </div>
 
@@ -68,14 +69,10 @@ export default function SellerOrdersPage() {
           <div className="absolute right-0 top-0 w-24 h-24 bg-tertiary-container/20 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110" />
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">
-                Awaiting Action
-              </p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">Awaiting Action</p>
               <p className="text-4xl font-bold text-on-surface">{pendingCount}</p>
             </div>
-            <span className="material-symbols-outlined text-on-tertiary-container bg-tertiary-container/30 p-2 rounded-lg shrink-0">
-              schedule
-            </span>
+            <span className="material-symbols-outlined text-on-tertiary-container bg-tertiary-container/30 p-2 rounded-lg shrink-0">schedule</span>
           </div>
         </div>
 
@@ -83,35 +80,28 @@ export default function SellerOrdersPage() {
           <div className="absolute right-0 top-0 w-24 h-24 bg-primary-fixed-dim/20 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110" />
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">
-                In Transit
-              </p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">In Transit</p>
               <p className="text-4xl font-bold text-on-surface">{shippedCount}</p>
             </div>
-            <span className="material-symbols-outlined text-on-primary-fixed-variant bg-primary-fixed-dim/30 p-2 rounded-lg shrink-0">
-              local_shipping
-            </span>
+            <span className="material-symbols-outlined text-on-primary-fixed-variant bg-primary-fixed-dim/30 p-2 rounded-lg shrink-0">local_shipping</span>
           </div>
         </div>
 
         <div className="bg-primary p-5 rounded-xl shadow-md relative overflow-hidden text-on-primary">
           <div className="absolute right-0 top-0 w-32 h-32 bg-white/10 rounded-full blur-xl -mr-10 -mt-10" />
-          <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-on-primary/80">
-            Total Revenue
-          </p>
-          <p className="text-4xl font-bold tracking-tight relative z-10">
-            {formatCurrency(totalRevenue)}
-          </p>
+          <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-on-primary/80">Total Revenue</p>
+          <p className="text-4xl font-bold tracking-tight relative z-10">{formatCurrency(totalRevenue)}</p>
         </div>
       </div>
 
-      {/* Table Card */}
       <div className="bg-surface-container-lowest rounded-xl shadow-md flex flex-col overflow-hidden">
-        <OrderControls
-          tab={tab}
-          onTab={setTab}
+        <TableControls
+          tabs={TABS}
+          activeTab={tab}
+          onTabChange={(t) => setTab(t as OrderTab)}
           search={search}
-          onSearch={setSearch}
+          onSearchChange={setSearch}
+          searchPlaceholder="Search order ID, buyer..."
         />
         <OrderTable orders={filtered} />
       </div>

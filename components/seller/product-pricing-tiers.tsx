@@ -1,4 +1,5 @@
 import { cn } from '@/lib/utils'
+import { SectionHeading } from '@/components/ui/section-heading'
 import type { PriceTier } from '@/types'
 
 interface ProductPricingTiersProps {
@@ -20,10 +21,7 @@ export function ProductPricingTiers({ tiers, onAdd, onRemove, onUpdateMax, onUpd
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-sm p-8 border border-outline-variant/20">
       <div className="flex items-center justify-between mb-4">
-        <h2 className="text-sm font-semibold text-on-surface flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary text-[20px]">payments</span>
-          Tiered Pricing
-        </h2>
+        <SectionHeading icon="payments" label="Tiered Pricing" className="mb-0" />
         <button type="button" onClick={onAdd} className="flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary/80 transition-colors">
           <span className="material-symbols-outlined text-[16px]">add</span>
           Add Tier
