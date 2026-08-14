@@ -112,7 +112,9 @@ components/
 ├── shared/
 │   ├── sidebar.tsx             → 'use client' — fixed, usePathname ile aktif nav
 │   │                              portal: 'seller' | 'buyer' prop — her portal kendi nav'ını görür
-│   ├── topbar.tsx              → server component, arama + bildirim + avatar
+│   ├── topbar.tsx              → server component, arama + NotificationBell + ProfileButton
+│   ├── notification-bell.tsx   → 'use client' — bell toggle, dropdown (scale+opacity anim), mark-all-read state
+│   │                              MOCK_NOTIFICATIONS: 4 item (2 unread), click-outside useEffect ile kapatma
 │   └── profile-button.tsx      → 'use client' — sağdan açılan drawer, Supabase signOut
 ├── buyer/
 │   ├── category-chips.tsx      → pure — categories[], selected, onSelect props
@@ -330,4 +332,3 @@ Server component. `needs_approval && !approved_by` filtresi. 3 stat kartı (Awai
 
 **Sıradaki (öncelik sırasıyla):**
 1. Seller + Buyer sayfalarını mock data'dan Supabase sorgularına bağla
-2. Realtime bildirim dropdown'ı (`proxy.ts` cookie kontrolü ile)
