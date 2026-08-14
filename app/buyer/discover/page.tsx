@@ -1,119 +1,94 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
-import { Search, Filter } from 'lucide-react'
 import { products, companies } from '@/lib/mock-data'
-import { formatCurrency } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { CategoryChips } from '@/components/buyer/category-chips'
+import { ProductCard, type ProductBadge } from '@/components/buyer/product-card'
 
-const CATEGORIES = ['Tümü', ...Array.from(new Set(products.map((p) => p.category)))]
+const ALL = 'Tümü'
+const CATEGORIES = [ALL, ...Array.from(new Set(products.map((p) => p.category)))]
+
+const RATINGS: Record<string, number> = {
+  'product-1': 4.8,
+  'product-2': 4.6,
+  'product-3': 5.0,
+  'product-4': 4.9,
+  'product-5': 4.7,
+}
+
+const BADGES: Record<string, ProductBadge> = {
+  'product-1': { label: 'Organik', colorScheme: 'secondary' },
+  'product-3': { label: 'Doğal', colorScheme: 'secondary' },
+  'product-5': { label: 'Hızlı Teslimat', colorScheme: 'primary' },
+}
+
+const UNITS: Record<string, string> = {
+  'product-1': '/ şişe',
+  'product-2': '/ çuval',
+  'product-3': '/ adet',
+  'product-4': '/ paket',
+  'product-5': '/ adet',
+}
 
 export default function BuyerDiscoverPage() {
-  const [search, setSearch] = useState('')
-  const [category, setCategory] = useState('Tümü')
+  const [category, setCategory] = useState(ALL)
 
   const filtered = products
     .filter((p) => p.status === 'active')
-    .filter((p) =>
-      category === 'Tümü' ? true : p.category === category
-    )
-    .filter((p) =>
-      search.trim() === ''
-        ? true
-        : p.name.toLowerCase().includes(search.toLowerCase()) ||
-          p.description.toLowerCase().includes(search.toLowerCase())
-    )
+    .filter((p) => category === ALL || p.category === category)
 
   return (
-    <div className="p-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Ürün Keşfi</h1>
-        <p className="text-sm text-slate-500 mt-1">Tedarikçilerden toptan ürün alın</p>
-      </div>
+    <div className="p-8 flex flex-col gap-10">
 
-      {/* Search + filter */}
-      <div className="flex gap-3 mb-6">
-        <div className="relative flex-1 max-w-md">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-slate-400" />
-          <input
-            type="text"
-            placeholder="Ürün ara..."
-            value={search}
-            onChange={(e) => setSearch(e.target.value)}
-            className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-[#1e3a5f]/20 focus:border-[#1e3a5f] bg-white"
-          />
+      {/* Header */}
+      <div className="flex flex-col gap-6">
+        <div className="flex items-start justify-between gap-6">
+          <div>
+            <h1 className="text-4xl font-bold tracking-tight text-on-surface">Ürün Keşfi</h1>
+            <p className="text-sm text-on-surface-variant mt-2 max-w-2xl">
+              Onaylı toptan tedarikçilerden yüksek kaliteli ürünleri keşfedin ve tedarik zincirinizi güçlendirin.
+            </p>
+          </div>
+          <div className="flex items-center gap-3 shrink-0">
+            <Button variant="ghost">
+              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>filter_list</span>
+              Filtrele
+            </Button>
+            <Button variant="primary">
+              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>tune</span>
+              Sırala
+            </Button>
+          </div>
         </div>
-        <div className="flex gap-2">
-          {CATEGORIES.map((cat) => (
-            <button
-              key={cat}
-              onClick={() => setCategory(cat)}
-              className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-                category === cat
-                  ? 'bg-[#1e3a5f] text-white'
-                  : 'bg-white border border-slate-200 text-slate-600 hover:border-slate-300'
-              }`}
-            >
-              {cat}
-            </button>
-          ))}
-        </div>
+
+        <CategoryChips categories={CATEGORIES} selected={category} onSelect={setCategory} />
       </div>
 
       {/* Product grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-        {filtered.map((product) => {
-          const seller = companies.find((c) => c.id === product.seller_id)!
-          const basePrice = product.price_tiers[0]?.price ?? 0
-          const bestPrice = product.price_tiers[product.price_tiers.length - 1]?.price ?? 0
-
-          return (
-            <Link
-              key={product.id}
-              href={`/buyer/discover/${product.id}`}
-              className="bg-white rounded-xl border border-slate-200 p-5 hover:border-[#1e3a5f]/40 hover:shadow-md transition-all group"
-            >
-              {/* Image placeholder */}
-              <div className="h-36 bg-slate-100 rounded-lg mb-4 flex items-center justify-center">
-                <span className="text-slate-400 text-sm">Görsel yok</span>
-              </div>
-
-              <div className="flex items-start justify-between gap-2">
-                <div className="min-w-0">
-                  <p className="font-semibold text-slate-900 group-hover:text-[#1e3a5f] transition-colors line-clamp-1">
-                    {product.name}
-                  </p>
-                  <p className="text-xs text-slate-500 mt-0.5">{seller.name}</p>
-                </div>
-                <span className="shrink-0 text-xs bg-slate-100 text-slate-500 px-2 py-0.5 rounded-full">
-                  {product.category}
-                </span>
-              </div>
-
-              <p className="text-xs text-slate-400 mt-2 line-clamp-2">{product.description}</p>
-
-              <div className="mt-4 pt-3 border-t border-slate-100 flex items-end justify-between">
-                <div>
-                  <p className="text-xs text-slate-400">Birim fiyat</p>
-                  <div className="flex items-baseline gap-1.5">
-                    <p className="text-lg font-bold text-slate-900">{formatCurrency(bestPrice)}</p>
-                    {bestPrice !== basePrice && (
-                      <p className="text-sm text-slate-400 line-through">{formatCurrency(basePrice)}</p>
-                    )}
-                  </div>
-                </div>
-                <p className="text-xs text-slate-400">Min. {product.min_order_qty} adet</p>
-              </div>
-            </Link>
-          )
-        })}
-      </div>
-
-      {filtered.length === 0 && (
-        <div className="text-center py-16">
-          <p className="text-slate-400">Arama kriterlerinize uygun ürün bulunamadı.</p>
+      {filtered.length > 0 ? (
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+          {filtered.map((product) => {
+            const seller = companies.find((c) => c.id === product.seller_id)
+            return (
+              <ProductCard
+                key={product.id}
+                product={product}
+                sellerName={seller?.name ?? 'Bilinmeyen Tedarikçi'}
+                rating={RATINGS[product.id] ?? 4.5}
+                unit={UNITS[product.id]}
+                badge={BADGES[product.id]}
+              />
+            )
+          })}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center py-24 gap-4 text-on-surface-variant">
+          <span className="material-symbols-outlined" style={{ fontSize: '48px' }}>search_off</span>
+          <p className="text-sm">Bu kategoride ürün bulunamadı.</p>
         </div>
       )}
+
     </div>
   )
 }
