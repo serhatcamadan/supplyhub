@@ -1,83 +1,43 @@
 import { getOrdersWithDetails } from '@/lib/mock-data'
-import { formatCurrency, formatDate } from '@/lib/utils'
-
-const STATUS_LABEL: Record<string, string> = {
-  pending: 'Bekliyor',
-  confirmed: 'Onaylandı',
-  shipped: 'Kargoda',
-  delivered: 'Teslim Edildi',
-}
-
-const STATUS_COLOR: Record<string, string> = {
-  pending: 'bg-amber-50 text-amber-700',
-  confirmed: 'bg-blue-50 text-blue-700',
-  shipped: 'bg-purple-50 text-purple-700',
-  delivered: 'bg-green-50 text-green-700',
-}
+import { formatCurrency } from '@/lib/utils'
+import { Button } from '@/components/ui/button'
+import { OrderStatCards } from '@/components/buyer/order-stat-cards'
+import { OrderHistoryTable } from '@/components/buyer/order-history-table'
 
 export default function BuyerOrdersPage() {
   const orders = getOrdersWithDetails().filter((o) => o.buyer_id === 'company-buyer-1')
 
+  const totalSpend = orders.reduce((sum, o) => sum + o.total, 0)
+  const inTransit  = orders.filter((o) => o.status === 'shipped').length
+
   return (
-    <div className="p-8">
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold text-slate-900">Siparişlerim</h1>
-        <p className="text-sm text-slate-500 mt-1">{orders.length} sipariş</p>
+    <div className="px-8 py-8 max-w-360 mx-auto space-y-8">
+      <div className="flex items-end justify-between">
+        <div>
+          <h1 className="text-4xl font-bold text-on-surface">Sipariş Geçmişi</h1>
+          <p className="text-sm text-on-surface-variant mt-2">
+            Geçmiş toptan alımlarınızı takip edin, yönetin ve tekrar sipariş verin.
+          </p>
+        </div>
+        <div className="flex gap-3">
+          <Button variant="ghost" size="md">
+            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>download</span>
+            CSV İndir
+          </Button>
+          <Button variant="primary" size="md">
+            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>filter_list</span>
+            Filtrele
+          </Button>
+        </div>
       </div>
 
-      <div className="space-y-3">
-        {orders.map((order) => (
-          <div key={order.id} className="bg-white rounded-xl border border-slate-200 p-5">
-            <div className="flex items-start justify-between gap-4 mb-4">
-              <div>
-                <div className="flex items-center gap-3 mb-1">
-                  <span className="font-mono text-xs text-slate-400">
-                    #{order.id.slice(-6).toUpperCase()}
-                  </span>
-                  <span
-                    className={`px-2 py-0.5 rounded-full text-xs font-medium ${STATUS_COLOR[order.status]}`}
-                  >
-                    {STATUS_LABEL[order.status]}
-                  </span>
-                  {order.needs_approval && !order.approved_by && (
-                    <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-amber-50 text-amber-700">
-                      Onay Bekliyor
-                    </span>
-                  )}
-                </div>
-                <p className="text-sm text-slate-500">
-                  {order.seller.name} · {formatDate(order.created_at)}
-                </p>
-              </div>
-              <div className="text-right">
-                <p className="text-xl font-bold text-slate-900">{formatCurrency(order.total)}</p>
-                <p className="text-xs text-slate-400 mt-0.5">
-                  Oluşturan: {order.created_by_user.name}
-                </p>
-              </div>
-            </div>
+      <OrderStatCards
+        totalOrders={orders.length}
+        totalSpend={formatCurrency(totalSpend)}
+        inTransit={inTransit}
+      />
 
-            {/* Items */}
-            <div className="border-t border-slate-100 pt-3 space-y-1.5">
-              {order.items.map((item) => (
-                <div key={item.id} className="flex items-center justify-between text-sm">
-                  <span className="text-slate-700">{item.product.name}</span>
-                  <div className="text-right">
-                    <span className="text-slate-500 text-xs">{item.quantity} adet × </span>
-                    <span className="font-medium text-slate-900">{formatCurrency(item.unit_price)}</span>
-                  </div>
-                </div>
-              ))}
-            </div>
-
-            <div className="mt-4 flex gap-2">
-              <button className="px-3 py-1.5 text-xs font-medium border border-slate-200 text-slate-600 rounded-lg hover:bg-slate-50 transition-colors">
-                Tekrar Sipariş Ver
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
+      <OrderHistoryTable orders={orders} />
     </div>
   )
 }

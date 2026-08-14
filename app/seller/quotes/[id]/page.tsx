@@ -1,18 +1,10 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { quoteRequests, products, companies } from '@/lib/mock-data'
+import { getInitials } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { QuoteDetailPanel } from '@/components/seller/quote-detail-panel'
 import { QuoteResponseForm } from '@/components/seller/quote-response-form'
-
-function getInitials(name: string) {
-  return name
-    .split(' ')
-    .filter((w) => w.length > 2 && !w.includes('.'))
-    .slice(0, 2)
-    .map((w) => w[0].toUpperCase())
-    .join('')
-}
 
 function formatReceived(iso: string) {
   return new Intl.DateTimeFormat('en-US', {

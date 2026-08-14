@@ -1,4 +1,5 @@
 import { formatCurrency } from '@/lib/utils'
+import { Avatar } from '@/components/ui/avatar'
 
 interface QuoteDetailPanelProps {
   buyerName: string
@@ -28,9 +29,12 @@ export function QuoteDetailPanel({
 
       {/* Buyer header */}
       <div className="p-6 bg-surface-container-low border-b border-outline-variant/30 flex items-center gap-4">
-        <div className="w-16 h-16 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center text-xl font-bold border-2 border-surface shadow-sm shrink-0">
-          {buyerInitials}
-        </div>
+        <Avatar
+          name={buyerName}
+          size="xl"
+          colorScheme="secondary"
+          className="border-2 border-surface shadow-sm"
+        />
         <div>
           <h2 className="text-2xl font-semibold text-on-surface">{buyerName}</h2>
           <div className="flex items-center gap-2 mt-1 text-on-surface-variant">
