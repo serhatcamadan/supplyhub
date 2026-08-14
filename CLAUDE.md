@@ -83,6 +83,9 @@ app/
     │   └── [id]/page.tsx       → /buyer/discover/[id]
     ├── cart/page.tsx           → /buyer/cart
     ├── orders/page.tsx         → /buyer/orders
+    ├── quotes/
+    │   ├── page.tsx            → /buyer/quotes  (→ redirect /buyer/quotes/new)
+    │   └── new/page.tsx        → /buyer/quotes/new  (RFQ form)
     └── approvals/page.tsx      → /buyer/approvals
 ```
 
@@ -123,7 +126,9 @@ components/
 │   ├── order-summary.tsx       → 'use client' — promo input state, cost breakdown, checkout/quote btns
 │   ├── order-stat-cards.tsx    → 3 stat kartı (Total Orders, Total Spend, In Transit)
 │   ├── order-history-table.tsx → sipariş geçmişi tablosu (Avatar,TablePagination,TableEmptyRow)
-│   └── approval-card.tsx       → onay bekleyen sipariş kartı — seller+user avatar, items table, Approve/Reject
+│   ├── approval-card.tsx       → onay bekleyen sipariş kartı — seller+user avatar, items table, Approve/Reject
+│   ├── rfq-product-card.tsx    → pure — Product + Company props, SKU/fiyat/stok badge
+│   └── rfq-supplier-sidebar.tsx → pure — Company + stats[], Supplier Info (Avatar,buttonVariants) + Buyer Protection kartı
 └── seller/
     ├── stat-cards.tsx          → 4 KPI kartı (sparkline SVG dahil)
     ├── top-products.tsx        → ürün listesi + donut SVG
@@ -162,6 +167,29 @@ Sidebar: `'use client'`, `usePathname()` ile aktif item tespiti. `portal: 'selle
 `ProfileButton` (`components/shared/profile-button.tsx`): sağdan kayan drawer (z-50, `translate-x-full → translate-x-0`), Supabase `auth.signOut()` çağırır, `/login`'e yönlendirir.
 
 ## Kodlama Konvansiyonları
+
+### Mevcut Component'ları Kullan — Asla Yeniden Yazma
+
+> **Kural:** Yeni bir sayfa veya bileşen eklerken, aşağıdaki shared component'ları ham HTML ile yeniden yazmak yasaktır. Her zaman import edip kullan.
+
+| İhtiyaç | Kullanılacak | Nereden |
+|---|---|---|
+| Buton (her türlü) | `<Button variant size>` veya Link için `buttonVariants()` | `@/components/ui/button` |
+| Avatar / baş harf daire | `<Avatar name size colorScheme>` | `@/components/ui/avatar` |
+| Tablo sayfalama footer | `<TablePagination label>` | `@/components/ui/table-pagination` |
+| Form bölüm başlığı (h2+ikon) | `<SectionHeading icon label className?>` | `@/components/ui/section-heading` |
+| Tablo boş durumu | `<TableEmptyRow icon message colSpan>` | `@/components/ui/table-empty-row` |
+| Tab bar + arama | `<TableControls tabs activeTab onTabChange search onSearchChange>` | `@/components/seller/table-controls` |
+| Baş harf üretme | `getInitials(name)` | `@/lib/utils` |
+| Para formatı | `formatCurrency(value)` | `@/lib/utils` |
+| Tarih formatı | `formatDate(value)` | `@/lib/utils` |
+| Class birleştirme | `cn(...classes)` | `@/lib/utils` |
+
+**Kontrol listesi — her yeni dosyada:**
+- `<button>` yazmadan önce `Button` var mı? → `@/components/ui/button`
+- `<div className="rounded-full flex items-center...">` yazmadan önce `Avatar` var mı? → `@/components/ui/avatar`
+- Bir fonksiyon `name.split(' ').map(...)` benzeri baş harf üretiyorsa `getInitials` kullan
+- Yeni component'a geçmeden önce `components/ui/` ve ilgili domain klasörünü tara
 
 - **Server component varsayılan** — interaktivite (useState, event handler) gerektiğinde `'use client'`
 - **Dinamik route params** Next.js 16'da `Promise<{id: string}>` — `await params` kullan
@@ -273,6 +301,13 @@ Server component. `getOrdersWithDetails()` → `buyer_id === 'company-buyer-1'` 
 - Durum renkleri: delivered→secondary, shipped→tertiary-container, confirmed→primary-container/20, pending→surface-container-high/on-surface-variant
 - Hover overlay: `bg-linear-to-br from-color/5 to-transparent opacity-0 group-hover:opacity-100`
 
+### Quote Requests — RFQ Formu (`/buyer/quotes/new`)
+`'use client'` (form state: qty, deliveryDate, targetPrice, message + charCount). 12-col grid (8 form + 4 sticky sidebar):
+- **Sol panel**: 3 bölümlü form (Product Selection kart + ürün SKU/fiyat, Requirements grid + target price, Message textarea + charCounter + attach files)
+- **Sağ panel**: Supplier Info card (Avatar initials, star rating, stats), Buyer Protection card (primary bg, escrow bilgisi)
+- `/buyer/quotes` → redirect to `/buyer/quotes/new`
+- Sidebar: "Quote Requests" → `/buyer/quotes`, "Pending Approvals" → `/buyer/approvals` (önceden hatalı eşleşmeydi, düzeltildi)
+
 ### Approvals — Onay Yönetimi (`/buyer/approvals`)
 Server component. `needs_approval && !approved_by` filtresi. 3 stat kartı (Awaiting Approval, Total Items, Total Value at Stake). Her sipariş için `ApprovalCard`:
 - Header: seller `Avatar`(sm,surface) + requester `Avatar`(sm,secondary) + date + order total
@@ -291,7 +326,7 @@ Server component. `needs_approval && !approved_by` filtresi. 3 stat kartı (Awai
 - `components/seller/table-controls.tsx`: `order-controls.tsx` + `quote-controls.tsx` birleştirildi (silinenlerin yerini aldı)
 - Auth: Login (4 demo hesap + seed butonu) + Signup (çok adımlı, Zod validasyonlu) + Supabase Auth
 - Seller: Dashboard, Products (liste + new), Quotes (liste + detay/yanıt), Orders
-- Buyer: Discover (liste + ürün detay), Cart, Orders, Approvals — tümü tamamlandı
+- Buyer: Discover (liste + ürün detay), Cart, Orders, Approvals, Quote Requests (RFQ) — tümü tamamlandı
 
 **Sıradaki (öncelik sırasıyla):**
 1. Seller + Buyer sayfalarını mock data'dan Supabase sorgularına bağla
