@@ -13,10 +13,11 @@ const SELLER_NAV = [
 ]
 
 const BUYER_NAV = [
-  { href: '/buyer/discover', label: 'Discovery', icon: 'search' },
-  { href: '/buyer/cart', label: 'Shopping Cart', icon: 'shopping_cart' },
-  { href: '/buyer/orders', label: 'Order History', icon: 'history' },
-  { href: '/buyer/approvals', label: 'Quote Requests', icon: 'outgoing_mail' },
+  { href: '/buyer/discover',   label: 'Discovery',         icon: 'search' },
+  { href: '/buyer/cart',       label: 'Shopping Cart',     icon: 'shopping_cart' },
+  { href: '/buyer/orders',     label: 'Order History',     icon: 'history' },
+  { href: '/buyer/quotes',     label: 'Quote Requests',    icon: 'outgoing_mail' },
+  { href: '/buyer/approvals',  label: 'Pending Approvals', icon: 'pending_actions' },
 ]
 
 interface SidebarProps {
