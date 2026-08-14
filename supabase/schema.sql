@@ -1,10 +1,8 @@
 -- ================================================================
--- SupplyHub — Schema
+-- SupplyHub — Tablo Şeması
 -- Supabase Dashboard → SQL Editor → Yeni sorgu → Yapıştır → Çalıştır
--- Auth kullanıcıları için: uygulamayı başlat → /login → "Demo Hesapları Yükle"
+-- Seed verisi: /api/seed endpoint'ini çağır (Login sayfasındaki buton)
 -- ================================================================
-
--- ── TABLOLAR ────────────────────────────────────────────────────
 
 create table if not exists companies (
   id          uuid primary key default gen_random_uuid(),

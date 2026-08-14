@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { formatCurrency } from '@/lib/utils'
+import { Button, buttonVariants } from '@/components/ui/button'
 
 interface QuoteResponseFormProps {
   quoteId: string
@@ -69,10 +70,7 @@ export function QuoteResponseForm({
             Your response has been sent to the buyer. They will be notified shortly.
           </p>
         </div>
-        <Link
-          href="/seller/quotes"
-          className="mt-2 px-6 py-2.5 bg-primary text-on-primary rounded-xl text-sm font-semibold hover:bg-primary-container transition-colors"
-        >
+        <Link href="/seller/quotes" className={buttonVariants({ variant: 'primary' }) + ' mt-2'}>
           Back to Quotes
         </Link>
       </div>
@@ -235,20 +233,14 @@ export function QuoteResponseForm({
 
       {/* Footer */}
       <div className="p-6 bg-surface-container-low border-t border-outline-variant/20 flex justify-between items-center z-10 shrink-0">
-        <button
-          onClick={handleSaveDraft}
-          className="px-5 py-2.5 bg-surface border border-outline-variant rounded-xl text-on-surface text-sm font-semibold hover:bg-surface-container-highest transition-colors shadow-sm flex items-center gap-2"
-        >
+        <Button variant="outline" onClick={handleSaveDraft}>
           <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>save</span>
           Save Draft
-        </button>
-        <button
-          onClick={handleSend}
-          className="px-7 py-2.5 bg-secondary text-on-secondary rounded-xl text-sm font-semibold hover:opacity-90 transition-all hover:-translate-y-0.5 shadow-md flex items-center gap-2"
-        >
+        </Button>
+        <Button variant="secondary" size="lg" onClick={handleSend} className="hover:-translate-y-0.5 shadow-md">
           Send Quote
           <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>send</span>
-        </button>
+        </Button>
       </div>
     </div>
   )
