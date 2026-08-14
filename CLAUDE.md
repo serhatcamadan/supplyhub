@@ -13,7 +13,7 @@
 | Framework | Next.js 16 App Router |
 | Dil | TypeScript (strict mode) |
 | Stil | Tailwind CSS v4 + shadcn/ui |
-| Backend / DB | Supabase (Auth, Postgres, Realtime, Storage) — henüz entegre değil |
+| Backend / DB | Supabase (Auth, Postgres, Realtime, Storage) — Auth + seed entegre edildi |
 | Form / Validasyon | react-hook-form + zod v4 + @hookform/resolvers |
 | Grafikler | Recharts |
 | İkonlar | Material Symbols Outlined (CDN, `app/layout.tsx` `<head>`) |
@@ -93,12 +93,27 @@ app/
 ```
 components/
 ├── ui/                         → shadcn + form primitifleri
+│   ├── button.tsx              → cva tabanlı Button + export buttonVariants (Link için)
+│   │                              variants: primary | secondary | ghost | outline | destructive | icon
+│   │                              sizes: sm | md | lg
 │   ├── form-error.tsx          → kırmızı hata paragrafı (role="alert")
 │   ├── form-input.tsx          → forwardRef, error prop, ring-2 ring-error
 │   └── form-select.tsx         → forwardRef, options[], error prop
 ├── shared/
 │   ├── sidebar.tsx             → 'use client' — fixed, usePathname ile aktif nav
-│   └── topbar.tsx              → server component, arama + bildirim + avatar
+│   │                              portal: 'seller' | 'buyer' prop — her portal kendi nav'ını görür
+│   ├── topbar.tsx              → server component, arama + bildirim + avatar
+│   └── profile-button.tsx      → 'use client' — sağdan açılan drawer, Supabase signOut
+├── buyer/
+│   ├── category-chips.tsx      → pure — categories[], selected, onSelect props
+│   ├── product-card.tsx        → pure — product, sellerName, rating, unit, badge?, favorited?
+│   │                              ProductBadge type: {label, colorScheme: 'secondary'|'primary'}
+│   ├── product-image-gallery.tsx → 'use client' — 4:3 main image + 3 thumbnail, zoom overlay
+│   ├── product-tabs.tsx        → 'use client' — Tab: 'overview'|'specs'|'docs'; features list
+│   ├── product-order-panel.tsx → 'use client' — TierRow, qty stepper, getUnitPrice/getTotalPrice
+│   ├── seller-info-card.tsx    → pure — initials(), 2-col stats grid
+│   ├── cart-item.tsx           → pure — CartItem type, SKU/stock badge, qty stepper, tier progress bar
+│   └── order-summary.tsx       → 'use client' — promo input state, cost breakdown, checkout/quote btns
 └── seller/
     ├── stat-cards.tsx          → 4 KPI kartı (sparkline SVG dahil)
     ├── top-products.tsx        → ürün listesi + donut SVG
@@ -132,7 +147,9 @@ components/
 </div>
 ```
 
-Sidebar: `'use client'`, `usePathname()` ile aktif item tespiti. Her iki portal nav'ı her zaman görünür (portfolyo avantajı). Sign Out butonu `hover:bg-error/10 hover:text-error`.
+Sidebar: `'use client'`, `usePathname()` ile aktif item tespiti. `portal: 'seller' | 'buyer'` prop'u alır — her portal yalnızca kendi nav öğelerini görür. Sign Out butonu `hover:bg-error/10 hover:text-error`.
+
+`ProfileButton` (`components/shared/profile-button.tsx`): sağdan kayan drawer (z-50, `translate-x-full → translate-x-0`), Supabase `auth.signOut()` çağırır, `/login`'e yönlendirir.
 
 ## Kodlama Konvansiyonları
 
@@ -194,21 +211,67 @@ Async server component (`await params`). İki panel layout (`h-[calc(100vh-4rem)
 | `export function middleware()` | `export function proxy()` | Config objesi (`matcher`) aynı kalıyor |
 | `params: { id: string }` | `params: Promise<{ id: string }>` | Dynamic route'larda `await params` |
 
+## Supabase Entegrasyonu
+
+**Durum:** Auth + seed tamamlandı; veri sorguları hâlâ mock.
+
+| Dosya | Açıklama |
+|---|---|
+| `lib/supabase/client.ts` | Browser client (`createBrowserClient`) |
+| `lib/supabase/server.ts` | Server client (`createServerClient`, cookies) |
+| `lib/supabase/types.ts` | `Database` tip ağacı — tüm tablolar + `Relationships: []` |
+| `supabase/schema.sql` | 6 tablo DDL (auth.users'a dokunmaz) |
+| `app/api/seed/route.ts` | POST — idempotent seed; `auth.admin.createUser()` ile 4 demo hesap |
+| `app/api/auth/signup/route.ts` | POST — yeni kullanıcı kaydı |
+
+**Demo hesaplar (şifre: `Demo1234!`):**
+- `ali@freshfarm.com` → seller/admin (FreshFarm Gıda)
+- `ayse@gunespazar.com` → buyer/admin (Güneş Pazarı)
+- `fatma@gunespazar.com` → buyer/staff (Güneş Pazarı)
+- `kemal@lezzet.com` → buyer/admin (Lezzet Restoranları)
+
+**Güvenlik:** `SUPABASE_SERVICE_ROLE_KEY` yalnızca server API route'larında. `NEXT_PUBLIC_` prefix'i ASLA eklenmez.
+
+## Buyer Portal — Tamamlanan Ekranlar
+
+### Discover — Liste (`/buyer/discover`)
+`'use client'` (selectedCategory state). `CategoryChips` (filtre) + `ProductCard` grid. RATINGS / BADGES / UNITS lookup map'leri sayfa içinde. `ProductBadge` tipi: `{label, colorScheme: 'secondary'|'primary'}`.
+
+### Discover — Detay (`/buyer/discover/[id]`)
+Async server component (`await params`). 12 sütun grid: sol 8 col (gallery + tabs), sağ 4 col (sipariş paneli + satıcı kartı). FEATURES_MAP + RATINGS_MAP sayfa içinde. SVG sparkline için `bg-linear-to-br` kullan (Tailwind v4).
+- **`ProductImageGallery`**: 4:3 ana görsel + 3 thumbnail, zoom overlay
+- **`ProductTabs`**: overview/specs/docs sekmeleri, `check_circle` ikonlu özellik listesi
+- **`ProductOrderPanel`**: tier tablosu, qty stepper (min_order_qty korumalı), `getUnitPrice`/`getTotalPrice`/`getNextTier`
+- **`SellerInfoCard`**: tedarikçi bilgisi, initials(), 2 sütunlu istatistik
+
+### Cart (`/buyer/cart`)
+`'use client'` (items state). İki panel layout: `h-[calc(100vh-4rem)]` → sol flex-1 scrollable + sağ w-96 fixed sidebar.
+- `PromoBanner`: en az tier ilerleme yüzdesi olan ürün için toplu indirim nudge'ı
+- `CartItemCard`: SKU badge, stock badge ('in_stock'|'low_stock'), qty stepper (minQty korumalı), fiyat (opsiyonel strikethrough), tier progress bar (alt kenar, 1px)
+- `OrderSummary`: subtotal/indirim/kargo (10K TRY üzeri ücretsiz)/KDV (%20) hesaplama, promo input, "Siparişi Tamamla" + "Resmi Teklif Talep Et" butonları, trust indicators
+
+**CartItem tipi** (`components/buyer/cart-item.tsx`):
+```typescript
+type CartItem = {
+  id, name, sku, supplierName, imageUrl, qty, unitPrice, originalUnitPrice,
+  tierLabel: string | null, stockStatus: 'in_stock'|'low_stock', tierPct: number, minQty
+}
+```
+
 ## Mevcut Aşama
 
-**Seller portal UI katmanı tamamlandı.** Buyer portal ekranları var ama henüz yeniden tasarlanmadı.
+**Seller portal UI + Buyer portal Discover/Cart tamamlandı. Supabase Auth entegre.**
 
 **Tamamlanan:**
 - `types/index.ts`, `lib/mock-data/`, `lib/pricing.ts`, `proxy.ts`
-- Auth: Login (demo hesaplar) + Signup (çok adımlı, Zod validasyonlu)
+- `components/ui/button.tsx` — cva tabanlı; `buttonVariants` export
+- Auth: Login (4 demo hesap + seed butonu) + Signup (çok adımlı, Zod validasyonlu) + Supabase Auth
 - Seller: Dashboard, Products (liste + new), Quotes (liste + detay/yanıt), Orders
-- Buyer: Discover, Discover/[id], Cart, Orders, Approvals — eski tasarım, yenilenmedi
+- Buyer: Discover (liste + ürün detay) + Cart — yeni tasarım, tamamlandı
+- Buyer: Orders, Approvals — eski tasarım, yenilenmedi
 
 **Sıradaki (öncelik sırasıyla):**
-1. Buyer portal ekranlarını yenile (Discover, Discover/[id], Cart, Orders, Approvals)
-2. Supabase entegrasyonu:
-   - Supabase projesi oluştur, `.env.local` ayarla
-   - DB şemasını SQL migration ile uygula
-   - Mock data → Supabase sorguları
-   - Supabase Auth + `proxy.ts` cookie kontrolü
-3. Realtime bildirim dropdown'ı
+1. Buyer — Orders (`/buyer/orders`) yenile
+2. Buyer — Approvals (`/buyer/approvals`) yenile
+3. Seller + Buyer sayfalarını mock data'dan Supabase sorgularına bağla
+4. Realtime bildirim dropdown'ı (`proxy.ts` cookie kontrolü ile)
