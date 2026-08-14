@@ -2,6 +2,9 @@ import Link from 'next/link'
 import { formatCurrency, formatDate, cn } from '@/lib/utils'
 import type { QuoteRequest } from '@/types'
 import { buttonVariants } from '@/components/ui/button'
+import { Avatar } from '@/components/ui/avatar'
+import { TablePagination } from '@/components/ui/table-pagination'
+import { TableEmptyRow } from '@/components/ui/table-empty-row'
 
 export interface EnrichedQuote extends QuoteRequest {
   buyerName: string
@@ -55,52 +58,29 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 overflow-auto">
-        <table className="w-full text-left border-collapse min-w-[860px]">
+        <table className="w-full text-left border-collapse min-w-215">
           <thead className="sticky top-0 bg-surface-container-lowest z-10 shadow-[0_1px_0_rgba(0,0,0,0.05)]">
             <tr>
               <th className="py-3 px-6 w-12">
-                <input
-                  type="checkbox"
-                  className="rounded border-outline-variant text-primary focus:ring-primary"
-                />
+                <input type="checkbox" className="rounded border-outline-variant text-primary focus:ring-primary" />
               </th>
-              <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-                RFQ ID
-              </th>
-              <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-                Buyer
-              </th>
-              <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-                Product
-              </th>
-              <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-on-surface-variant text-right">
-                Quantity
-              </th>
-              <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-                Date Received
-              </th>
-              <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-                Status
-              </th>
-              <th className="py-3 px-6 text-xs font-semibold uppercase tracking-wider text-on-surface-variant text-right">
-                Actions
-              </th>
+              {['RFQ ID', 'Buyer', 'Product', 'Quantity', 'Date Received', 'Status', 'Actions'].map((h, i) => (
+                <th
+                  key={h}
+                  className={cn(
+                    'py-3 px-6 text-xs font-semibold uppercase tracking-wider text-on-surface-variant',
+                    (i === 3 || i === 6) && 'text-right'
+                  )}
+                >
+                  {h}
+                </th>
+              ))}
             </tr>
           </thead>
 
           <tbody className="divide-y divide-outline-variant/20">
             {quotes.length === 0 ? (
-              <tr>
-                <td colSpan={8} className="py-16 text-center">
-                  <span
-                    className="material-symbols-outlined block mx-auto mb-3 text-outline-variant"
-                    style={{ fontSize: '40px' }}
-                  >
-                    request_quote
-                  </span>
-                  <span className="text-sm text-on-surface-variant">No quote requests found.</span>
-                </td>
-              </tr>
+              <TableEmptyRow icon="request_quote" message="No quote requests found." colSpan={8} />
             ) : (
               quotes.map((quote) => (
                 <tr
@@ -108,10 +88,7 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
                   className="hover:bg-surface-container-low/50 transition-colors group cursor-pointer"
                 >
                   <td className="py-4 px-6">
-                    <input
-                      type="checkbox"
-                      className="rounded border-outline-variant text-primary focus:ring-primary"
-                    />
+                    <input type="checkbox" className="rounded border-outline-variant text-primary focus:ring-primary" />
                   </td>
 
                   <td className="py-4 px-6">
@@ -122,9 +99,7 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
 
                   <td className="py-4 px-6">
                     <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-full bg-secondary-container text-on-secondary-container flex items-center justify-center text-xs font-bold shrink-0">
-                        {quote.buyerInitials}
-                      </div>
+                      <Avatar name={quote.buyerName} size="sm" colorScheme="secondary" />
                       <div>
                         <p className="text-sm font-semibold text-on-surface leading-tight">
                           {quote.buyerName}
@@ -189,23 +164,7 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
         </table>
       </div>
 
-      {/* Pagination */}
-      <div className="px-6 py-4 border-t border-outline-variant/30 flex items-center justify-between bg-surface-container-lowest">
-        <span className="text-xs text-on-surface-variant">
-          Showing {quotes.length} of {quotes.length} entries
-        </span>
-        <div className="flex items-center gap-1">
-          <button className="p-1 text-on-surface-variant opacity-50 cursor-not-allowed rounded-md">
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chevron_left</span>
-          </button>
-          <button className="w-8 h-8 flex items-center justify-center text-xs font-semibold bg-primary-container text-on-primary-container rounded-md">
-            1
-          </button>
-          <button className="p-1 text-on-surface-variant rounded-md hover:bg-surface-container-high transition-colors">
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chevron_right</span>
-          </button>
-        </div>
-      </div>
+      <TablePagination label={`Showing ${quotes.length} of ${quotes.length} entries`} />
     </div>
   )
 }

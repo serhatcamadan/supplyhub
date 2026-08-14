@@ -92,10 +92,17 @@ app/
 
 ```
 components/
-├── ui/                         → shadcn + form primitifleri
+├── ui/                         → shadcn + form primitifleri + paylaşılan ilkeller
 │   ├── button.tsx              → cva tabanlı Button + export buttonVariants (Link için)
 │   │                              variants: primary | secondary | ghost | outline | destructive | icon
 │   │                              sizes: sm | md | lg
+│   ├── avatar.tsx              → getInitials + boyut/renk prop'ları — tüm avatar'lar burada
+│   │                              sizes: sm(w-8) | md(w-10) | lg(w-12) | xl(w-16)
+│   │                              colorSchemes: secondary | surface | primary
+│   │                              className override (cycling colors için)
+│   ├── table-pagination.tsx    → "Showing X of Y" footer — label: string prop
+│   ├── section-heading.tsx     → h2 icon+label — className ile mb override edilebilir
+│   ├── table-empty-row.tsx     → icon + message + colSpan — tablo boş durumu
 │   ├── form-error.tsx          → kırmızı hata paragrafı (role="alert")
 │   ├── form-input.tsx          → forwardRef, error prop, ring-2 ring-error
 │   └── form-select.tsx         → forwardRef, options[], error prop
@@ -111,9 +118,12 @@ components/
 │   ├── product-image-gallery.tsx → 'use client' — 4:3 main image + 3 thumbnail, zoom overlay
 │   ├── product-tabs.tsx        → 'use client' — Tab: 'overview'|'specs'|'docs'; features list
 │   ├── product-order-panel.tsx → 'use client' — TierRow, qty stepper, getUnitPrice/getTotalPrice
-│   ├── seller-info-card.tsx    → pure — initials(), 2-col stats grid
+│   ├── seller-info-card.tsx    → pure — Avatar(lg,primary), 2-col stats grid
 │   ├── cart-item.tsx           → pure — CartItem type, SKU/stock badge, qty stepper, tier progress bar
-│   └── order-summary.tsx       → 'use client' — promo input state, cost breakdown, checkout/quote btns
+│   ├── order-summary.tsx       → 'use client' — promo input state, cost breakdown, checkout/quote btns
+│   ├── order-stat-cards.tsx    → 3 stat kartı (Total Orders, Total Spend, In Transit)
+│   ├── order-history-table.tsx → sipariş geçmişi tablosu (Avatar,TablePagination,TableEmptyRow)
+│   └── approval-card.tsx       → onay bekleyen sipariş kartı — seller+user avatar, items table, Approve/Reject
 └── seller/
     ├── stat-cards.tsx          → 4 KPI kartı (sparkline SVG dahil)
     ├── top-products.tsx        → ürün listesi + donut SVG
@@ -122,16 +132,16 @@ components/
     ├── product-controls.tsx    → 'use client' — arama + filtre bar
     ├── product-table.tsx       → ürün tablosu (MOCK_STOCK, StockBar, RowActions, pagination)
     ├── status-badge.tsx        → active/draft/inactive badge
-    ├── quote-controls.tsx      → 'use client' — tab bar + arama
-    ├── quote-table.tsx         → RFQ tablosu (EnrichedQuote tipi + pagination)
-    ├── quote-detail-panel.tsx  → sol panel: alıcı bilgisi, ürün tablosu, mesaj
+    ├── table-controls.tsx      → 'use client' — GENERIC tab bar + arama; sellers/quotes+orders paylaşıyor
+    │                              tabs: TabItem[], activeTab, onTabChange, search, onSearchChange
+    ├── quote-table.tsx         → RFQ tablosu (EnrichedQuote tipi + Avatar + TablePagination + TableEmptyRow)
+    ├── quote-detail-panel.tsx  → sol panel: Avatar(xl) alıcı bilgisi, ürün tablosu, mesaj
     ├── quote-response-form.tsx → 'use client' — sağ panel: fiyat/mesaj formu, canlı toplam
-    ├── order-controls.tsx      → 'use client' — tab bar (All/Pending/Confirmed/Shipped/Delivered) + arama
-    ├── order-table.tsx         → sipariş tablosu (OrderWithDetails, StatusBadge, hover actions, pagination)
-    ├── product-basic-info.tsx  → ürün adı, kategori, min sipariş adedi, açıklama + char counter
-    ├── product-pricing-tiers.tsx → 'use client' içermiyor; tier tablosu, props: tiers + 4 handler
-    ├── product-media.tsx       → 'use client' — dropzone + resim önizleme (kendi state'i)
-    └── product-logistics.tsx   → 'use client' — aktif toggle + ağırlık + lead time (kendi state'i)
+    ├── order-table.tsx         → sipariş tablosu (Avatar cycling colors, TablePagination, TableEmptyRow)
+    ├── product-basic-info.tsx  → SectionHeading(info) + ad, kategori, min sipariş, açıklama
+    ├── product-pricing-tiers.tsx → SectionHeading(payments,mb-0) + tier tablosu, props: tiers + 4 handler
+    ├── product-media.tsx       → 'use client' — SectionHeading(image) + dropzone + resim önizleme
+    └── product-logistics.tsx   → 'use client' — SectionHeading(local_shipping) + toggle + ağırlık + lead time
 ```
 
 ## Layout Sistemi
@@ -157,7 +167,7 @@ Sidebar: `'use client'`, `usePathname()` ile aktif item tespiti. `portal: 'selle
 - **Dinamik route params** Next.js 16'da `Promise<{id: string}>` — `await params` kullan
 - **Pricing mantığı:** `lib/pricing.ts` — tier hesaplama, `lib/pricing.test.ts` ile test edilmiş
 - **Mock data:** `lib/mock-data/` — her entity için ayrı dosya, `index.ts` re-export
-- **`lib/utils.ts`:** `cn()`, `formatCurrency()` (TRY), `formatDate()` (tr-TR locale)
+- **`lib/utils.ts`:** `cn()`, `formatCurrency()` (TRY), `formatDate()` (tr-TR locale), `getInitials(name)` — 2 harfli baş harf; tüm avatar'larda buradan kullanılır; yerel kopya yazılmaz
 - **RBAC / Route koruması:** `proxy.ts` (Next.js 16 — eski adı `middleware.ts`)
 - **Test dosyaları** `tsconfig.json`'dan exclude edilmiş
 
@@ -186,7 +196,7 @@ Server component. Mock data'dan stats hesaplar, `StatCards` + `RevenueChart` + `
 `'use client'` (search state). `ProductControls` + `ProductTable`. Tablo: checkbox, resim, ürün bilgisi, kategori badge, fiyat aralığı (tier'lardan), stok bar (MOCK_STOCK), StatusBadge, hover actions.
 
 ### Quotes — Liste (`/seller/quotes`)
-`'use client'` (tab + search state). 4 stat kartı (total, pending, conversion rate, pipeline). `QuoteControls` (tab: All/Pending/Responded/Archived) + `QuoteTable` (buyer avatar, ürün, miktar, durum badge, hover actions).
+`'use client'` (tab + search state). 4 stat kartı (total, pending, conversion rate, pipeline). `TableControls` (tab: All/Pending/Responded/Archived) + `QuoteTable` (buyer avatar, ürün, miktar, durum badge, hover actions).
 
 ### Quotes — Detay (`/seller/quotes/[id]`)
 Async server component (`await params`). İki panel layout (`h-[calc(100vh-4rem)]`, `min-h-0` ile iç scroll):
@@ -194,7 +204,7 @@ Async server component (`await params`). İki panel layout (`h-[calc(100vh-4rem)
 - **Sağ panel** (`QuoteResponseForm`, `'use client'`): birim fiyat input → canlı toplam, lead time select, geçerlilik tarihi, mesaj textarea, Save Draft / Send Quote. "Sent" başarı ekranı.
 
 ### Orders (`/seller/orders`)
-`'use client'` (tab + search state). 4 stat kartı (total, awaiting action, in transit, total revenue). `OrderControls` (tab: All/Pending/Confirmed/Shipped/Delivered) + `OrderTable` (buyer avatar+email, order ID, tarih, items özeti, toplam, durum badge, hover action buttons: Confirm/Ship/Deliver statüye göre).
+`'use client'` (tab + search state). 4 stat kartı (total, awaiting action, in transit, total revenue). `TableControls` (tab: All/Pending/Confirmed/Shipped/Delivered) + `OrderTable` (buyer avatar+email, order ID, tarih, items özeti, toplam, durum badge, hover action buttons: Confirm/Ship/Deliver statüye göre).
 
 ### Products — New (`/seller/products/new`)
 `'use client'` (tiers + description state). Sayfa 75 satır — 4 bileşene bölünmüş:
@@ -258,20 +268,31 @@ type CartItem = {
 }
 ```
 
+### Orders — Sipariş Geçmişi (`/buyer/orders`)
+Server component. `getOrdersWithDetails()` → `buyer_id === 'company-buyer-1'` filtresi. 3 stat kartı (`OrderStatCards`). `OrderHistoryTable`: Sipariş No (mono primary), Tedarikçi (`Avatar` surface), Tarih, Tutar, Durum badge, "Tekrar Sipariş" hover action.
+- Durum renkleri: delivered→secondary, shipped→tertiary-container, confirmed→primary-container/20, pending→surface-container-high/on-surface-variant
+- Hover overlay: `bg-linear-to-br from-color/5 to-transparent opacity-0 group-hover:opacity-100`
+
+### Approvals — Onay Yönetimi (`/buyer/approvals`)
+Server component. `needs_approval && !approved_by` filtresi. 3 stat kartı (Awaiting Approval, Total Items, Total Value at Stake). Her sipariş için `ApprovalCard`:
+- Header: seller `Avatar`(sm,surface) + requester `Avatar`(sm,secondary) + date + order total
+- Items tablosu
+- Footer: "Exceeds staff spending limit" uyarısı + Reject / Approve butonları (tertiary/secondary renkler)
+- Empty state: check_circle ikonu + "All caught up!" mesajı
+
 ## Mevcut Aşama
 
-**Seller portal UI + Buyer portal Discover/Cart tamamlandı. Supabase Auth entegre.**
+**Seller portal + Buyer portal (Discover/Cart/Orders/Approvals) UI tamamlandı. Supabase Auth entegre.**
 
 **Tamamlanan:**
 - `types/index.ts`, `lib/mock-data/`, `lib/pricing.ts`, `proxy.ts`
-- `components/ui/button.tsx` — cva tabanlı; `buttonVariants` export
+- `components/ui/`: `button.tsx` (cva), `avatar.tsx`, `table-pagination.tsx`, `section-heading.tsx`, `table-empty-row.tsx`
+- `lib/utils.ts`: `getInitials()` eklendi — yerel kopya yazılmaz
+- `components/seller/table-controls.tsx`: `order-controls.tsx` + `quote-controls.tsx` birleştirildi (silinenlerin yerini aldı)
 - Auth: Login (4 demo hesap + seed butonu) + Signup (çok adımlı, Zod validasyonlu) + Supabase Auth
 - Seller: Dashboard, Products (liste + new), Quotes (liste + detay/yanıt), Orders
-- Buyer: Discover (liste + ürün detay) + Cart — yeni tasarım, tamamlandı
-- Buyer: Orders, Approvals — eski tasarım, yenilenmedi
+- Buyer: Discover (liste + ürün detay), Cart, Orders, Approvals — tümü tamamlandı
 
 **Sıradaki (öncelik sırasıyla):**
-1. Buyer — Orders (`/buyer/orders`) yenile
-2. Buyer — Approvals (`/buyer/approvals`) yenile
-3. Seller + Buyer sayfalarını mock data'dan Supabase sorgularına bağla
-4. Realtime bildirim dropdown'ı (`proxy.ts` cookie kontrolü ile)
+1. Seller + Buyer sayfalarını mock data'dan Supabase sorgularına bağla
+2. Realtime bildirim dropdown'ı (`proxy.ts` cookie kontrolü ile)

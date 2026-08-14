@@ -1,3 +1,5 @@
+import { SectionHeading } from '@/components/ui/section-heading'
+
 const CATEGORIES = [
   'Yağlar',
   'Tahıllar',
@@ -17,10 +19,7 @@ interface ProductBasicInfoProps {
 export function ProductBasicInfo({ description, onDescriptionChange }: ProductBasicInfoProps) {
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-sm p-8 border border-outline-variant/20">
-      <h2 className="text-sm font-semibold text-on-surface mb-6 flex items-center gap-2">
-        <span className="material-symbols-outlined text-primary text-[20px]">info</span>
-        Basic Information
-      </h2>
+      <SectionHeading icon="info" label="Basic Information" />
 
       <div className="space-y-6">
         <div className="flex flex-col gap-2">

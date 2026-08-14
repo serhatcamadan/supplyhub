@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { cn } from '@/lib/utils'
+import { SectionHeading } from '@/components/ui/section-heading'
 
 const INPUT = 'w-full px-3 py-2 bg-surface border border-outline-variant/40 rounded-lg text-sm font-mono text-on-surface focus:outline-none focus:border-primary'
 
@@ -10,10 +11,7 @@ export function ProductLogistics() {
 
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-sm p-8 border border-outline-variant/20">
-      <h2 className="text-sm font-semibold text-on-surface mb-6 flex items-center gap-2">
-        <span className="material-symbols-outlined text-primary text-[20px]">local_shipping</span>
-        Logistics
-      </h2>
+      <SectionHeading icon="local_shipping" label="Logistics" />
 
       <div className="space-y-5">
         <div className="flex items-center justify-between pb-4 border-b border-outline-variant/10">
