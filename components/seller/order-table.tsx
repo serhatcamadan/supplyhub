@@ -1,5 +1,6 @@
 import { formatCurrency, formatDate, cn } from '@/lib/utils'
 import type { OrderStatus, OrderWithDetails } from '@/types'
+import { Button } from '@/components/ui/button'
 
 const STATUS_CONFIG: Record<
   OrderStatus,
@@ -60,19 +61,13 @@ function RowActions({ status }: { status: OrderStatus }) {
   return (
     <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
       {status === 'pending' && (
-        <button className="px-3 py-1.5 bg-primary text-on-primary text-xs font-semibold rounded-lg hover:bg-primary/90 transition-colors">
-          Confirm
-        </button>
+        <Button variant="primary" size="sm">Confirm</Button>
       )}
       {status === 'confirmed' && (
-        <button className="px-3 py-1.5 bg-primary text-on-primary text-xs font-semibold rounded-lg hover:bg-primary/90 transition-colors">
-          Ship
-        </button>
+        <Button variant="primary" size="sm">Ship</Button>
       )}
       {status === 'shipped' && (
-        <button className="px-3 py-1.5 bg-secondary text-on-secondary text-xs font-semibold rounded-lg hover:bg-secondary/90 transition-colors">
-          Deliver
-        </button>
+        <Button variant="secondary" size="sm">Deliver</Button>
       )}
       <button className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors">
         <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>more_vert</span>

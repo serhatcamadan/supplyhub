@@ -1,6 +1,7 @@
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { companies } from '@/lib/mock-data'
 import type { Order, QuoteRequest } from '@/types'
+import { buttonVariants } from '@/components/ui/button'
 
 interface ActivityFeedProps {
   orders: Order[]
@@ -113,7 +114,7 @@ export function ActivityFeed({ orders, quote }: ActivityFeedProps) {
             <div className="shrink-0">
               <a
                 href="/seller/quotes"
-                className="px-3 py-1.5 bg-surface border border-outline-variant text-on-surface text-xs font-semibold rounded-lg hover:bg-surface-container-high transition-colors inline-block"
+                className={buttonVariants({ variant: 'outline', size: 'sm' })}
               >
                 Respond
               </a>

@@ -5,10 +5,11 @@ import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
 
 const SELLER_NAV = [
-  { href: '/seller/dashboard', label: 'Dashboard', icon: 'grid_view' },
-  { href: '/seller/products', label: 'Products', icon: 'inventory_2' },
-  { href: '/seller/quotes', label: 'Quote Requests', icon: 'request_quote' },
-  { href: '/seller/orders', label: 'Orders', icon: 'shopping_bag' },
+  { href: '/seller/dashboard',  label: 'Dashboard',        icon: 'grid_view' },
+  { href: '/seller/products',   label: 'Products',         icon: 'inventory_2' },
+  { href: '/seller/quotes',     label: 'Quote Requests',   icon: 'request_quote' },
+  { href: '/seller/orders',     label: 'Orders',           icon: 'shopping_bag' },
+  { href: '/seller/discover',   label: 'Market Discovery', icon: 'query_stats' },
 ]
 
 const BUYER_NAV = [
@@ -18,9 +19,15 @@ const BUYER_NAV = [
   { href: '/buyer/approvals', label: 'Quote Requests', icon: 'outgoing_mail' },
 ]
 
-export function Sidebar() {
+interface SidebarProps {
+  portal: 'seller' | 'buyer'
+}
+
+export function Sidebar({ portal }: SidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
+
+  const navItems = portal === 'seller' ? SELLER_NAV : BUYER_NAV
 
   function handleLogout() {
     document.cookie = 'mock-session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
@@ -54,19 +61,8 @@ export function Sidebar() {
         <span className="text-xl font-bold tracking-tight">SupplyHub</span>
       </div>
 
-      <nav className="flex-1 py-6 px-4 space-y-8">
-        <section>
-          <p className="px-4 mb-3 text-xs font-semibold uppercase tracking-wider text-on-primary-container/60">
-            Seller Portal
-          </p>
-          <div className="space-y-1">{SELLER_NAV.map(navLink)}</div>
-        </section>
-        <section>
-          <p className="px-4 mb-3 text-xs font-semibold uppercase tracking-wider text-on-primary-container/60">
-            Buyer Portal
-          </p>
-          <div className="space-y-1">{BUYER_NAV.map(navLink)}</div>
-        </section>
+      <nav className="flex-1 py-6 px-4">
+        <div className="space-y-1">{navItems.map(navLink)}</div>
       </nav>
 
       <div className="p-4 border-t border-primary-container/30">

@@ -6,27 +6,40 @@ import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 
 const DEMO_ACCOUNTS = [
-  { email: 'ali@freshfarm.com',    name: 'Ali Yılmaz',   sub: 'FreshFarm Gıda A.Ş.',     badge: 'bg-primary/10 text-primary',      label: 'Satıcı Admin' },
-  { email: 'ayse@gunespazar.com',  name: 'Ayşe Demir',   sub: 'Güneş Market Zinciri',     badge: 'bg-secondary/10 text-secondary',  label: 'Alıcı Admin' },
-  { email: 'fatma@gunespazar.com', name: 'Fatma Çelik',  sub: 'Güneş Market Zinciri',     badge: 'bg-on-tertiary-container/10 text-on-tertiary-container', label: 'Alıcı Staff' },
+  { email: 'ali@freshfarm.com',    name: 'Ali Yılmaz',   sub: 'FreshFarm Gıda A.Ş.',   badge: 'bg-primary/10 text-primary',     label: 'Satıcı Admin' },
+  { email: 'ayse@gunespazar.com',  name: 'Ayşe Demir',   sub: 'Güneş Market Zinciri',  badge: 'bg-secondary/10 text-secondary', label: 'Alıcı Admin'  },
+  { email: 'fatma@gunespazar.com', name: 'Fatma Çelik',  sub: 'Güneş Market Zinciri',  badge: 'bg-tertiary/10 text-tertiary',   label: 'Alıcı Staff'  },
+  { email: 'kemal@lezzet.com',     name: 'Kemal Arslan', sub: 'Lezzet Restoranları',   badge: 'bg-secondary/10 text-secondary', label: 'Alıcı Admin'  },
 ] as const
 
 const DEMO_PASSWORD = 'Demo1234!'
+
+type SeedState = 'idle' | 'loading' | 'ok' | 'error'
 
 export default function LoginPage() {
   const router = useRouter()
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
-  const [seeding, setSeeding] = useState(false)
+  const [seedState, setSeedState] = useState<SeedState>('idle')
   const [seedMsg, setSeedMsg] = useState<string | null>(null)
 
   async function handleSeed() {
-    setSeeding(true)
+    setSeedState('loading')
     setSeedMsg(null)
-    const res = await fetch('/api/seed', { method: 'POST' })
-    const json = await res.json() as { success?: boolean; message?: string; error?: string }
-    setSeedMsg(json.success ? 'Demo veriler yüklendi! Giriş yapabilirsiniz.' : (json.message ?? json.error ?? 'Hata'))
-    setSeeding(false)
+    try {
+      const res = await fetch('/api/seed', { method: 'POST' })
+      const data = await res.json()
+      if (!res.ok) {
+        setSeedState('error')
+        setSeedMsg(data.error ?? 'Seed başarısız.')
+      } else {
+        setSeedState('ok')
+        setSeedMsg(data.message ?? 'Tamamlandı.')
+      }
+    } catch {
+      setSeedState('error')
+      setSeedMsg('Ağ hatası.')
+    }
   }
 
   async function handleDemoLogin(email: string) {
@@ -130,18 +143,23 @@ export default function LoginPage() {
             <Link href="/signup" className="text-primary font-semibold hover:underline">Kayıt Ol</Link>
           </p>
 
-          {/* İlk kurulum: demo verisi yükleme */}
-          <div className="border-t border-outline-variant/40 pt-4 flex flex-col gap-2">
+          {/* Geliştirici: veritabanı seed */}
+          <div className="border-t border-outline-variant/30 pt-4 flex flex-col gap-2">
+            <p className="text-xs text-on-surface-variant/40 uppercase tracking-wider font-semibold text-center">
+              Geliştirici Araçları
+            </p>
             <button
               onClick={handleSeed}
-              disabled={seeding || loading}
-              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg border border-dashed border-outline-variant text-xs text-on-surface-variant hover:border-primary/40 hover:text-primary transition-colors disabled:opacity-50"
+              disabled={seedState === 'loading' || seedState === 'ok'}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-dashed border-outline-variant rounded-lg text-xs text-on-surface-variant hover:border-primary/40 hover:text-primary transition-colors disabled:opacity-50"
             >
-              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>database</span>
-              {seeding ? 'Demo veriler yükleniyor…' : 'Demo Hesapları Yükle (İlk Kurulum)'}
+              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
+                {seedState === 'ok' ? 'check_circle' : 'database'}
+              </span>
+              {seedState === 'loading' ? 'Yükleniyor…' : seedState === 'ok' ? 'Seed tamamlandı' : 'Demo veritabanını hazırla'}
             </button>
             {seedMsg && (
-              <p className={`text-xs text-center ${seedMsg.includes('Hata') || seedMsg.includes('error') ? 'text-error' : 'text-secondary'}`}>
+              <p className={`text-xs text-center ${seedState === 'error' ? 'text-error' : 'text-secondary'}`}>
                 {seedMsg}
               </p>
             )}

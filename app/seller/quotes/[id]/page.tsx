@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { quoteRequests, products, companies } from '@/lib/mock-data'
+import { Button } from '@/components/ui/button'
 import { QuoteDetailPanel } from '@/components/seller/quote-detail-panel'
 import { QuoteResponseForm } from '@/components/seller/quote-response-form'
 
@@ -71,14 +72,14 @@ export default async function QuoteDetailPage({
         </div>
 
         <div className="flex gap-3">
-          <button className="flex items-center gap-2 px-5 py-2.5 bg-surface-container-lowest border border-outline-variant rounded-xl text-primary text-sm font-semibold hover:bg-surface-container-low transition-colors shadow-sm">
+          <Button variant="outline" className="text-primary">
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>print</span>
             Print
-          </button>
-          <button className="flex items-center gap-2 px-5 py-2.5 bg-surface-container-lowest border border-outline-variant rounded-xl text-error text-sm font-semibold hover:bg-error-container/50 transition-colors shadow-sm">
+          </Button>
+          <Button variant="outline" className="text-error hover:bg-error-container/50">
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>block</span>
             Decline
-          </button>
+          </Button>
         </div>
       </div>
 
