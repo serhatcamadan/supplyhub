@@ -258,20 +258,24 @@ type CartItem = {
 }
 ```
 
+### Orders — Sipariş Geçmişi (`/buyer/orders`)
+Server component. `getOrdersWithDetails()` → `buyer_id === 'company-buyer-1'` filtresi. 3 stat kartı (Toplam Sipariş, Toplam Harcama YTD + %12 badge, Kargoda). Tablo: Sipariş No (mono primary), Tedarikçi (initials avatar + ad), Tarih, Tutar, Durum badge, "Tekrar Sipariş" hover action.
+- Durum renkleri: delivered→secondary, shipped→tertiary-container, confirmed→primary-container/20, pending→surface-container-high/on-surface-variant
+- Hover overlay: `bg-linear-to-br from-color/5 to-transparent opacity-0 group-hover:opacity-100`
+
 ## Mevcut Aşama
 
-**Seller portal UI + Buyer portal Discover/Cart tamamlandı. Supabase Auth entegre.**
+**Seller portal UI + Buyer portal Discover/Cart/Orders tamamlandı. Supabase Auth entegre.**
 
 **Tamamlanan:**
 - `types/index.ts`, `lib/mock-data/`, `lib/pricing.ts`, `proxy.ts`
 - `components/ui/button.tsx` — cva tabanlı; `buttonVariants` export
 - Auth: Login (4 demo hesap + seed butonu) + Signup (çok adımlı, Zod validasyonlu) + Supabase Auth
 - Seller: Dashboard, Products (liste + new), Quotes (liste + detay/yanıt), Orders
-- Buyer: Discover (liste + ürün detay) + Cart — yeni tasarım, tamamlandı
-- Buyer: Orders, Approvals — eski tasarım, yenilenmedi
+- Buyer: Discover (liste + ürün detay), Cart, Orders — yeni tasarım, tamamlandı
+- Buyer: Approvals — eski tasarım, yenilenmedi
 
 **Sıradaki (öncelik sırasıyla):**
-1. Buyer — Orders (`/buyer/orders`) yenile
-2. Buyer — Approvals (`/buyer/approvals`) yenile
-3. Seller + Buyer sayfalarını mock data'dan Supabase sorgularına bağla
-4. Realtime bildirim dropdown'ı (`proxy.ts` cookie kontrolü ile)
+1. Buyer — Approvals (`/buyer/approvals`) yenile
+2. Seller + Buyer sayfalarını mock data'dan Supabase sorgularına bağla
+3. Realtime bildirim dropdown'ı (`proxy.ts` cookie kontrolü ile)
