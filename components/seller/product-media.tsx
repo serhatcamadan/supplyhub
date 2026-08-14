@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { SectionHeading } from '@/components/ui/section-heading'
 
 export function ProductMedia() {
   const [preview, setPreview] = useState<string | null>(null)
@@ -15,10 +16,7 @@ export function ProductMedia() {
 
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-sm p-8 border border-outline-variant/20">
-      <h2 className="text-sm font-semibold text-on-surface mb-6 flex items-center gap-2">
-        <span className="material-symbols-outlined text-primary text-[20px]">image</span>
-        Product Media
-      </h2>
+      <SectionHeading icon="image" label="Product Media" />
 
       <div className="w-full aspect-video rounded-xl border-2 border-dashed border-outline-variant/50 bg-surface flex flex-col items-center justify-center p-6 text-center hover:bg-surface-container-low hover:border-primary/50 transition-all cursor-pointer mb-4 group relative overflow-hidden">
         <input
