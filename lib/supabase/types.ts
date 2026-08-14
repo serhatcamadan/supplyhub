@@ -45,7 +45,7 @@ export type Database = {
         Insert: {
           id?: string; buyer_id: string; product_id: string; quantity: number
           buyer_note?: string | null; status?: 'pending' | 'responded' | 'accepted' | 'declined'
-          seller_response_price?: number | null; seller_message?: string | null
+          seller_response_price?: number | null; seller_message?: string | null; created_at?: string
         }
         Update: {
           status?: 'pending' | 'responded' | 'accepted' | 'declined'
@@ -67,7 +67,7 @@ export type Database = {
           id?: string; buyer_id: string; seller_id: string
           status?: 'pending' | 'confirmed' | 'shipped' | 'delivered'
           total?: number; needs_approval?: boolean
-          approved_by?: string | null; created_by: string
+          approved_by?: string | null; created_by: string; created_at?: string
         }
         Update: {
           status?: 'pending' | 'confirmed' | 'shipped' | 'delivered'
