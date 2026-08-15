@@ -1,9 +1,9 @@
 'use client'
 
 import { useState } from 'react'
-import Link from 'next/link'
 import { formatCurrency } from '@/lib/utils'
-import { Button, buttonVariants } from '@/components/ui/button'
+import { Button } from '@/components/ui/button'
+import { QuoteSentScreen } from '@/components/seller/quote-sent-screen'
 
 interface QuoteResponseFormProps {
   quoteId: string
@@ -54,27 +54,7 @@ export function QuoteResponseForm({
   }
 
   if (isSent) {
-    return (
-      <div className="flex-1 flex flex-col bg-surface-container-lowest rounded-2xl shadow-xl overflow-hidden border border-outline-variant/20 items-center justify-center gap-5">
-        <div className="w-20 h-20 rounded-full bg-secondary-container flex items-center justify-center">
-          <span
-            className="material-symbols-outlined text-secondary"
-            style={{ fontSize: '40px', fontVariationSettings: "'FILL' 1" }}
-          >
-            check_circle
-          </span>
-        </div>
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-on-surface">Quote Sent!</h2>
-          <p className="text-sm text-on-surface-variant mt-2 max-w-xs">
-            Your response has been sent to the buyer. They will be notified shortly.
-          </p>
-        </div>
-        <Link href="/seller/quotes" className={buttonVariants({ variant: 'primary' }) + ' mt-2'}>
-          Back to Quotes
-        </Link>
-      </div>
-    )
+    return <QuoteSentScreen />
   }
 
   return (
@@ -132,7 +112,7 @@ export function QuoteResponseForm({
               </div>
               <span className="text-sm text-on-surface-variant shrink-0">per adet</span>
               <div className="h-10 w-px bg-outline-variant/30 shrink-0" />
-              <div className="text-right shrink-0 min-w-[100px]">
+              <div className="text-right shrink-0 min-w-25">
                 <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
                   Total Value
                 </p>
@@ -224,7 +204,7 @@ export function QuoteResponseForm({
               setMessage(e.target.value)
               setSavedAt(null)
             }}
-            className="flex-1 min-h-[160px] bg-surface border border-outline-variant rounded-xl p-4 text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary resize-none shadow-sm"
+            className="flex-1 min-h-40 bg-surface border border-outline-variant rounded-xl p-4 text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary resize-none shadow-sm"
             placeholder="Write your response here..."
           />
         </div>

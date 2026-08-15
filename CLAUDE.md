@@ -115,6 +115,9 @@ components/
 │   ├── topbar.tsx              → server component, arama + NotificationBell + ProfileButton
 │   ├── notification-bell.tsx   → 'use client' — bell toggle, dropdown (scale+opacity anim), mark-all-read state
 │   │                              MOCK_NOTIFICATIONS: 4 item (2 unread), click-outside useEffect ile kapatma
+│   ├── notification-item.tsx   → pure — FullNotification type (exported), unread accent bar, action buttons
+│   ├── notification-filter-sidebar.tsx → pure — FilterType + FILTERS (exported), search + category nav + settings card
+│   ├── notifications-page.tsx  → 'use client' — orchestrator: state + INITIAL data + NotificationItem + NotificationFilterSidebar
 │   └── profile-button.tsx      → 'use client' — sağdan açılan drawer, Supabase signOut
 ├── buyer/
 │   ├── category-chips.tsx      → pure — categories[], selected, onSelect props
@@ -122,9 +125,11 @@ components/
 │   │                              ProductBadge type: {label, colorScheme: 'secondary'|'primary'}
 │   ├── product-image-gallery.tsx → 'use client' — 4:3 main image + 3 thumbnail, zoom overlay
 │   ├── product-tabs.tsx        → 'use client' — Tab: 'overview'|'specs'|'docs'; features list
-│   ├── product-order-panel.tsx → 'use client' — TierRow, qty stepper, getUnitPrice/getTotalPrice
+│   ├── product-order-panel.tsx → 'use client' — qty stepper, getUnitPrice/getTotalPrice, imports TierRow
+│   ├── tier-row.tsx            → pure — PriceTier prop, range label + savings pct display
 │   ├── seller-info-card.tsx    → pure — Avatar(lg,primary), 2-col stats grid
-│   ├── cart-item.tsx           → pure — CartItem type, SKU/stock badge, qty stepper, tier progress bar
+│   ├── cart-item.tsx           → pure — CartItem type (exported), SKU/stock badge, qty stepper, tier progress bar
+│   ├── cart-promo-banner.tsx   → pure — CartItem prop, bulk-discount nudge + "Hemen Ekle" link
 │   ├── order-summary.tsx       → 'use client' — promo input state, cost breakdown, checkout/quote btns
 │   ├── order-stat-cards.tsx    → 3 stat kartı (Total Orders, Total Spend, In Transit)
 │   ├── order-history-table.tsx → sipariş geçmişi tablosu (Avatar,TablePagination,TableEmptyRow)
@@ -137,13 +142,16 @@ components/
     ├── activity-feed.tsx       → timeline feed (orders + quote)
     ├── revenue-chart.tsx       → Recharts çizgi grafiği
     ├── product-controls.tsx    → 'use client' — arama + filtre bar
-    ├── product-table.tsx       → ürün tablosu (MOCK_STOCK, StockBar, RowActions, pagination)
+    ├── product-table.tsx       → ürün tablosu (imports StockBar + ProductRowActions, pagination)
+    ├── stock-bar.tsx           → pure — productId prop, MOCK_STOCK lookup, stok bar + label
+    ├── product-row-actions.tsx → pure — productId prop, edit/view/more hover action buttons
     ├── status-badge.tsx        → active/draft/inactive badge
     ├── table-controls.tsx      → 'use client' — GENERIC tab bar + arama; sellers/quotes+orders paylaşıyor
     │                              tabs: TabItem[], activeTab, onTabChange, search, onSearchChange
     ├── quote-table.tsx         → RFQ tablosu (EnrichedQuote tipi + Avatar + TablePagination + TableEmptyRow)
     ├── quote-detail-panel.tsx  → sol panel: Avatar(xl) alıcı bilgisi, ürün tablosu, mesaj
-    ├── quote-response-form.tsx → 'use client' — sağ panel: fiyat/mesaj formu, canlı toplam
+    ├── quote-response-form.tsx → 'use client' — sağ panel: fiyat/mesaj formu, canlı toplam; imports QuoteSentScreen
+    ├── quote-sent-screen.tsx   → pure — "Quote Sent!" success screen, Back to Quotes link
     ├── order-table.tsx         → sipariş tablosu (Avatar cycling colors, TablePagination, TableEmptyRow)
     ├── product-basic-info.tsx  → SectionHeading(info) + ad, kategori, min sipariş, açıklama
     ├── product-pricing-tiers.tsx → SectionHeading(payments,mb-0) + tier tablosu, props: tiers + 4 handler
