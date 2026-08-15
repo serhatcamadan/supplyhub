@@ -1,17 +1,11 @@
-import Link from 'next/link'
 import { cn, formatCurrency } from '@/lib/utils'
 import { StatusBadge } from '@/components/seller/status-badge'
+import { StockBar } from '@/components/seller/stock-bar'
+import { ProductRowActions } from '@/components/seller/product-row-actions'
 import type { Product, PriceTier } from '@/types'
 
 interface ProductTableProps {
   products: Product[]
-}
-
-const MOCK_STOCK: Record<string, number> = {
-  'product-1': 5240,
-  'product-2': 120,
-  'product-3': 0,
-  'product-4': 1800,
 }
 
 function getPriceRange(tiers: PriceTier[]) {
@@ -19,68 +13,11 @@ function getPriceRange(tiers: PriceTier[]) {
   return { min: Math.min(...prices), max: Math.max(...prices) }
 }
 
-function StockBar({ productId }: { productId: string }) {
-  const stock = MOCK_STOCK[productId] ?? 500
-
-  if (stock === 0) {
-    return (
-      <div className="flex flex-col items-end">
-        <span className="font-mono text-sm font-bold text-error">0</span>
-        <div className="w-16 h-1.5 bg-error-container rounded-full mt-1.5 overflow-hidden">
-          <div className="h-full bg-error w-0 rounded-full" />
-        </div>
-        <span className="text-[10px] text-error font-semibold mt-0.5">Out of Stock</span>
-      </div>
-    )
-  }
-
-  const isLow = stock < 200
-  const pct = isLow
-    ? Math.max(8, Math.round((stock / 200) * 20))
-    : Math.min(100, Math.round((stock / 6000) * 100))
-
-  return (
-    <div className="flex flex-col items-end">
-      <span className="font-mono text-sm font-bold text-on-surface">
-        {stock.toLocaleString('tr-TR')}
-      </span>
-      <div className="w-16 h-1.5 bg-surface-container-high rounded-full mt-1.5 overflow-hidden">
-        <div
-          className={cn('h-full rounded-full', isLow ? 'bg-on-tertiary-container' : 'bg-secondary')}
-          style={{ width: `${pct}%` }}
-        />
-      </div>
-      {isLow && (
-        <span className="text-[10px] text-on-tertiary-container font-semibold mt-0.5">Low Stock</span>
-      )}
-    </div>
-  )
-}
-
-function RowActions({ productId }: { productId: string }) {
-  return (
-    <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-      <Link
-        href={`/seller/products/${productId}/edit`}
-        className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-md transition-colors"
-        title="Edit"
-      >
-        <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>edit</span>
-      </Link>
-      <button
-        className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-md transition-colors"
-        title="View Details"
-      >
-        <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>visibility</span>
-      </button>
-      <button
-        className="p-1.5 text-on-surface-variant hover:text-error hover:bg-error-container/20 rounded-md transition-colors"
-        title="More actions"
-      >
-        <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>more_vert</span>
-      </button>
-    </div>
-  )
+const MOCK_STOCK: Record<string, number> = {
+  'product-1': 5240,
+  'product-2': 120,
+  'product-3': 0,
+  'product-4': 1800,
 }
 
 export function ProductTable({ products }: ProductTableProps) {
@@ -176,7 +113,7 @@ export function ProductTable({ products }: ProductTableProps) {
                       <StatusBadge status={product.status} />
                     </td>
                     <td className="p-4 text-right">
-                      <RowActions productId={product.id} />
+                      <ProductRowActions productId={product.id} />
                     </td>
                   </tr>
                 )
@@ -186,7 +123,6 @@ export function ProductTable({ products }: ProductTableProps) {
         </table>
       </div>
 
-      {/* Pagination */}
       <div className="border-t border-outline-variant/30 p-4 flex items-center justify-between">
         <span className="text-xs text-on-surface-variant">
           Rows per page: <strong>10</strong>

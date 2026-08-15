@@ -1,6 +1,8 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
+import Link from 'next/link'
+import { usePathname } from 'next/navigation'
 import { Button } from '@/components/ui/button'
 
 type Notification = {
@@ -63,6 +65,8 @@ export function NotificationBell() {
   const [open,          setOpen]          = useState(false)
   const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS)
   const containerRef = useRef<HTMLDivElement>(null)
+  const pathname     = usePathname()
+  const allNotificationsHref = pathname.startsWith('/buyer') ? '/buyer/notifications' : '/seller/notifications'
 
   const unreadCount = notifications.filter((n) => !n.read).length
 
@@ -162,12 +166,16 @@ export function NotificationBell() {
 
         {/* Footer */}
         <div className="px-6 py-3 bg-surface-container-lowest border-t border-outline-variant/10 flex justify-center shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
-          <button className="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 group/link">
+          <Link
+            href={allNotificationsHref}
+            onClick={() => setOpen(false)}
+            className="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 group/link"
+          >
             View all notifications
             <span className="material-symbols-outlined text-[15px] group-hover/link:translate-x-1 transition-transform">
               arrow_forward
             </span>
-          </button>
+          </Link>
         </div>
       </div>
     </div>
