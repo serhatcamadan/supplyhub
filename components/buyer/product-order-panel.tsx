@@ -4,44 +4,8 @@ import { useState } from 'react'
 import { formatCurrency } from '@/lib/utils'
 import { getUnitPrice, getTotalPrice, getNextTier } from '@/lib/pricing'
 import { Button } from '@/components/ui/button'
-import type { Product, PriceTier } from '@/types'
-
-function TierRow({
-  tier,
-  isActive,
-  baseTierPrice,
-}: {
-  tier: PriceTier
-  isActive: boolean
-  baseTierPrice: number
-}) {
-  const savingsPct =
-    baseTierPrice > 0
-      ? Math.round(((baseTierPrice - tier.price) / baseTierPrice) * 100)
-      : 0
-  const rangeLabel = tier.max_qty
-    ? `${tier.min_qty} – ${tier.max_qty} adet`
-    : `${tier.min_qty}+ adet`
-
-  return (
-    <div
-      className={`flex justify-between items-center px-4 py-3 transition-colors ${
-        isActive ? 'bg-surface-container-low' : 'hover:bg-surface-container-high'
-      }`}
-    >
-      <span className="text-sm text-on-surface">{rangeLabel}</span>
-      <div className="text-right">
-        <span className="text-sm font-semibold text-on-surface">
-          {formatCurrency(tier.price)}{' '}
-          <span className="text-xs font-normal text-on-surface-variant">/adet</span>
-        </span>
-        {savingsPct > 0 && (
-          <p className="text-xs text-secondary">%{savingsPct} indirim</p>
-        )}
-      </div>
-    </div>
-  )
-}
+import { TierRow } from '@/components/buyer/tier-row'
+import type { Product } from '@/types'
 
 interface ProductOrderPanelProps {
   product: Product
@@ -81,7 +45,6 @@ export function ProductOrderPanel({
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-md p-6 flex flex-col gap-6">
 
-      {/* Category badge + rating */}
       <div className="flex justify-between items-start">
         <span className="inline-flex items-center px-2 py-1 bg-surface-container-high text-on-surface-variant text-xs font-semibold rounded-md uppercase tracking-wider">
           {product.category}
@@ -98,7 +61,6 @@ export function ProductOrderPanel({
         </div>
       </div>
 
-      {/* Title */}
       <div>
         <h1 className="text-2xl font-bold text-on-surface leading-tight">{product.name}</h1>
         <p className="text-sm text-on-surface-variant mt-1">
@@ -106,7 +68,6 @@ export function ProductOrderPanel({
         </p>
       </div>
 
-      {/* Price */}
       <div className="pt-4 border-t border-outline-variant/30">
         <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-widest mb-1">
           Liste Fiyatı
@@ -127,7 +88,6 @@ export function ProductOrderPanel({
         </p>
       </div>
 
-      {/* Volume discounts */}
       <div className="bg-surface-container-lowest rounded-lg overflow-hidden shadow-sm border border-outline-variant/20">
         <div className="bg-primary-container/10 px-4 py-2 flex items-center gap-2">
           <span className="material-symbols-outlined text-primary" style={{ fontSize: '18px' }}>sell</span>
@@ -145,7 +105,6 @@ export function ProductOrderPanel({
         </div>
       </div>
 
-      {/* Next tier nudge */}
       {nextTier && (
         <div className="flex items-center gap-2 px-3 py-2 bg-secondary/5 rounded-lg border border-secondary/20 text-xs text-secondary">
           <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>trending_down</span>
@@ -156,7 +115,6 @@ export function ProductOrderPanel({
         </div>
       )}
 
-      {/* Quantity + CTA */}
       <div className="pt-4 border-t border-outline-variant/30 flex flex-col gap-4">
         <div>
           <label className="block text-sm font-semibold text-on-surface mb-2">Miktar</label>
