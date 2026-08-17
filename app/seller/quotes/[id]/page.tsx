@@ -1,10 +1,11 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
-import { quoteRequests, products, companies } from '@/lib/mock-data'
+import { createClient } from '@/lib/supabase/server'
 import { getInitials } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { QuoteDetailPanel } from '@/components/seller/quote-detail-panel'
 import { QuoteResponseForm } from '@/components/seller/quote-response-form'
+import type { Product, Company } from '@/types'
 
 function formatReceived(iso: string) {
   return new Intl.DateTimeFormat('en-US', {
@@ -22,12 +23,23 @@ export default async function QuoteDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
+  const supabase = await createClient()
 
-  const quote = quoteRequests.find((q) => q.id === id)
+  const { data: quote } = await supabase
+    .from('quote_requests')
+    .select('*')
+    .eq('id', id)
+    .single()
+
   if (!quote) notFound()
 
-  const product = products.find((p) => p.id === quote.product_id)
-  const buyer = companies.find((c) => c.id === quote.buyer_id)
+  const [{ data: productData }, { data: buyerData }] = await Promise.all([
+    supabase.from('products').select('*').eq('id', quote.product_id).single(),
+    supabase.from('companies').select('*').eq('id', quote.buyer_id).single(),
+  ])
+
+  const product = productData as Product | null
+  const buyer = buyerData as Company | null
 
   const listPrice =
     product?.price_tiers.find(
@@ -41,7 +53,6 @@ export default async function QuoteDetailPage({
   return (
     <div className="h-[calc(100vh-4rem)] p-8 flex flex-col gap-6">
 
-      {/* Header */}
       <div className="flex justify-between items-end flex-wrap gap-4 shrink-0">
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-3">
@@ -54,7 +65,7 @@ export default async function QuoteDetailPage({
             </Link>
             <span className="text-outline-variant">/</span>
             <span className="px-2 py-1 bg-tertiary-container/20 text-on-tertiary-container text-xs font-semibold rounded-md uppercase tracking-wider">
-              {quote.id.toUpperCase()}
+              {quote.id.slice(0, 8).toUpperCase()}
             </span>
             <span className="px-2 py-1 bg-surface-container-high text-on-surface-variant text-xs font-semibold rounded-md">
               Received: {formatReceived(quote.created_at)}
@@ -75,7 +86,6 @@ export default async function QuoteDetailPage({
         </div>
       </div>
 
-      {/* Two-panel layout */}
       <div className="flex flex-1 gap-6 min-h-0">
         <QuoteDetailPanel
           buyerName={buyer?.name ?? 'Unknown Buyer'}

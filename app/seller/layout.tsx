@@ -10,7 +10,7 @@ export default async function SellerLayout({ children }: { children: React.React
   if (!user) redirect('/login')
 
   const name = user.user_metadata?.name ?? user.email ?? 'Seller'
-  const role = user.user_metadata?.role ?? 'Wholesale Seller'
+  const role = 'Wholesale Seller'
 
   return (
     <div className="min-h-screen bg-surface">

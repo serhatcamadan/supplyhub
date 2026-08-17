@@ -10,7 +10,7 @@ export default async function BuyerLayout({ children }: { children: React.ReactN
   if (!user) redirect('/login')
 
   const name = user.user_metadata?.name ?? user.email ?? 'Buyer'
-  const role = user.user_metadata?.role ?? 'Wholesale Buyer'
+  const role = 'Wholesale Buyer'
 
   return (
     <div className="min-h-screen bg-surface">

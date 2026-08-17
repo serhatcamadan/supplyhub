@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
-import { getOrdersWithDetails } from '@/lib/mock-data'
+import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
 import { formatCurrency } from '@/lib/utils'
+import type { OrderWithDetails } from '@/types'
 import { TableControls } from '@/components/seller/table-controls'
 import { OrderTable } from '@/components/seller/order-table'
 
@@ -16,13 +17,36 @@ const TABS = [
   { value: 'delivered', label: 'Delivered' },
 ]
 
-const SELLER_ID = 'company-seller-1'
-
 export default function SellerOrdersPage() {
-  const [tab, setTab]       = useState<OrderTab>('all')
-  const [search, setSearch] = useState('')
+  const [tab, setTab]         = useState<OrderTab>('all')
+  const [search, setSearch]   = useState('')
+  const [allOrders, setAllOrders] = useState<OrderWithDetails[]>([])
 
-  const allOrders    = getOrdersWithDetails().filter((o) => o.seller_id === SELLER_ID)
+  useEffect(() => {
+    async function load() {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      const companyId = user?.user_metadata?.company_id
+      if (!companyId) return
+
+      const { data } = await supabase
+        .from('orders')
+        .select(`
+          *,
+          buyer:companies!orders_buyer_id_fkey(*),
+          seller:companies!orders_seller_id_fkey(*),
+          created_by_user:users!orders_created_by_fkey(*),
+          approved_by_user:users!orders_approved_by_fkey(*),
+          items:order_items(*, product:products(*))
+        `)
+        .eq('seller_id', companyId)
+        .order('created_at', { ascending: false })
+
+      setAllOrders((data as unknown as OrderWithDetails[]) ?? [])
+    }
+    load()
+  }, [])
+
   const pendingCount = allOrders.filter((o) => o.status === 'pending').length
   const shippedCount = allOrders.filter((o) => o.status === 'shipped').length
   const totalRevenue = allOrders.reduce((sum, o) => sum + o.total, 0)

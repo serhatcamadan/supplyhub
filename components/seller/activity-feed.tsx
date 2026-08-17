@@ -1,11 +1,11 @@
 import { formatCurrency, formatDate } from '@/lib/utils'
-import { companies } from '@/lib/mock-data'
 import type { Order, QuoteRequest } from '@/types'
 import { buttonVariants } from '@/components/ui/button'
 
 interface ActivityFeedProps {
   orders: Order[]
   quote: QuoteRequest | null
+  buyerNames: Record<string, string>
 }
 
 const STATUS_LABEL: Record<string, string> = {
@@ -22,11 +22,10 @@ const STATUS_COLOR: Record<string, string> = {
   delivered: 'bg-secondary-container/30 text-secondary',
 }
 
-function getCompanyName(id: string) {
-  return companies.find((c) => c.id === id)?.name ?? id
-}
-
-export function ActivityFeed({ orders, quote }: ActivityFeedProps) {
+export function ActivityFeed({ orders, quote, buyerNames }: ActivityFeedProps) {
+  function getCompanyName(id: string) {
+    return buyerNames[id] ?? id
+  }
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-sm p-6">
       <div className="flex justify-between items-center mb-6">
