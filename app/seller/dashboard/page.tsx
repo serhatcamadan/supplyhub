@@ -1,37 +1,70 @@
-import { orders, products, quoteRequests } from '@/lib/mock-data'
+import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
 import { RevenueChart } from '@/components/seller/revenue-chart'
 import { StatCards } from '@/components/seller/stat-cards'
 import { TopProducts } from '@/components/seller/top-products'
 import { ActivityFeed } from '@/components/seller/activity-feed'
 
-const SELLER_ID = 'company-seller-1'
+const MONTH_NAMES = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara']
 
-export default function SellerDashboardPage() {
-  const sellerOrders = orders.filter((o) => o.seller_id === SELLER_ID)
-  const activeProducts = products.filter((p) => p.seller_id === SELLER_ID && p.status === 'active')
-  const draftProducts = products.filter((p) => p.seller_id === SELLER_ID && p.status === 'draft')
-  const pendingQuotes = quoteRequests.filter((q) => q.status === 'pending')
+function buildMonthlyRevenue(orders: { status: string; total: number; created_at: string }[]) {
+  const map: Record<number, number> = {}
+  for (const order of orders) {
+    if (order.status !== 'delivered') continue
+    const month = new Date(order.created_at).getMonth()
+    map[month] = (map[month] ?? 0) + order.total
+  }
+  const now = new Date()
+  return Array.from({ length: 7 }, (_, i) => {
+    const month = (now.getMonth() - 6 + i + 12) % 12
+    return { month: MONTH_NAMES[month], revenue: map[month] ?? 0 }
+  })
+}
 
-  const totalRevenue = sellerOrders
-    .filter((o) => o.status === 'delivered')
-    .reduce((sum, o) => sum + o.total, 0)
+export default async function SellerDashboardPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const companyId = user?.user_metadata?.company_id as string
 
-  const shippingOrders = sellerOrders.filter((o) => o.status === 'shipped')
-  const processingOrders = sellerOrders.filter((o) => o.status === 'confirmed')
+  const [productsRes, ordersRes] = await Promise.all([
+    supabase.from('products').select('*').eq('seller_id', companyId),
+    supabase.from('orders').select('*').eq('seller_id', companyId),
+  ])
+
+  const allProducts = productsRes.data ?? []
+  const allOrders = ordersRes.data ?? []
+
+  const productIds = allProducts.map((p) => p.id)
+  const [quotesRes, buyerCompaniesRes] = await Promise.all([
+    productIds.length > 0
+      ? supabase.from('quote_requests').select('*').in('product_id', productIds)
+      : Promise.resolve({ data: [] }),
+    supabase
+      .from('companies')
+      .select('id, name')
+      .in('id', [...new Set(allOrders.map((o) => o.buyer_id))]),
+  ])
+
+  const allQuotes = quotesRes.data ?? []
+  const buyerNames = Object.fromEntries((buyerCompaniesRes.data ?? []).map((c) => [c.id, c.name]))
+
+  const activeProducts = allProducts.filter((p) => p.status === 'active')
+  const draftProducts = allProducts.filter((p) => p.status === 'draft')
+  const pendingQuotes = allQuotes.filter((q) => q.status === 'pending')
+  const totalRevenue = allOrders.filter((o) => o.status === 'delivered').reduce((sum, o) => sum + o.total, 0)
+  const shippingOrders = allOrders.filter((o) => o.status === 'shipped')
+  const processingOrders = allOrders.filter((o) => o.status === 'confirmed')
 
   const topProducts = activeProducts.slice(0, 3)
-
-  const recentOrders = [...sellerOrders]
+  const recentOrders = [...allOrders]
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 2)
-
   const firstPendingQuote = pendingQuotes[0] ?? null
+  const monthlyRevenue = buildMonthlyRevenue(allOrders)
 
   return (
     <div className="p-8 flex flex-col gap-8">
 
-      {/* Header */}
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-4xl font-bold tracking-tight text-on-surface">Seller Dashboard</h1>
@@ -62,7 +95,6 @@ export default function SellerDashboardPage() {
         draftProductsCount={draftProducts.length}
       />
 
-      {/* Chart + Top Products */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 bg-surface-container-lowest rounded-xl shadow-sm p-6">
           <div className="flex justify-between items-center mb-6">
@@ -72,13 +104,13 @@ export default function SellerDashboardPage() {
               <Button variant="primary" size="sm">Monthly</Button>
             </div>
           </div>
-          <RevenueChart />
+          <RevenueChart data={monthlyRevenue} />
         </div>
 
         <TopProducts products={topProducts} />
       </div>
 
-      <ActivityFeed orders={recentOrders} quote={firstPendingQuote} />
+      <ActivityFeed orders={recentOrders} quote={firstPendingQuote} buyerNames={buyerNames} />
 
     </div>
   )
