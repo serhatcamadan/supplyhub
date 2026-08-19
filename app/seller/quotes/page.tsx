@@ -1,8 +1,9 @@
 'use client'
 
-import { useState } from 'react'
-import { quoteRequests, products, companies } from '@/lib/mock-data'
+import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
 import { formatCurrency, getInitials } from '@/lib/utils'
+import type { Product } from '@/types'
 import { TableControls } from '@/components/seller/table-controls'
 import { QuoteTable, type EnrichedQuote } from '@/components/seller/quote-table'
 
@@ -15,48 +16,77 @@ const TABS = [
   { value: 'archived',  label: 'Archived' },
 ]
 
-const SELLER_ID     = 'company-seller-1'
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
 
 export default function SellerQuotesPage() {
-  const [tab, setTab]       = useState<QuoteTab>('all')
-  const [search, setSearch] = useState('')
+  const [tab, setTab]             = useState<QuoteTab>('all')
+  const [search, setSearch]       = useState('')
+  const [enriched, setEnriched]   = useState<EnrichedQuote[]>([])
 
-  const sellerProductIds = new Set(
-    products.filter((p) => p.seller_id === SELLER_ID).map((p) => p.id)
-  )
-  const relevantQuotes = quoteRequests.filter((q) => sellerProductIds.has(q.product_id))
+  useEffect(() => {
+    async function load() {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      const companyId = user?.user_metadata?.company_id
+      if (!companyId) return
 
-  const pendingCount = relevantQuotes.filter((q) => q.status === 'pending').length
-  const closedCount  = relevantQuotes.filter((q) => q.status === 'accepted' || q.status === 'declined').length
-  const acceptedCount  = relevantQuotes.filter((q) => q.status === 'accepted').length
-  const conversionRate = closedCount > 0 ? Math.round((acceptedCount / closedCount) * 100) : 0
-  const pipelineValue  = relevantQuotes
-    .filter((q) => q.status === 'pending')
-    .reduce((sum, q) => {
-      const product = products.find((p) => p.id === q.product_id)
-      return sum + q.quantity * (product?.price_tiers[0]?.price ?? 0)
-    }, 0)
+      const { data: sellerProducts } = await supabase
+        .from('products')
+        .select('*')
+        .eq('seller_id', companyId)
 
-  const enriched: EnrichedQuote[] = relevantQuotes.map((q) => {
-    const buyer   = companies.find((c) => c.id === q.buyer_id)
-    const product = products.find((p) => p.id === q.product_id)
-    const listPrice =
-      product?.price_tiers.find(
-        (t) => q.quantity >= t.min_qty && (t.max_qty === null || q.quantity <= t.max_qty)
-      )?.price ?? null
-    const ageMs = Date.now() - new Date(q.created_at).getTime()
+      const productIds = (sellerProducts ?? []).map((p) => p.id)
+      if (productIds.length === 0) { setEnriched([]); return }
 
-    return {
-      ...q,
-      buyerName:       buyer?.name ?? q.buyer_id,
-      buyerInitials:   buyer ? getInitials(buyer.name) : '??',
-      productName:     product?.name ?? q.product_id,
-      productCategory: product?.category ?? '—',
-      listPrice,
-      isExpiring: ageMs > SEVEN_DAYS_MS,
+      const productMap: Record<string, Product> = Object.fromEntries(
+        (sellerProducts ?? []).map((p) => [p.id, p as Product])
+      )
+
+      const { data: quotes } = await supabase
+        .from('quote_requests')
+        .select('*')
+        .in('product_id', productIds)
+
+      const buyerIds = [...new Set((quotes ?? []).map((q) => q.buyer_id))]
+      const { data: buyers } = await supabase
+        .from('companies')
+        .select('id, name')
+        .in('id', buyerIds)
+
+      const buyerMap: Record<string, string> = Object.fromEntries(
+        (buyers ?? []).map((c) => [c.id, c.name])
+      )
+
+      const result: EnrichedQuote[] = (quotes ?? []).map((q) => {
+        const product = productMap[q.product_id]
+        const buyerName = buyerMap[q.buyer_id] ?? q.buyer_id
+        const listPrice =
+          product?.price_tiers.find(
+            (t) => q.quantity >= t.min_qty && (t.max_qty === null || q.quantity <= t.max_qty)
+          )?.price ?? null
+        const ageMs = Date.now() - new Date(q.created_at).getTime()
+        return {
+          ...q,
+          buyerName,
+          buyerInitials: getInitials(buyerName),
+          productName: product?.name ?? q.product_id,
+          productCategory: product?.category ?? '—',
+          listPrice,
+          isExpiring: ageMs > SEVEN_DAYS_MS,
+        }
+      })
+      setEnriched(result)
     }
-  })
+    load()
+  }, [])
+
+  const pendingCount    = enriched.filter((q) => q.status === 'pending').length
+  const closedCount     = enriched.filter((q) => q.status === 'accepted' || q.status === 'declined').length
+  const acceptedCount   = enriched.filter((q) => q.status === 'accepted').length
+  const conversionRate  = closedCount > 0 ? Math.round((acceptedCount / closedCount) * 100) : 0
+  const pipelineValue   = enriched
+    .filter((q) => q.status === 'pending')
+    .reduce((sum, q) => sum + q.quantity * (q.listPrice ?? 0), 0)
 
   const byTab = enriched.filter((q) => {
     if (tab === 'pending')   return q.status === 'pending'
@@ -94,7 +124,7 @@ export default function SellerQuotesPage() {
         <div className="bg-surface-container-lowest p-5 rounded-xl shadow-sm relative overflow-hidden group">
           <div className="absolute right-0 top-0 w-24 h-24 bg-primary/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110" />
           <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">Total Active RFQs</p>
-          <p className="text-4xl font-bold text-on-surface">{relevantQuotes.length}</p>
+          <p className="text-4xl font-bold text-on-surface">{enriched.length}</p>
         </div>
 
         <div className="bg-surface-container-lowest p-5 rounded-xl shadow-sm relative overflow-hidden group">
