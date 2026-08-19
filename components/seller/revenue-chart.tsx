@@ -9,13 +9,16 @@ import {
   Tooltip,
   CartesianGrid,
 } from 'recharts'
-import { SELLER_REVENUE_BY_MONTH } from '@/lib/mock-data'
 import { formatCurrency } from '@/lib/utils'
 
-export function RevenueChart() {
+interface RevenueChartProps {
+  data: { month: string; revenue: number }[]
+}
+
+export function RevenueChart({ data }: RevenueChartProps) {
   return (
     <ResponsiveContainer width="100%" height={240}>
-      <AreaChart data={SELLER_REVENUE_BY_MONTH} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
+      <AreaChart data={data} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
         <defs>
           <linearGradient id="revenueGradient" x1="0" y1="0" x2="0" y2="1">
             <stop offset="5%" stopColor="#1e3a5f" stopOpacity={0.2} />

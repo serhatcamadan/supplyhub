@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { cn } from '@/lib/utils'
+import { createClient } from '@/lib/supabase/client'
 
 const SELLER_NAV = [
   { href: '/seller/dashboard',  label: 'Dashboard',        icon: 'grid_view' },
@@ -30,8 +31,9 @@ export function Sidebar({ portal }: SidebarProps) {
 
   const navItems = portal === 'seller' ? SELLER_NAV : BUYER_NAV
 
-  function handleLogout() {
-    document.cookie = 'mock-session=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT'
+  async function handleLogout() {
+    const supabase = createClient()
+    await supabase.auth.signOut()
     router.push('/login')
   }
 

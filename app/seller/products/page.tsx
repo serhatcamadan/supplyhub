@@ -1,30 +1,39 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import Link from 'next/link'
-import { products } from '@/lib/mock-data'
+import { createClient } from '@/lib/supabase/client'
+import type { Product } from '@/types'
 import { ProductControls } from '@/components/seller/product-controls'
 import { ProductTable } from '@/components/seller/product-table'
 
-const SELLER_ID = 'company-seller-1'
-
 export default function SellerProductsPage() {
   const [search, setSearch] = useState('')
+  const [products, setProducts] = useState<Product[]>([])
 
-  const sellerProducts = products.filter((p) => p.seller_id === SELLER_ID)
+  useEffect(() => {
+    async function load() {
+      const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      const companyId = user?.user_metadata?.company_id
+      if (!companyId) return
+      const { data } = await supabase.from('products').select('*').eq('seller_id', companyId)
+      setProducts((data as Product[]) ?? [])
+    }
+    load()
+  }, [])
 
   const filtered = search
-    ? sellerProducts.filter(
+    ? products.filter(
         (p) =>
           p.name.toLowerCase().includes(search.toLowerCase()) ||
           p.category.toLowerCase().includes(search.toLowerCase())
       )
-    : sellerProducts
+    : products
 
   return (
     <div className="p-8 flex flex-col gap-6">
 
-      {/* Header */}
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-4xl font-bold tracking-tight text-on-surface">Product Catalog</h1>
@@ -45,7 +54,7 @@ export default function SellerProductsPage() {
       <ProductControls
         search={search}
         onSearch={setSearch}
-        totalCount={sellerProducts.length}
+        totalCount={products.length}
         filteredCount={filtered.length}
       />
 
