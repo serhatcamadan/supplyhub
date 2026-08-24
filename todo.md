@@ -191,23 +191,23 @@
 
 ## 9. Polish
 
-### 9.1 Quote Detay Print
+### ✅ 9.1 Quote Detay Print
 **Dosya:** `app/seller/quotes/[id]/page.tsx`
 - "Print" butonu işlevsel değil
 - `window.print()` çağır veya kaldır
 
-### 9.2 Buyer Orders "CSV İndir"
+### ✅ 9.2 Buyer Orders "CSV İndir"
 **Dosya:** `app/buyer/orders/page.tsx`
 - Buton no-op; sipariş verilerini CSV olarak indiren basit bir export ekle
 
-### 9.3 Notification Bell Aksiyonları
+### ✅ 9.3 Notification Bell Aksiyonları
 **Dosya:** `components/shared/notification-bell.tsx`
 - "View Quote", "Track Shipment" gibi aksiyon butonları ilgili sayfalara yönlendirmeli
 
-### 9.4 ProfileButton Ayar Linkleri
+### ✅ 9.4 ProfileButton Ayar Linkleri
 **Dosya:** `components/shared/profile-button.tsx`
 - Tüm menü öğeleri `href="#"` — gerçek sayfalar oluşturulana kadar toast veya `router.push` ekle
 
-### 9.5 "Generate AI Draft" Butonu
+### ✅ 9.5 "Generate AI Draft" Butonu
 **Dosya:** `components/seller/quote-response-form.tsx`
 - Claude API entegrasyonu yapılmayacaksa butonu kaldır; yapılacaksa API rotası oluştur

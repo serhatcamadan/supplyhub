@@ -14,21 +14,21 @@ const SECTIONS = [
   {
     title: 'Hesap Ayarları',
     items: [
-      { icon: 'person_edit', label: 'Profil Düzenle', href: '#' },
-      { icon: 'password',    label: 'Şifre Değiştir', href: '#' },
+      { icon: 'person_edit', label: 'Profil Düzenle' },
+      { icon: 'password',    label: 'Şifre Değiştir' },
     ],
   },
   {
     title: 'Kişisel Bilgiler',
     items: [
-      { icon: 'contact_mail', label: 'İletişim Bilgileri', href: '#' },
+      { icon: 'contact_mail', label: 'İletişim Bilgileri' },
     ],
   },
   {
     title: 'Tercihler',
     items: [
-      { icon: 'notifications', label: 'Bildirim Ayarları', href: '#' },
-      { icon: 'language',      label: 'Dil & Bölge',       href: '#' },
+      { icon: 'notifications', label: 'Bildirim Ayarları' },
+      { icon: 'language',      label: 'Dil & Bölge' },
     ],
   },
 ]
@@ -89,10 +89,10 @@ export function ProfileButton({ userName, userRole }: ProfileButtonProps) {
                 {section.title}
               </p>
               {section.items.map((item) => (
-                <a
+                <button
                   key={item.label}
-                  href={item.href}
-                  className="flex items-center py-2.5 text-sm text-on-surface hover:text-primary transition-colors group"
+                  onClick={() => setOpen(false)}
+                  className="w-full flex items-center py-2.5 text-sm text-on-surface hover:text-primary transition-colors group"
                 >
                   <span
                     className="material-symbols-outlined mr-3 text-on-surface-variant group-hover:text-primary transition-colors"
@@ -101,7 +101,7 @@ export function ProfileButton({ userName, userRole }: ProfileButtonProps) {
                     {item.icon}
                   </span>
                   {item.label}
-                </a>
+                </button>
               ))}
             </div>
           ))}
