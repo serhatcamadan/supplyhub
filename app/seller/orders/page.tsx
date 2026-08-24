@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { createClient } from '@/lib/supabase/client'
 import { formatCurrency } from '@/lib/utils'
-import type { OrderWithDetails } from '@/types'
+import type { OrderStatus, OrderWithDetails } from '@/types'
 import { TableControls } from '@/components/seller/table-controls'
 import { OrderTable } from '@/components/seller/order-table'
 
@@ -50,6 +50,12 @@ export default function SellerOrdersPage() {
   const pendingCount = allOrders.filter((o) => o.status === 'pending').length
   const shippedCount = allOrders.filter((o) => o.status === 'shipped').length
   const totalRevenue = allOrders.reduce((sum, o) => sum + o.total, 0)
+
+  async function handleStatusChange(orderId: string, newStatus: OrderStatus) {
+    const supabase = createClient()
+    await supabase.from('orders').update({ status: newStatus }).eq('id', orderId)
+    setAllOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o)))
+  }
 
   const byTab = allOrders.filter((o) => tab === 'all' || o.status === tab)
   const filtered = search
@@ -127,7 +133,7 @@ export default function SellerOrdersPage() {
           onSearchChange={setSearch}
           searchPlaceholder="Search order ID, buyer..."
         />
-        <OrderTable orders={filtered} />
+        <OrderTable orders={filtered} onStatusChange={handleStatusChange} />
       </div>
 
     </div>

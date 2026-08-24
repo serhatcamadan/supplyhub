@@ -1,11 +1,30 @@
-import { getOrdersWithDetails } from '@/lib/mock-data'
+import { createClient } from '@/lib/supabase/server'
 import { formatCurrency } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { OrderStatCards } from '@/components/buyer/order-stat-cards'
 import { OrderHistoryTable } from '@/components/buyer/order-history-table'
+import { OrdersCsvButton } from '@/components/buyer/orders-csv-button'
+import type { OrderWithDetails } from '@/types'
 
-export default function BuyerOrdersPage() {
-  const orders = getOrdersWithDetails().filter((o) => o.buyer_id === 'company-buyer-1')
+export default async function BuyerOrdersPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const companyId = user?.user_metadata?.company_id as string
+
+  const { data } = await supabase
+    .from('orders')
+    .select(`
+      *,
+      buyer:companies!orders_buyer_id_fkey(*),
+      seller:companies!orders_seller_id_fkey(*),
+      created_by_user:users!orders_created_by_fkey(*),
+      approved_by_user:users!orders_approved_by_fkey(*),
+      items:order_items(*, product:products(*))
+    `)
+    .eq('buyer_id', companyId)
+    .order('created_at', { ascending: false })
+
+  const orders = (data as unknown as OrderWithDetails[]) ?? []
 
   const totalSpend = orders.reduce((sum, o) => sum + o.total, 0)
   const inTransit  = orders.filter((o) => o.status === 'shipped').length
@@ -20,10 +39,7 @@ export default function BuyerOrdersPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <Button variant="ghost" size="md">
-            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>download</span>
-            CSV İndir
-          </Button>
+          <OrdersCsvButton orders={orders} />
           <Button variant="primary" size="md">
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>filter_list</span>
             Filtrele

@@ -14,7 +14,7 @@ type Notification = {
   message: string
   time: string
   read: boolean
-  action?: { label: string }
+  action?: { label: string; href: string }
 }
 
 const MOCK_NOTIFICATIONS: Notification[] = [
@@ -27,7 +27,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
     message: 'Supplier Acme Corp has responded to your RFQ for Industrial Bearings. Review the updated pricing.',
     time: '2m ago',
     read: false,
-    action: { label: 'View Quote' },
+    action: { label: 'View Quote', href: '/buyer/quotes' },
   },
   {
     id: '2',
@@ -149,9 +149,11 @@ export function NotificationBell() {
                 <p className="text-xs text-on-surface-variant line-clamp-2 leading-relaxed">{n.message}</p>
                 {n.action && (
                   <div className="mt-3">
-                    <Button size="sm" className="text-xs">
-                      {n.action.label}
-                    </Button>
+                    <Link href={n.action.href} onClick={() => setOpen(false)}>
+                      <Button size="sm" className="text-xs">
+                        {n.action.label}
+                      </Button>
+                    </Link>
                   </div>
                 )}
               </div>

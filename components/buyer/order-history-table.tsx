@@ -1,4 +1,9 @@
+'use client'
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { formatCurrency, formatDate, cn } from '@/lib/utils'
+import { createClient } from '@/lib/supabase/client'
 import type { OrderWithDetails } from '@/types'
 import { Avatar } from '@/components/ui/avatar'
 import { TablePagination } from '@/components/ui/table-pagination'
@@ -47,6 +52,45 @@ function StatusBadge({ status }: { status: OrderStatus }) {
 }
 
 export function OrderHistoryTable({ orders }: { orders: OrderWithDetails[] }) {
+  const router = useRouter()
+  const [reorderingId, setReorderingId] = useState<string | null>(null)
+
+  async function handleReorder(order: OrderWithDetails) {
+    setReorderingId(order.id)
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { setReorderingId(null); return }
+
+    const companyId = user.user_metadata?.company_id as string
+
+    const { data: newOrder, error } = await supabase
+      .from('orders')
+      .insert({
+        buyer_id: companyId,
+        seller_id: order.seller.id,
+        status: 'pending',
+        total: order.total,
+        needs_approval: false,
+        created_by: user.id,
+      })
+      .select('id')
+      .single()
+
+    if (!error && newOrder && order.items.length > 0) {
+      await supabase.from('order_items').insert(
+        order.items.map((item) => ({
+          order_id: newOrder.id,
+          product_id: item.product.id,
+          quantity: item.quantity,
+          unit_price: item.unit_price,
+        }))
+      )
+    }
+
+    setReorderingId(null)
+    router.refresh()
+  }
+
   return (
     <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/20 overflow-hidden">
       <div className="overflow-x-auto">
@@ -103,9 +147,13 @@ export function OrderHistoryTable({ orders }: { orders: OrderWithDetails[] }) {
                   </td>
 
                   <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <button className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-low hover:bg-primary hover:text-on-primary text-primary rounded-lg text-xs font-semibold uppercase tracking-wider transition-all opacity-0 group-hover:opacity-100 focus:opacity-100">
+                    <button
+                      onClick={() => handleReorder(order)}
+                      disabled={reorderingId === order.id}
+                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-low hover:bg-primary hover:text-on-primary text-primary rounded-lg text-xs font-semibold uppercase tracking-wider transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 disabled:opacity-50"
+                    >
                       <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>refresh</span>
-                      Tekrar Sipariş
+                      {reorderingId === order.id ? 'İşleniyor…' : 'Tekrar Sipariş'}
                     </button>
                   </td>
                 </tr>

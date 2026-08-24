@@ -2,6 +2,8 @@ import { formatCurrency } from '@/lib/utils'
 
 export type CartItem = {
   id: string
+  productId?: string
+  sellerId?: string
   name: string
   sku: string
   supplierName: string
