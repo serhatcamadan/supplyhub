@@ -1,3 +1,6 @@
+'use client'
+
+import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 
 interface StatCardProps {
@@ -56,24 +59,26 @@ interface OrderStatCardsProps {
 }
 
 export function OrderStatCards({ totalOrders, totalSpend, inTransit }: OrderStatCardsProps) {
+  const t = useTranslations('buyer')
+
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <StatCard
         icon="shopping_bag"
-        label="Toplam Sipariş"
+        label={t('orders.stats.totalOrders')}
         value={String(totalOrders)}
         color="primary"
       />
       <StatCard
         icon="payments"
-        label="Toplam Harcama (YTD)"
+        label={t('orders.stats.totalSpend')}
         value={totalSpend}
         badge="+12%"
         color="secondary"
       />
       <StatCard
         icon="local_shipping"
-        label="Kargoda"
+        label={t('orders.stats.inTransit')}
         value={String(inTransit)}
         color="tertiary"
       />

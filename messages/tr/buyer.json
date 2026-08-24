@@ -169,7 +169,71 @@
       }
     }
   },
-  "orders": {},
-  "approvals": {},
+  "orders": {
+    "heading": "Sipariş Geçmişi",
+    "subHeading": "Geçmiş toptan alımlarınızı takip edin, yönetin ve tekrar sipariş verin.",
+    "filter": "Filtrele",
+    "csvDownload": "CSV İndir",
+    "csvFilename": "siparisler",
+    "csvHeaders": {
+      "orderId": "Sipariş No",
+      "supplier": "Tedarikçi",
+      "date": "Tarih",
+      "total": "Toplam",
+      "status": "Durum",
+      "itemCount": "Ürün Sayısı"
+    },
+    "stats": {
+      "totalOrders": "Toplam Sipariş",
+      "totalSpend": "Toplam Harcama (YTD)",
+      "inTransit": "Kargoda"
+    },
+    "table": {
+      "orderId": "Sipariş No",
+      "supplier": "Tedarikçi",
+      "date": "Sipariş Tarihi",
+      "total": "Tutar",
+      "status": "Durum",
+      "action": "İşlem",
+      "empty": "Sipariş bulunamadı.",
+      "reorder": "Tekrar Sipariş",
+      "reordering": "İşleniyor…",
+      "paginationShowing": "{total} siparişten {shown} tanesi gösteriliyor",
+      "status": {
+        "delivered": "Teslim Edildi",
+        "shipped": "Kargoda",
+        "confirmed": "Onaylandı",
+        "pending": "İşleniyor"
+      }
+    }
+  },
+  "approvals": {
+    "heading": "Onay Bekleyenler",
+    "subHeading": "Harcama limitini aşan personel siparişlerini inceleyin ve onaylayın.",
+    "filter": "Filtrele",
+    "empty": {
+      "heading": "Hepsi tamamlandı!",
+      "subtext": "Şu anda onayınızı bekleyen sipariş yok."
+    },
+    "stats": {
+      "awaiting": "Onay Bekliyor",
+      "totalItems": "Toplam Ürün",
+      "totalValue": "Toplam Değer"
+    },
+    "card": {
+      "orderLabel": "Sipariş",
+      "supplierLabel": "Tedarikçi",
+      "requestedByLabel": "Talep Eden",
+      "dateLabel": "Tarih",
+      "totalLabel": "Sipariş Tutarı",
+      "product": "Ürün",
+      "qty": "Miktar",
+      "unitPrice": "Birim Fiyat",
+      "lineTotal": "Satır Toplamı",
+      "limitWarning": "Bu sipariş personel harcama limitini aşıyor ve yönetici onayı gerektiriyor.",
+      "reject": "Reddet",
+      "approve": "Onayla"
+    }
+  },
   "quotes": {}
 }

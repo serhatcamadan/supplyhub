@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { formatCurrency } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -7,7 +8,7 @@ import { OrdersCsvButton } from '@/components/buyer/orders-csv-button'
 import type { OrderWithDetails } from '@/types'
 
 export default async function BuyerOrdersPage() {
-  const supabase = await createClient()
+  const [supabase, t] = await Promise.all([createClient(), getTranslations('buyer')])
   const { data: { user } } = await supabase.auth.getUser()
   const companyId = user?.user_metadata?.company_id as string
 
@@ -33,16 +34,14 @@ export default async function BuyerOrdersPage() {
     <div className="px-8 py-8 max-w-360 mx-auto space-y-8">
       <div className="flex items-end justify-between">
         <div>
-          <h1 className="text-4xl font-bold text-on-surface">Sipariş Geçmişi</h1>
-          <p className="text-sm text-on-surface-variant mt-2">
-            Geçmiş toptan alımlarınızı takip edin, yönetin ve tekrar sipariş verin.
-          </p>
+          <h1 className="text-4xl font-bold text-on-surface">{t('orders.heading')}</h1>
+          <p className="text-sm text-on-surface-variant mt-2">{t('orders.subHeading')}</p>
         </div>
         <div className="flex gap-3">
           <OrdersCsvButton orders={orders} />
           <Button variant="primary" size="md">
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>filter_list</span>
-            Filtrele
+            {t('orders.filter')}
           </Button>
         </div>
       </div>

@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { ApprovalCard } from '@/components/buyer/approval-card'
 import { ApprovalStatCards } from '@/components/buyer/approval-stat-cards'
@@ -5,7 +6,7 @@ import { Button } from '@/components/ui/button'
 import type { OrderWithDetails } from '@/types'
 
 export default async function BuyerApprovalsPage() {
-  const supabase = await createClient()
+  const [supabase, t] = await Promise.all([createClient(), getTranslations('buyer')])
   const { data: { user } } = await supabase.auth.getUser()
   const companyId = user?.user_metadata?.company_id as string
 
@@ -34,15 +35,13 @@ export default async function BuyerApprovalsPage() {
 
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight text-on-surface">Pending Approvals</h1>
-          <p className="text-sm text-on-surface-variant mt-2">
-            Review and approve orders submitted by staff members that exceed spending limits.
-          </p>
+          <h1 className="text-4xl font-bold tracking-tight text-on-surface">{t('approvals.heading')}</h1>
+          <p className="text-sm text-on-surface-variant mt-2">{t('approvals.subHeading')}</p>
         </div>
         <div className="flex gap-3">
           <Button variant="outline">
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>filter_list</span>
-            Filter
+            {t('approvals.filter')}
           </Button>
         </div>
       </div>
@@ -59,8 +58,8 @@ export default async function BuyerApprovalsPage() {
             <span className="material-symbols-outlined text-secondary text-[32px]">check_circle</span>
           </div>
           <div>
-            <p className="font-semibold text-on-surface text-lg">All caught up!</p>
-            <p className="text-sm text-on-surface-variant mt-1">No orders are waiting for your approval right now.</p>
+            <p className="font-semibold text-on-surface text-lg">{t('approvals.empty.heading')}</p>
+            <p className="text-sm text-on-surface-variant mt-1">{t('approvals.empty.subtext')}</p>
           </div>
         </div>
       ) : (

@@ -169,7 +169,71 @@
       }
     }
   },
-  "orders": {},
-  "approvals": {},
+  "orders": {
+    "heading": "Order History",
+    "subHeading": "Track, manage and reorder your past wholesale purchases.",
+    "filter": "Filter",
+    "csvDownload": "Export CSV",
+    "csvFilename": "orders",
+    "csvHeaders": {
+      "orderId": "Order No",
+      "supplier": "Supplier",
+      "date": "Date",
+      "total": "Total",
+      "status": "Status",
+      "itemCount": "Item Count"
+    },
+    "stats": {
+      "totalOrders": "Total Orders",
+      "totalSpend": "Total Spend (YTD)",
+      "inTransit": "In Transit"
+    },
+    "table": {
+      "orderId": "Order No",
+      "supplier": "Supplier",
+      "date": "Order Date",
+      "total": "Amount",
+      "status": "Status",
+      "action": "Action",
+      "empty": "No orders found.",
+      "reorder": "Reorder",
+      "reordering": "Processing…",
+      "paginationShowing": "Showing {shown} of {total} orders",
+      "status": {
+        "delivered": "Delivered",
+        "shipped": "Shipped",
+        "confirmed": "Confirmed",
+        "pending": "Processing"
+      }
+    }
+  },
+  "approvals": {
+    "heading": "Pending Approvals",
+    "subHeading": "Review and approve orders submitted by staff members that exceed spending limits.",
+    "filter": "Filter",
+    "empty": {
+      "heading": "All caught up!",
+      "subtext": "No orders are waiting for your approval right now."
+    },
+    "stats": {
+      "awaiting": "Awaiting Approval",
+      "totalItems": "Total Items",
+      "totalValue": "Total Value at Stake"
+    },
+    "card": {
+      "orderLabel": "Order",
+      "supplierLabel": "Supplier",
+      "requestedByLabel": "Requested by",
+      "dateLabel": "Date",
+      "totalLabel": "Order Total",
+      "product": "Product",
+      "qty": "Qty",
+      "unitPrice": "Unit Price",
+      "lineTotal": "Line Total",
+      "limitWarning": "This order exceeds the staff spending limit and requires admin approval.",
+      "reject": "Reject",
+      "approve": "Approve"
+    }
+  },
   "quotes": {}
 }
