@@ -10,6 +10,7 @@ interface OrderSummaryProps {
   itemCount: number
   onCheckout: () => void
   onRequestQuote: () => void
+  isCheckingOut?: boolean
 }
 
 const TAX_RATE = 0.20
@@ -49,6 +50,7 @@ export function OrderSummary({
   itemCount,
   onCheckout,
   onRequestQuote,
+  isCheckingOut = false,
 }: OrderSummaryProps) {
   const [promo, setPromo] = useState('')
   const [applied, setApplied] = useState(false)
@@ -142,10 +144,11 @@ export function OrderSummary({
             variant="secondary"
             size="lg"
             onClick={onCheckout}
+            disabled={isCheckingOut}
             className="w-full"
           >
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>shopping_bag</span>
-            Siparişi Tamamla
+            {isCheckingOut ? 'İşleniyor…' : 'Siparişi Tamamla'}
           </Button>
           <Button
             variant="outline"

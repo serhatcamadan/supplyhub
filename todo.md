@@ -138,13 +138,13 @@
 
 ## 6. Cart Aksiyonları
 
-### 6.1 Cart Checkout
+### ✅ 6.1 Cart Checkout
 **Dosya:** `app/buyer/cart/page.tsx`
 - `onCheckout` şu an `alert('Ödeme akışı yakında ekleniyor…')`
 - Sepet içeriğinden `orders` + `order_items` tablosuna insert yap
 - `total > eşik ise needs_approval = true` mantığını uygula
 
-### 6.2 Cart'tan Teklif Talebi
+### ✅ 6.2 Cart'tan Teklif Talebi
 **Dosya:** `app/buyer/cart/page.tsx`
 - `onRequestQuote` şu an `alert('Teklif talebi yakında ekleniyor…')`
 - Sepetteki ürünlerle `/buyer/quotes/new` sayfasına yönlendir
