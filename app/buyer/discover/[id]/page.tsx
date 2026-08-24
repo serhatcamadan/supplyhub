@@ -1,6 +1,7 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
+import { formatCurrency } from '@/lib/utils'
 import { ProductImageGallery } from '@/components/buyer/product-image-gallery'
 import { ProductTabs } from '@/components/buyer/product-tabs'
 import { ProductOrderPanel } from '@/components/buyer/product-order-panel'
@@ -64,6 +65,24 @@ export default async function BuyerProductDetailPage({
 
   const features = FEATURES_BY_CATEGORY[product.category] ?? []
 
+  const minPrice = product.price_tiers.length > 0
+    ? Math.min(...product.price_tiers.map((t) => t.price))
+    : 0
+  const maxPrice = product.price_tiers.length > 0
+    ? Math.max(...product.price_tiers.map((t) => t.price))
+    : 0
+
+  const specs = [
+    { label: 'Kategori',              value: product.category },
+    { label: 'Min. Sipariş Miktarı', value: `${product.min_order_qty} adet` },
+    { label: 'Başlangıç Fiyatı',     value: formatCurrency(minPrice) + ' / adet' },
+    { label: 'Fiyat Aralığı',        value: `${formatCurrency(minPrice)} – ${formatCurrency(maxPrice)}` },
+    { label: 'Fiyat Kademeleri',     value: `${product.price_tiers.length} kademe` },
+    { label: 'Teslimat Süresi',      value: '7–14 iş günü' },
+    { label: 'Depo Konumu',          value: 'Türkiye' },
+    { label: 'Raf Ömrü',             value: '18 ay' },
+  ]
+
   return (
     <div className="p-8 flex flex-col gap-8">
 
@@ -83,7 +102,7 @@ export default async function BuyerProductDetailPage({
 
         <div className="lg:col-span-8 flex flex-col gap-8">
           <ProductImageGallery imageUrl={product.image_url} productName={product.name} />
-          <ProductTabs description={product.description} features={features} />
+          <ProductTabs description={product.description} features={features} specs={specs} />
         </div>
 
         <div className="lg:col-span-4 flex flex-col gap-6 sticky top-24">

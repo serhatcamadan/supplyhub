@@ -167,22 +167,22 @@
 
 ## 8. İşlevsel Eksiklikler
 
-### 8.1 Buyer Discover Arama
+### ✅ 8.1 Buyer Discover Arama
 **Dosya:** `app/buyer/discover/page.tsx`
 - Topbar'daki global arama ile ürün listesi bağlantılı değil
 - Sayfaya search state ekle, ürün listesini filtrele
 
-### 8.2 Product Tabs İçerikleri
+### ✅ 8.2 Product Tabs İçerikleri
 **Dosya:** `components/buyer/product-tabs.tsx`
 - "Specs" ve "Docs" tab'ları `"yakında eklenecek"` placeholder gösteriyor
 - Gerçek ürün özelliklerini ve belge listesini göster (mock veri bile olsa dolu görünmeli)
 
-### 8.3 Buyer Orders Tekrar Sipariş
+### ✅ 8.3 Buyer Orders Tekrar Sipariş
 **Dosya:** `components/buyer/order-history-table.tsx`
 - "Tekrar Sipariş" hover action `onClick`'i yok
 - Aynı order_items'larla sepete ürün ekle veya yeni sipariş oluştur
 
-### 8.4 Seller Discover "Ürün Ekle" Butonu
+### ✅ 8.4 Seller Discover "Ürün Ekle" Butonu
 **Dosya:** `app/seller/discover/page.tsx`
 - Sağ üstteki "Ürün Ekle" butonu no-op
 - `/seller/products/new`'e yönlendir
@@ -191,23 +191,23 @@
 
 ## 9. Polish
 
-### 9.1 Quote Detay Print
+### ✅ 9.1 Quote Detay Print
 **Dosya:** `app/seller/quotes/[id]/page.tsx`
 - "Print" butonu işlevsel değil
 - `window.print()` çağır veya kaldır
 
-### 9.2 Buyer Orders "CSV İndir"
+### ✅ 9.2 Buyer Orders "CSV İndir"
 **Dosya:** `app/buyer/orders/page.tsx`
 - Buton no-op; sipariş verilerini CSV olarak indiren basit bir export ekle
 
-### 9.3 Notification Bell Aksiyonları
+### ✅ 9.3 Notification Bell Aksiyonları
 **Dosya:** `components/shared/notification-bell.tsx`
 - "View Quote", "Track Shipment" gibi aksiyon butonları ilgili sayfalara yönlendirmeli
 
-### 9.4 ProfileButton Ayar Linkleri
+### ✅ 9.4 ProfileButton Ayar Linkleri
 **Dosya:** `components/shared/profile-button.tsx`
 - Tüm menü öğeleri `href="#"` — gerçek sayfalar oluşturulana kadar toast veya `router.push` ekle
 
-### 9.5 "Generate AI Draft" Butonu
+### ✅ 9.5 "Generate AI Draft" Butonu
 **Dosya:** `components/seller/quote-response-form.tsx`
 - Claude API entegrasyonu yapılmayacaksa butonu kaldır; yapılacaksa API rotası oluştur

@@ -3,6 +3,7 @@ import { formatCurrency } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { OrderStatCards } from '@/components/buyer/order-stat-cards'
 import { OrderHistoryTable } from '@/components/buyer/order-history-table'
+import { OrdersCsvButton } from '@/components/buyer/orders-csv-button'
 import type { OrderWithDetails } from '@/types'
 
 export default async function BuyerOrdersPage() {
@@ -38,10 +39,7 @@ export default async function BuyerOrdersPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <Button variant="ghost" size="md">
-            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>download</span>
-            CSV İndir
-          </Button>
+          <OrdersCsvButton orders={orders} />
           <Button variant="primary" size="md">
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>filter_list</span>
             Filtrele

@@ -1,4 +1,5 @@
-import { Button } from '@/components/ui/button'
+import Link from 'next/link'
+import { Button, buttonVariants } from '@/components/ui/button'
 import { DiscoverSearch } from '@/components/seller/discover-search'
 import { MarketTrends, type MarketTrend } from '@/components/seller/market-trends'
 import { BuyerSearches, type SearchKeyword } from '@/components/seller/buyer-searches'
@@ -77,10 +78,10 @@ export default function SellerDiscoverPage() {
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>download</span>
             Rapor İndir
           </Button>
-          <Button variant="primary">
+          <Link href="/seller/products/new" className={buttonVariants({ variant: 'primary' })}>
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>add</span>
             Ürün Ekle
-          </Button>
+          </Link>
         </div>
       </div>
 

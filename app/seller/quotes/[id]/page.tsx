@@ -5,6 +5,7 @@ import { getInitials } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { QuoteDetailPanel } from '@/components/seller/quote-detail-panel'
 import { QuoteResponseForm } from '@/components/seller/quote-response-form'
+import { PrintButton } from '@/components/seller/print-button'
 import type { Product, Company } from '@/types'
 
 function formatReceived(iso: string) {
@@ -82,10 +83,7 @@ export default async function QuoteDetailPage({
         </div>
 
         <div className="flex gap-3">
-          <Button variant="outline" className="text-primary">
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>print</span>
-            Print
-          </Button>
+          <PrintButton />
           <form action={decline}>
             <Button type="submit" variant="outline" className="text-error hover:bg-error-container/50">
               <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>block</span>

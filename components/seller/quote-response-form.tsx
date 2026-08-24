@@ -205,12 +205,6 @@ export function QuoteResponseForm({
         <div className="flex flex-col gap-2 flex-1">
           <div className="flex justify-between items-end">
             <label className="text-sm font-semibold text-on-surface">Message to Buyer</label>
-            <button className="text-xs font-semibold text-primary flex items-center gap-1 hover:underline">
-              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-                smart_toy
-              </span>
-              Generate AI Draft
-            </button>
           </div>
           <textarea
             value={message}
