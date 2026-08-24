@@ -1,1 +1,18 @@
-{}
+{
+  "searchPlaceholder": "Search products, orders, or suppliers...",
+  "profile": {
+    "sections": {
+      "account": "Account Settings",
+      "personal": "Personal Info",
+      "preferences": "Preferences"
+    },
+    "items": {
+      "editProfile": "Edit Profile",
+      "changePassword": "Change Password",
+      "contactInfo": "Contact Information",
+      "notifications": "Notification Settings",
+      "language": "Language & Region"
+    },
+    "signOut": "Sign Out"
+  }
+}

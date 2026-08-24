@@ -1,1 +1,17 @@
-{}
+{
+  "seller": {
+    "dashboard": "Gösterge Paneli",
+    "products": "Ürünler",
+    "quotes": "Teklif Talepleri",
+    "orders": "Siparişler",
+    "discover": "Pazar Keşfi"
+  },
+  "buyer": {
+    "discover": "Keşfet",
+    "cart": "Sepet",
+    "orders": "Sipariş Geçmişi",
+    "quotes": "Teklif Talepleri",
+    "approvals": "Onay Bekleyenler"
+  },
+  "signOut": "Çıkış Yap"
+}

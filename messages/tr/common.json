@@ -1,1 +1,18 @@
-{}
+{
+  "searchPlaceholder": "Ürün, sipariş veya tedarikçi ara...",
+  "profile": {
+    "sections": {
+      "account": "Hesap Ayarları",
+      "personal": "Kişisel Bilgiler",
+      "preferences": "Tercihler"
+    },
+    "items": {
+      "editProfile": "Profil Düzenle",
+      "changePassword": "Şifre Değiştir",
+      "contactInfo": "İletişim Bilgileri",
+      "notifications": "Bildirim Ayarları",
+      "language": "Dil & Bölge"
+    },
+    "signOut": "Çıkış Yap"
+  }
+}
