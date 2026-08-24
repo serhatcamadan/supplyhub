@@ -1,16 +1,11 @@
 'use client'
 
-import { useState } from 'react'
-import { products, companies } from '@/lib/mock-data'
+import { useState, useEffect } from 'react'
+import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { RfqProductCard } from '@/components/buyer/rfq-product-card'
 import { RfqSupplierSidebar } from '@/components/buyer/rfq-supplier-sidebar'
-
-const PRODUCT_ID = 'product-1'
-const SELLER_ID  = 'company-seller-1'
-
-const product = products.find((p) => p.id === PRODUCT_ID)!
-const seller  = companies.find((c) => c.id === SELLER_ID)!
+import type { Product, Company } from '@/types'
 
 const SUPPLIER_STATS = [
   { label: 'Response Time',    value: '< 24 Hours',  accent: false },
@@ -65,10 +60,34 @@ function IconInput({
 }
 
 export default function BuyerQuoteNewPage() {
+  const [product,      setProduct]      = useState<Product | null>(null)
+  const [seller,       setSeller]       = useState<Company | null>(null)
   const [qty,          setQty]          = useState('')
   const [deliveryDate, setDeliveryDate] = useState('')
   const [targetPrice,  setTargetPrice]  = useState('')
   const [message,      setMessage]      = useState('')
+
+  useEffect(() => {
+    async function load() {
+      const supabase = createClient()
+      const { data: firstProduct } = await supabase
+        .from('products')
+        .select('*')
+        .eq('status', 'active')
+        .order('created_at')
+        .limit(1)
+        .single()
+      if (!firstProduct) return
+      setProduct(firstProduct as Product)
+      const { data: sellerData } = await supabase
+        .from('companies')
+        .select('*')
+        .eq('id', firstProduct.seller_id)
+        .single()
+      if (sellerData) setSeller(sellerData as Company)
+    }
+    load()
+  }, [])
 
   return (
     <div className="flex flex-col w-full relative overflow-hidden">
@@ -101,7 +120,7 @@ export default function BuyerQuoteNewPage() {
 
                 <section>
                   <FormSectionHeader icon="inventory_2" label="Product Selection" />
-                  <RfqProductCard product={product} seller={seller} />
+                  {product && seller && <RfqProductCard product={product} seller={seller} />}
                 </section>
 
                 <section>
@@ -113,11 +132,11 @@ export default function BuyerQuoteNewPage() {
                       icon="tag"
                       type="number"
                       required
-                      min={product.min_order_qty}
+                      min={product?.min_order_qty ?? 1}
                       value={qty}
                       onChange={(e) => setQty(e.target.value)}
-                      placeholder={`Minimum ${product.min_order_qty} units`}
-                      hint={`Pricing tiers available for ${product.price_tiers.length > 1 ? `${product.price_tiers[1]?.min_qty}+` : '100+'} units.`}
+                      placeholder={`Minimum ${product?.min_order_qty ?? 1} units`}
+                      hint={`Pricing tiers available for ${(product?.price_tiers.length ?? 0) > 1 ? `${product?.price_tiers[1]?.min_qty}+` : '100+'} units.`}
                     />
                     <IconInput
                       id="deadline"
@@ -188,7 +207,7 @@ export default function BuyerQuoteNewPage() {
 
           {/* Right — sidebar */}
           <div className="lg:col-span-4 lg:sticky lg:top-24">
-            <RfqSupplierSidebar seller={seller} stats={SUPPLIER_STATS} />
+            {seller && <RfqSupplierSidebar seller={seller} stats={SUPPLIER_STATS} />}
           </div>
 
         </div>

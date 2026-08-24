@@ -4,12 +4,12 @@
 
 ## 1. Auth & Oturum Düzeltmeleri
 
-### 1.1 Layout'larda Hard-coded Kullanıcı Adını Kaldır
+### ✅ 1.1 Layout'larda Hard-coded Kullanıcı Adını Kaldır
 **Dosyalar:** `app/seller/layout.tsx`, `app/buyer/layout.tsx`
 - Her iki layout'ta `Topbar userName="Ali Yılmaz"` ve `"Ayşe Demir"` hard-coded
 - `createServerClient` ile Supabase `getUser()` çağır, `user_metadata.name` ve `user_metadata.role` props olarak geçir
 
-### 1.2 Sidebar Sign Out'u Supabase'e Bağla
+### ✅ 1.2 Sidebar Sign Out'u Supabase'e Bağla
 **Dosya:** `components/shared/sidebar.tsx`
 - `handleLogout()` şu an `document.cookie = 'mock-session...'` siliyor
 - `ProfileButton`'daki gibi `supabase.auth.signOut()` kullanacak şekilde güncelle
@@ -18,38 +18,38 @@
 
 ## 2. Supabase Entegrasyonu — Seller Portal
 
-### 2.1 Seller Dashboard
+### ✅ 2.1 Seller Dashboard
 **Dosya:** `app/seller/dashboard/page.tsx`
 - `orders`, `products`, `quoteRequests` mock'tan geliyor
 - Supabase'ten oturumdaki seller'ın verilerini çek
 - `StatCards`, `RevenueChart`, `TopProducts`, `ActivityFeed` bileşenlerine gerçek veri geç
 
-### 2.2 Seller Products Listesi
+### ✅ 2.2 Seller Products Listesi
 **Dosya:** `app/seller/products/page.tsx`
 - `products` mock'tan geliyor; `SELLER_ID = 'company-seller-1'` hard-coded
 - Supabase'ten `products where seller_id = session.user.id` sorgula
 
-### 2.3 Seller Quotes Listesi
+### ✅ 2.3 Seller Quotes Listesi
 **Dosya:** `app/seller/quotes/page.tsx`
 - `quoteRequests`, `products`, `companies` mock'tan geliyor
 - Supabase'ten join sorgusuyla `QuoteRequestWithDetails` listesi çek
 
-### 2.4 Seller Quote Detay
+### ✅ 2.4 Seller Quote Detay
 **Dosya:** `app/seller/quotes/[id]/page.tsx`
 - `quoteRequests`, `products`, `companies` mock'tan geliyor
 - Supabase'ten `id`'ye göre tek quote + ilgili product ve buyer çek
 
-### 2.5 Seller Orders
+### ✅ 2.5 Seller Orders
 **Dosya:** `app/seller/orders/page.tsx`
 - `getOrdersWithDetails()` mock'tan geliyor
 - Supabase'ten `orders where seller_id = session.user.id` sorgula, buyer bilgileriyle join'le
 
-### 2.6 Activity Feed
+### ✅ 2.6 Activity Feed
 **Dosya:** `components/seller/activity-feed.tsx`
 - `companies` mock'tan geliyor
 - Supabase'ten son siparişleri ve quote'ları çek
 
-### 2.7 Revenue Chart
+### ✅ 2.7 Revenue Chart
 **Dosya:** `components/seller/revenue-chart.tsx`
 - `SELLER_REVENUE_BY_MONTH` mock'tan geliyor
 - Supabase'ten aylık teslim edilen sipariş tutarlarını aggregate ile hesapla
@@ -58,28 +58,28 @@
 
 ## 3. Supabase Entegrasyonu — Buyer Portal
 
-### 3.1 Buyer Discover Listesi
+### ✅ 3.1 Buyer Discover Listesi
 **Dosya:** `app/buyer/discover/page.tsx`
 - `products`, `companies` mock'tan geliyor
 - Supabase'ten aktif ürünleri ve satıcı bilgilerini çek
 
-### 3.2 Buyer Ürün Detay
+### ✅ 3.2 Buyer Ürün Detay
 **Dosya:** `app/buyer/discover/[id]/page.tsx`
 - `products`, `companies` mock'tan geliyor
 - Supabase'ten `id`'ye göre ürün + satıcı bilgisi çek
 
-### 3.3 Buyer Orders
+### ✅ 3.3 Buyer Orders
 **Dosya:** `app/buyer/orders/page.tsx`
 - `getOrdersWithDetails()` mock'tan geliyor; `buyer_id = 'company-buyer-1'` hard-coded
 - Supabase'ten `orders where buyer_id = session.user.company_id` sorgula
 
-### 3.4 Buyer Approvals
+### ✅ 3.4 Buyer Approvals
 **Dosya:** `app/buyer/approvals/page.tsx`
 - `getOrdersWithDetails()` mock'tan geliyor
 - Supabase'ten `needs_approval = true AND approved_by IS NULL` sorgula
 - Yalnızca `role = 'admin'` kullanıcı görebilir (proxy.ts koruması zaten var)
 
-### 3.5 Buyer RFQ Formu — Ürün ve Satıcı Bilgisi
+### ✅ 3.5 Buyer RFQ Formu — Ürün ve Satıcı Bilgisi
 **Dosya:** `app/buyer/quotes/new/page.tsx`
 - `products`, `companies` mock'tan geliyor
 - Supabase'ten ürün ve satıcı bilgilerini çek
