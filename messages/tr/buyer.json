@@ -1,0 +1,284 @@
+{
+  "discover": {
+    "heading": "Ürün Keşfi",
+    "subHeading": "Onaylı toptan tedarikçilerden yüksek kaliteli ürünleri keşfedin ve tedarik zincirinizi güçlendirin.",
+    "searchPlaceholder": "Ürün ara…",
+    "filter": "Filtrele",
+    "allCategory": "Tümü",
+    "unknownSupplier": "Bilinmeyen Tedarikçi",
+    "noProducts": "Bu kategoride ürün bulunamadı.",
+    "breadcrumb": "Keşfet",
+    "priceTrend": "Fiyat Trendi (30 Gün)",
+    "priceTrendStable": "Stabil",
+    "badges": {
+      "organic": "Organik",
+      "natural": "Doğal",
+      "fresh": "Taze",
+      "fastDelivery": "Hızlı Teslimat"
+    },
+    "units": {
+      "bottle": "/ şişe",
+      "sack": "/ çuval",
+      "piece": "/ adet",
+      "pack": "/ paket"
+    },
+    "features": {
+      "oils": [
+        "Soğuk sıkım tekniği ile üretilmiş",
+        "AB organik sertifikalı",
+        "Ege bölgesi zeytinlerinden",
+        "Cam şişe, ışık geçirmez ambalaj"
+      ],
+      "grains": [
+        "Doğrudan değirmenden tedarik",
+        "Yüksek protein içeriği (%13+)",
+        "Standart 25 kg çuval ambalaj",
+        "Uzun raf ömrü (18 ay)"
+      ],
+      "natural": [
+        "Saf ve katkısız, ham bal",
+        "Karadeniz yayla çiçeklerinden",
+        "Mikrobiyolojik test onaylı",
+        "Yıl boyunca stok garantisi"
+      ],
+      "legumes": [
+        "Günlük taze üretim",
+        "Serbest gezen tavuk yumurtası",
+        "500g vakumlu paket",
+        "Soğuk zincir taşımacılık"
+      ]
+    }
+  },
+  "productDetail": {
+    "specs": {
+      "category": "Kategori",
+      "minOrderQty": "Min. Sipariş Miktarı",
+      "startingPrice": "Başlangıç Fiyatı",
+      "priceRange": "Fiyat Aralığı",
+      "priceTiers": "Fiyat Kademeleri",
+      "deliveryTime": "Teslimat Süresi",
+      "warehouseLocation": "Depo Konumu",
+      "shelfLife": "Raf Ömrü"
+    },
+    "specValues": {
+      "pieces": "{count} adet",
+      "tiers": "{count} kademe",
+      "pricePerPiece": "/ adet",
+      "deliveryDays": "7–14 iş günü",
+      "warehouseLocation": "Türkiye",
+      "shelfLife": "18 ay"
+    }
+  },
+  "productCard": {
+    "from": "İtibaren",
+    "perUnit": "/ adet",
+    "min": "Min:",
+    "pieces": "adet",
+    "favoriteLabel": "Favorilere ekle"
+  },
+  "productTabs": {
+    "overview": "Genel Bakış",
+    "specs": "Teknik Özellikler",
+    "docs": "Belgeler",
+    "keyFeatures": "Temel Özellikler",
+    "noSpecs": "Teknik özellik bilgisi mevcut değil.",
+    "documents": {
+      "sds": "Ürün Güvenlik Bilgi Formu (SDS)",
+      "quality": "Kalite Güvencesi Sertifikası",
+      "organic": "Organik Sertifikasyon",
+      "lab": "Laboratuvar Test Raporu"
+    }
+  },
+  "orderPanel": {
+    "listPrice": "Liste Fiyatı",
+    "perUnit": "/ adet",
+    "total": "Toplam:",
+    "inStock": "Stokta mevcut",
+    "bulkDiscount": "Toplu Alım İndirimleri",
+    "minUnitsWithSeller": "Min. {count} adet · {seller}",
+    "nextTierHint": "{count} adet daha ekleyin → {price}/adet",
+    "quantity": "Miktar",
+    "minQuantity": "Min. {count} adet",
+    "decrement": "Azalt",
+    "increment": "Artır",
+    "addToCart": "Sepete Ekle",
+    "requestQuote": "Özel Teklif İste",
+    "freeShipping": "500₺ üzeri siparişlerde ücretsiz kargo · 24 saat içinde kargoda"
+  },
+  "sellerInfo": {
+    "heading": "Tedarikçi Bilgileri",
+    "verifiedSupplier": "Onaylı Tedarikçi",
+    "responseTime": "Yanıt Süresi",
+    "responseTimeValue": "< 2 saat",
+    "onTimeDelivery": "Zamanında Teslimat",
+    "viewProfile": "Tedarikçi Profilini Gör"
+  },
+  "cart": {
+    "heading": "Alışveriş Sepeti",
+    "itemCount": "{count} ürün türü",
+    "clearCart": "Sepeti Temizle",
+    "saveAsTemplate": "Bu sepeti şablon olarak kaydet",
+    "empty": {
+      "heading": "Sepetiniz boş",
+      "subtext": "Tedarikçi ürünlerini keşfetmek için aşağıdaki butona tıklayın.",
+      "cta": "Ürünleri Keşfet"
+    },
+    "checkoutError": {
+      "noSeller": "Satıcı bilgisi bulunamadı.",
+      "orderFailed": "Sipariş oluşturulamadı."
+    },
+    "item": {
+      "supplier": "Tedarikçi",
+      "quantity": "Miktar",
+      "decrement": "Azalt",
+      "increment": "Artır",
+      "remove": "Kaldır",
+      "perUnit": "/ adet",
+      "stock": {
+        "in_stock": "STOKTA",
+        "low_stock": "AZ STOK"
+      }
+    },
+    "promo": {
+      "heading": "Toplu İndirim Fırsatı",
+      "subtext": "{name} için {count} adet daha ekleyerek Tier 3 fiyatına ulaşın.",
+      "cta": "Hemen Ekle"
+    },
+    "summary": {
+      "heading": "Sipariş Özeti",
+      "subtotal": "Ara Toplam",
+      "volumeDiscount": "Hacim İndirimi",
+      "shipping": "Kargo",
+      "shippingFree": "Ücretsiz",
+      "shippingNudge": "{amount} daha ekleyin, kargo ücretsiz",
+      "tax": "KDV (%{rate})",
+      "total": "Toplam Tutar",
+      "saved": "{amount} tasarruf ettiniz",
+      "promoLabel": "Promosyon Kodu / Sipariş No",
+      "promoPlaceholder": "PROMO veya PO-XXXX",
+      "promoApply": "Uygula",
+      "promoApplied": "Uygulandı",
+      "promoAppliedMsg": "Kod uygulandı",
+      "checkout": "Siparişi Tamamla",
+      "checkoutLoading": "İşleniyor…",
+      "requestQuote": "Resmi Teklif Talep Et",
+      "trust": {
+        "ssl": "SSL korumalı ödeme",
+        "verified": "Doğrulanmış tedarikçiler",
+        "support": "B2B destek hattı"
+      }
+    }
+  },
+  "orders": {
+    "heading": "Sipariş Geçmişi",
+    "subHeading": "Geçmiş toptan alımlarınızı takip edin, yönetin ve tekrar sipariş verin.",
+    "filter": "Filtrele",
+    "csvDownload": "CSV İndir",
+    "csvFilename": "siparisler",
+    "csvHeaders": {
+      "orderId": "Sipariş No",
+      "supplier": "Tedarikçi",
+      "date": "Tarih",
+      "total": "Toplam",
+      "status": "Durum",
+      "itemCount": "Ürün Sayısı"
+    },
+    "stats": {
+      "totalOrders": "Toplam Sipariş",
+      "totalSpend": "Toplam Harcama (YTD)",
+      "inTransit": "Kargoda"
+    },
+    "table": {
+      "orderId": "Sipariş No",
+      "supplier": "Tedarikçi",
+      "date": "Sipariş Tarihi",
+      "total": "Tutar",
+      "status": "Durum",
+      "action": "İşlem",
+      "empty": "Sipariş bulunamadı.",
+      "reorder": "Tekrar Sipariş",
+      "reordering": "İşleniyor…",
+      "paginationShowing": "{total} siparişten {shown} tanesi gösteriliyor",
+      "status": {
+        "delivered": "Teslim Edildi",
+        "shipped": "Kargoda",
+        "confirmed": "Onaylandı",
+        "pending": "İşleniyor"
+      }
+    }
+  },
+  "approvals": {
+    "heading": "Onay Bekleyenler",
+    "subHeading": "Harcama limitini aşan personel siparişlerini inceleyin ve onaylayın.",
+    "filter": "Filtrele",
+    "empty": {
+      "heading": "Hepsi tamamlandı!",
+      "subtext": "Şu anda onayınızı bekleyen sipariş yok."
+    },
+    "stats": {
+      "awaiting": "Onay Bekliyor",
+      "totalItems": "Toplam Ürün",
+      "totalValue": "Toplam Değer"
+    },
+    "card": {
+      "orderLabel": "Sipariş",
+      "supplierLabel": "Tedarikçi",
+      "requestedByLabel": "Talep Eden",
+      "dateLabel": "Tarih",
+      "totalLabel": "Sipariş Tutarı",
+      "product": "Ürün",
+      "qty": "Miktar",
+      "unitPrice": "Birim Fiyat",
+      "lineTotal": "Satır Toplamı",
+      "limitWarning": "Bu sipariş personel harcama limitini aşıyor ve yönetici onayı gerektiriyor.",
+      "reject": "Reddet",
+      "approve": "Onayla"
+    }
+  },
+  "quotes": {
+    "heading": "Teklif Talebi",
+    "subHeading": "Kesin bir toptan fiyat teklifi almak için detaylı özellikleri belirtin. Tedarikçiler genellikle 24–48 saat içinde yanıt verir.",
+    "sections": {
+      "productSelection": "Ürün Seçimi",
+      "requirements": "Gereksinimler",
+      "message": "Tedarikçiye Mesaj"
+    },
+    "fields": {
+      "quantity": "İstenen Miktar",
+      "quantityPlaceholder": "Minimum {min} adet",
+      "quantityHint": "{count}+ adet için fiyat kademeleri mevcut.",
+      "deliveryDate": "Hedef Teslimat Tarihi",
+      "targetPrice": "Hedef Birim Fiyatı",
+      "optional": "(Opsiyonel)",
+      "messageLabel": "Detaylı Özellikler ve Sorgu",
+      "messagePlaceholder": "Malzeme özellikleri, özel ambalaj gereksinimleri, teslimat tercihleri veya referans belgeleri gibi ayrıntıları belirtin…",
+      "charCount": "{count}/1000 karakter"
+    },
+    "actions": {
+      "attachFiles": "Dosya Ekle",
+      "saveDraft": "Taslak Kaydet",
+      "submit": "Talebi Gönder",
+      "submitting": "Gönderiliyor…"
+    },
+    "productCard": {
+      "inStock": "Stokta",
+      "manufacturedBy": "Üretici:",
+      "listPrice": "Liste fiyatı {price}/adetten başlıyor · Min. sipariş: {qty} adet"
+    },
+    "supplier": {
+      "infoHeading": "Tedarikçi Bilgisi",
+      "reviews": "{rating} ({count} yorum)",
+      "viewProfile": "Profili Görüntüle",
+      "stats": {
+        "responseTime": "Yanıt Süresi",
+        "onTimeDelivery": "Zamanında Teslimat",
+        "location": "Konum"
+      }
+    },
+    "buyerProtection": {
+      "heading": "Alıcı Koruması",
+      "description": "Talebiniz SupplyHub'ın güvenli işlem garantisi kapsamındadır. Teslimat onaylanana kadar ödemeler emanette tutulur.",
+      "learnMore": "Daha fazla bilgi"
+    }
+  }
+}

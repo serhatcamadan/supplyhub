@@ -1,3 +1,6 @@
+'use client'
+
+import { useTranslations } from 'next-intl'
 import { SectionHeading } from '@/components/ui/section-heading'
 
 const CATEGORIES = [
@@ -28,20 +31,22 @@ export function ProductBasicInfo({
   minOrderQty, onMinOrderQtyChange,
   description, onDescriptionChange,
 }: ProductBasicInfoProps) {
+  const t = useTranslations('seller')
+
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-sm p-8 border border-outline-variant/20">
-      <SectionHeading icon="info" label="Basic Information" />
+      <SectionHeading icon="info" label={t('products.basicInfo.heading')} />
 
       <div className="space-y-6">
         <div className="flex flex-col gap-2">
           <label htmlFor="product-name" className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-            PRODUCT NAME <span className="text-error">*</span>
+            {t('products.basicInfo.name')} <span className="text-error">*</span>
           </label>
           <input
             id="product-name"
             type="text"
             required
-            placeholder="e.g. Organik Zeytinyağı (5L)"
+            placeholder={t('products.basicInfo.namePlaceholder')}
             value={name}
             onChange={(e) => onNameChange(e.target.value)}
             className={INPUT}
@@ -51,7 +56,7 @@ export function ProductBasicInfo({
         <div className="grid grid-cols-2 gap-6">
           <div className="flex flex-col gap-2">
             <label htmlFor="category" className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-              CATEGORY
+              {t('products.basicInfo.category')}
             </label>
             <div className="relative">
               <select
@@ -60,7 +65,7 @@ export function ProductBasicInfo({
                 onChange={(e) => onCategoryChange(e.target.value)}
                 className={`${INPUT} appearance-none`}
               >
-                <option value="" disabled>Select Category</option>
+                <option value="" disabled>{t('products.basicInfo.categorySelect')}</option>
                 {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
               <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
@@ -70,7 +75,7 @@ export function ProductBasicInfo({
           </div>
           <div className="flex flex-col gap-2">
             <label htmlFor="min-qty" className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-              MIN. ORDER QUANTITY
+              {t('products.basicInfo.minQty')}
             </label>
             <input
               id="min-qty"
@@ -86,18 +91,18 @@ export function ProductBasicInfo({
 
         <div className="flex flex-col gap-2">
           <label htmlFor="description" className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-            DETAILED DESCRIPTION
+            {t('products.basicInfo.description')}
           </label>
           <textarea
             id="description"
             rows={5}
             value={description}
             onChange={(e) => onDescriptionChange(e.target.value.slice(0, 2000))}
-            placeholder="Provide technical specifications, material details, and applications..."
+            placeholder={t('products.basicInfo.descriptionPlaceholder')}
             className={`${INPUT} resize-y`}
           />
           <div className="flex justify-between">
-            <span className="text-[11px] text-on-surface-variant">Use markdown for formatting.</span>
+            <span className="text-[11px] text-on-surface-variant">{t('products.basicInfo.markdownHint')}</span>
             <span className="text-[11px] text-on-surface-variant">{description.length}/2000</span>
           </div>
         </div>

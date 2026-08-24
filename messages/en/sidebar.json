@@ -1,0 +1,17 @@
+{
+  "seller": {
+    "dashboard": "Dashboard",
+    "products": "Products",
+    "quotes": "Quote Requests",
+    "orders": "Orders",
+    "discover": "Market Discovery"
+  },
+  "buyer": {
+    "discover": "Discovery",
+    "cart": "Shopping Cart",
+    "orders": "Order History",
+    "quotes": "Quote Requests",
+    "approvals": "Pending Approvals"
+  },
+  "signOut": "Sign Out"
+}

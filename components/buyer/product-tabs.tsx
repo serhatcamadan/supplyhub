@@ -1,16 +1,10 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 
 type Tab = 'overview' | 'specs' | 'docs'
-
-const MOCK_DOCS = [
-  { icon: 'description',    name: 'Ürün Güvenlik Bilgi Formu (SDS)', ext: 'PDF', size: '2.1 MB' },
-  { icon: 'verified',       name: 'Kalite Güvencesi Sertifikası',      ext: 'PDF', size: '0.8 MB' },
-  { icon: 'eco',            name: 'Organik Sertifikasyon',              ext: 'PDF', size: '1.2 MB' },
-  { icon: 'science',        name: 'Laboratuvar Test Raporu',            ext: 'PDF', size: '3.4 MB' },
-]
 
 interface ProductTabsProps {
   description: string
@@ -18,18 +12,25 @@ interface ProductTabsProps {
   specs?: { label: string; value: string }[]
 }
 
-const TABS: { id: Tab; label: string }[] = [
-  { id: 'overview', label: 'Genel Bakış' },
-  { id: 'specs',    label: 'Teknik Özellikler' },
-  { id: 'docs',     label: 'Belgeler' },
+const MOCK_DOCS_DEFS = [
+  { icon: 'description', key: 'sds',     ext: 'PDF', size: '2.1 MB' },
+  { icon: 'verified',    key: 'quality', ext: 'PDF', size: '0.8 MB' },
+  { icon: 'eco',         key: 'organic', ext: 'PDF', size: '1.2 MB' },
+  { icon: 'science',     key: 'lab',     ext: 'PDF', size: '3.4 MB' },
 ]
 
 export function ProductTabs({ description, features, specs = [] }: ProductTabsProps) {
+  const t = useTranslations('buyer')
   const [active, setActive] = useState<Tab>('overview')
+
+  const TABS: { id: Tab; label: string }[] = [
+    { id: 'overview', label: t('productTabs.overview') },
+    { id: 'specs',    label: t('productTabs.specs') },
+    { id: 'docs',     label: t('productTabs.docs') },
+  ]
 
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-sm overflow-hidden">
-      {/* Tab bar */}
       <div className="flex border-b border-outline-variant/30 px-4">
         {TABS.map((tab) => (
           <button
@@ -47,14 +48,13 @@ export function ProductTabs({ description, features, specs = [] }: ProductTabsPr
         ))}
       </div>
 
-      {/* Content */}
       <div className="p-8">
         {active === 'overview' && (
           <div className="flex flex-col gap-6">
             <p className="text-sm text-on-surface-variant leading-relaxed">{description}</p>
             {features.length > 0 && (
               <>
-                <h3 className="text-base font-semibold text-on-surface">Temel Özellikler</h3>
+                <h3 className="text-base font-semibold text-on-surface">{t('productTabs.keyFeatures')}</h3>
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {features.map((feature) => (
                     <li key={feature} className="flex items-start gap-3">
@@ -90,21 +90,21 @@ export function ProductTabs({ description, features, specs = [] }: ProductTabsPr
               ))}
             </div>
           ) : (
-            <p className="text-sm text-on-surface-variant">Teknik özellik bilgisi mevcut değil.</p>
+            <p className="text-sm text-on-surface-variant">{t('productTabs.noSpecs')}</p>
           )
         )}
         {active === 'docs' && (
           <div className="flex flex-col gap-3">
-            {MOCK_DOCS.map((doc) => (
+            {MOCK_DOCS_DEFS.map((doc) => (
               <div
-                key={doc.name}
+                key={doc.key}
                 className="flex items-center gap-4 p-4 rounded-xl border border-outline-variant/30 hover:bg-surface-container-low transition-colors group cursor-pointer"
               >
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
                   <span className="material-symbols-outlined text-primary" style={{ fontSize: '22px' }}>{doc.icon}</span>
                 </div>
                 <div className="flex-1 min-w-0">
-                  <p className="text-sm font-semibold text-on-surface truncate">{doc.name}</p>
+                  <p className="text-sm font-semibold text-on-surface truncate">{t(`productTabs.documents.${doc.key}`)}</p>
                   <p className="text-xs text-on-surface-variant mt-0.5">{doc.ext} · {doc.size}</p>
                 </div>
                 <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" style={{ fontSize: '20px' }}>

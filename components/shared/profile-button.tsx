@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations, useLocale } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 
@@ -10,37 +11,39 @@ interface ProfileButtonProps {
   userRole: string
 }
 
-const SECTIONS = [
-  {
-    title: 'Hesap Ayarları',
-    items: [
-      { icon: 'person_edit', label: 'Profil Düzenle' },
-      { icon: 'password',    label: 'Şifre Değiştir' },
-    ],
-  },
-  {
-    title: 'Kişisel Bilgiler',
-    items: [
-      { icon: 'contact_mail', label: 'İletişim Bilgileri' },
-    ],
-  },
-  {
-    title: 'Tercihler',
-    items: [
-      { icon: 'notifications', label: 'Bildirim Ayarları' },
-      { icon: 'language',      label: 'Dil & Bölge' },
-    ],
-  },
-]
-
 export function ProfileButton({ userName, userRole }: ProfileButtonProps) {
   const [open, setOpen] = useState(false)
   const router = useRouter()
+  const t = useTranslations('common')
+  const locale = useLocale()
+
+  const sections = [
+    {
+      title: t('profile.sections.account'),
+      items: [
+        { icon: 'person_edit', label: t('profile.items.editProfile') },
+        { icon: 'password',    label: t('profile.items.changePassword') },
+      ],
+    },
+    {
+      title: t('profile.sections.personal'),
+      items: [
+        { icon: 'contact_mail', label: t('profile.items.contactInfo') },
+      ],
+    },
+    {
+      title: t('profile.sections.preferences'),
+      items: [
+        { icon: 'notifications', label: t('profile.items.notifications') },
+        { icon: 'language',      label: t('profile.items.language') },
+      ],
+    },
+  ]
 
   async function handleSignOut() {
     const supabase = createClient()
     await supabase.auth.signOut()
-    router.push('/login')
+    router.push(`/${locale}/login`)
     router.refresh()
   }
 
@@ -83,7 +86,7 @@ export function ProfileButton({ userName, userRole }: ProfileButtonProps) {
 
         {/* Menu */}
         <div className="flex-1 overflow-y-auto py-2">
-          {SECTIONS.map((section, si) => (
+          {sections.map((section, si) => (
             <div key={section.title} className={`px-6 py-4 ${si > 0 ? 'border-t border-outline-variant/30' : ''}`}>
               <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">
                 {section.title}
@@ -111,7 +114,7 @@ export function ProfileButton({ userName, userRole }: ProfileButtonProps) {
         <div className="p-6 border-t border-outline-variant/30">
           <Button variant="destructive" size="lg" onClick={handleSignOut} className="w-full">
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>logout</span>
-            Çıkış Yap
+            {t('profile.signOut')}
           </Button>
         </div>
       </div>

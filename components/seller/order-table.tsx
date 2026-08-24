@@ -1,3 +1,6 @@
+'use client'
+
+import { useTranslations } from 'next-intl'
 import { formatCurrency, formatDate, cn } from '@/lib/utils'
 import type { OrderStatus, OrderWithDetails } from '@/types'
 import { Button } from '@/components/ui/button'
@@ -5,30 +8,14 @@ import { Avatar } from '@/components/ui/avatar'
 import { TablePagination } from '@/components/ui/table-pagination'
 import { TableEmptyRow } from '@/components/ui/table-empty-row'
 
-const STATUS_CONFIG: Record<
+const STATUS_STYLE: Record<
   OrderStatus,
-  { label: string; className: string; dot?: boolean; icon?: string }
+  { className: string; dot?: boolean; icon?: string }
 > = {
-  pending: {
-    label: 'Pending',
-    className: 'bg-tertiary-container/20 text-on-tertiary-container',
-    dot: true,
-  },
-  confirmed: {
-    label: 'Confirmed',
-    className: 'bg-primary-fixed-dim/20 text-on-primary-fixed-variant',
-    icon: 'check_circle',
-  },
-  shipped: {
-    label: 'Shipped',
-    className: 'bg-primary/10 text-primary',
-    icon: 'local_shipping',
-  },
-  delivered: {
-    label: 'Delivered',
-    className: 'bg-secondary/10 text-secondary',
-    icon: 'done_all',
-  },
+  pending:   { className: 'bg-tertiary-container/20 text-on-tertiary-container', dot: true },
+  confirmed: { className: 'bg-primary-fixed-dim/20 text-on-primary-fixed-variant', icon: 'check_circle' },
+  shipped:   { className: 'bg-primary/10 text-primary', icon: 'local_shipping' },
+  delivered: { className: 'bg-secondary/10 text-secondary', icon: 'done_all' },
 }
 
 const AVATAR_COLOR_SCHEMES = [
@@ -43,15 +30,13 @@ function formatOrderId(id: string) {
   return `#ORD-${num.padStart(4, '0')}`
 }
 
-function StatusBadge({ status }: { status: OrderStatus }) {
-  const cfg = STATUS_CONFIG[status]
+function OrderStatusBadge({ status, label }: { status: OrderStatus; label: string }) {
+  const cfg = STATUS_STYLE[status]
   return (
     <span className={cn('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold', cfg.className)}>
       {cfg.dot && <span className="w-1.5 h-1.5 rounded-full bg-current" />}
-      {cfg.icon && (
-        <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>{cfg.icon}</span>
-      )}
-      {cfg.label}
+      {cfg.icon && <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>{cfg.icon}</span>}
+      {label}
     </span>
   )
 }
@@ -60,21 +45,23 @@ function RowActions({
   orderId,
   status,
   onStatusChange,
+  labels,
 }: {
   orderId: string
   status: OrderStatus
   onStatusChange: (id: string, status: OrderStatus) => void
+  labels: { confirm: string; ship: string; deliver: string }
 }) {
   return (
     <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
       {status === 'pending' && (
-        <Button variant="primary" size="sm" onClick={() => onStatusChange(orderId, 'confirmed')}>Confirm</Button>
+        <Button variant="primary" size="sm" onClick={() => onStatusChange(orderId, 'confirmed')}>{labels.confirm}</Button>
       )}
       {status === 'confirmed' && (
-        <Button variant="primary" size="sm" onClick={() => onStatusChange(orderId, 'shipped')}>Ship</Button>
+        <Button variant="primary" size="sm" onClick={() => onStatusChange(orderId, 'shipped')}>{labels.ship}</Button>
       )}
       {status === 'shipped' && (
-        <Button variant="secondary" size="sm" onClick={() => onStatusChange(orderId, 'delivered')}>Deliver</Button>
+        <Button variant="secondary" size="sm" onClick={() => onStatusChange(orderId, 'delivered')}>{labels.deliver}</Button>
       )}
       <button className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors">
         <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>more_vert</span>
@@ -90,13 +77,31 @@ export function OrderTable({
   orders: OrderWithDetails[]
   onStatusChange: (id: string, status: OrderStatus) => void
 }) {
+  const t = useTranslations('seller')
+
+  const headers = [
+    t('orders.table.orderId'),
+    t('orders.table.buyer'),
+    t('orders.table.date'),
+    t('orders.table.items'),
+    t('orders.table.total'),
+    t('orders.table.status'),
+    t('orders.table.actionsCol'),
+  ]
+
+  const rowActionLabels = {
+    confirm: t('orders.table.rowActions.confirm'),
+    ship:    t('orders.table.rowActions.ship'),
+    deliver: t('orders.table.rowActions.deliver'),
+  }
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 overflow-auto">
         <table className="w-full text-left border-collapse min-w-200">
           <thead className="sticky top-0 bg-surface-container-lowest z-10 shadow-[0_1px_0_rgba(0,0,0,0.05)]">
             <tr>
-              {['Order ID', 'Buyer', 'Date', 'Items', 'Total', 'Status', 'Actions'].map((h, i) => (
+              {headers.map((h, i) => (
                 <th
                   key={h}
                   className={cn(
@@ -113,7 +118,7 @@ export function OrderTable({
 
           <tbody className="divide-y divide-outline-variant/20">
             {orders.length === 0 ? (
-              <TableEmptyRow icon="shopping_bag" message="No orders found." colSpan={7} />
+              <TableEmptyRow icon="shopping_bag" message={t('orders.table.noResults')} colSpan={7} />
             ) : (
               orders.map((order, i) => (
                 <tr
@@ -126,7 +131,7 @@ export function OrderTable({
                     </span>
                     {order.needs_approval && !order.approved_by && (
                       <p className="text-[10px] text-on-tertiary-container font-semibold mt-0.5">
-                        Awaiting approval
+                        {t('orders.table.awaitingApproval')}
                       </p>
                     )}
                   </td>
@@ -167,11 +172,19 @@ export function OrderTable({
                   </td>
 
                   <td className="py-4 px-6">
-                    <StatusBadge status={order.status} />
+                    <OrderStatusBadge
+                      status={order.status}
+                      label={t(`orders.table.statusLabel.${order.status}`)}
+                    />
                   </td>
 
                   <td className="py-4 px-6">
-                    <RowActions orderId={order.id} status={order.status} onStatusChange={onStatusChange} />
+                    <RowActions
+                      orderId={order.id}
+                      status={order.status}
+                      onStatusChange={onStatusChange}
+                      labels={rowActionLabels}
+                    />
                   </td>
                 </tr>
               ))
@@ -180,7 +193,7 @@ export function OrderTable({
         </table>
       </div>
 
-      <TablePagination label={`Showing ${orders.length} of ${orders.length} entries`} />
+      <TablePagination label={t('orders.table.pagination', { shown: orders.length, total: orders.length })} />
     </div>
   )
 }

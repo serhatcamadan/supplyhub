@@ -1,13 +1,23 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { OrderWithDetails } from '@/types'
 
 export function OrdersCsvButton({ orders }: { orders: OrderWithDetails[] }) {
+  const t = useTranslations('buyer')
+
   function handleDownload() {
     const rows = [
-      ['Sipariş No', 'Tedarikçi', 'Tarih', 'Toplam', 'Durum', 'Ürün Sayısı'],
+      [
+        t('orders.csvHeaders.orderId'),
+        t('orders.csvHeaders.supplier'),
+        t('orders.csvHeaders.date'),
+        t('orders.csvHeaders.total'),
+        t('orders.csvHeaders.status'),
+        t('orders.csvHeaders.itemCount'),
+      ],
       ...orders.map((o) => [
         o.id,
         o.seller.name,
@@ -22,7 +32,7 @@ export function OrdersCsvButton({ orders }: { orders: OrderWithDetails[] }) {
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = `siparisler-${new Date().toISOString().split('T')[0]}.csv`
+    a.download = `${t('orders.csvFilename')}-${new Date().toISOString().split('T')[0]}.csv`
     document.body.appendChild(a)
     a.click()
     document.body.removeChild(a)
@@ -32,7 +42,7 @@ export function OrdersCsvButton({ orders }: { orders: OrderWithDetails[] }) {
   return (
     <Button variant="ghost" size="md" onClick={handleDownload}>
       <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>download</span>
-      CSV İndir
+      {t('orders.csvDownload')}
     </Button>
   )
 }

@@ -1,9 +1,22 @@
+import createIntlMiddleware from 'next-intl/middleware'
 import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { routing } from './i18n/routing'
+
+const handleI18nRouting = createIntlMiddleware(routing)
 
 export async function proxy(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request })
+  const { pathname } = request.nextUrl
 
+  // Extract locale prefix from URL (/tr/... or /en/...)
+  const localeMatch = pathname.match(/^\/(tr|en)(\/|$)/)
+  const locale = localeMatch?.[1] ?? routing.defaultLocale
+  const pathWithoutLocale = localeMatch
+    ? pathname.slice(locale.length + 1) || '/'
+    : pathname
+
+  // Supabase session refresh — must run on every request
+  let supabaseResponse = NextResponse.next({ request })
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -25,45 +38,61 @@ export async function proxy(request: NextRequest) {
     }
   )
 
-  // Session yenile — her zaman ilk çalıştırılmalı
   const { data: { user } } = await supabase.auth.getUser()
 
-  const { pathname } = request.nextUrl
-  const isAuthPage = pathname.startsWith('/login') || pathname.startsWith('/signup')
+  const isAuthPage =
+    pathWithoutLocale === '/login' ||
+    pathWithoutLocale === '/signup' ||
+    pathWithoutLocale.startsWith('/login/') ||
+    pathWithoutLocale.startsWith('/signup/')
 
-  // Giriş yapılmamış → login'e yönlendir
-  if (!user && !isAuthPage) {
-    return NextResponse.redirect(new URL('/login', request.url))
+  // Carry Supabase auth cookies into any redirect response
+  function redirectWithCookies(url: string) {
+    const res = NextResponse.redirect(new URL(url, request.url))
+    supabaseResponse.cookies.getAll().forEach((c) => res.cookies.set(c.name, c.value))
+    return res
   }
 
-  // Giriş yapılmış → auth sayfalarına izin verme
+  // Unauthenticated → login
+  if (!user && !isAuthPage) {
+    return redirectWithCookies(`/${locale}/login`)
+  }
+
+  // Authenticated on auth page → portal home
   if (user && isAuthPage) {
     const companyType = user.user_metadata?.company_type as string | undefined
-    const dest = companyType === 'seller' ? '/seller/dashboard' : '/buyer/discover'
-    return NextResponse.redirect(new URL(dest, request.url))
+    const dest = companyType === 'seller'
+      ? `/${locale}/seller/dashboard`
+      : `/${locale}/buyer/discover`
+    return redirectWithCookies(dest)
   }
 
   if (user) {
     const companyType = user.user_metadata?.company_type as string | undefined
     const role = user.user_metadata?.role as string | undefined
 
-    // Satıcı portal koruması
-    if (pathname.startsWith('/seller') && companyType !== 'seller') {
-      return NextResponse.redirect(new URL('/buyer/discover', request.url))
+    if (pathWithoutLocale.startsWith('/seller') && companyType !== 'seller') {
+      return redirectWithCookies(`/${locale}/buyer/discover`)
     }
 
-    // Alıcı portal koruması
-    if (pathname.startsWith('/buyer') && companyType !== 'buyer') {
-      return NextResponse.redirect(new URL('/seller/dashboard', request.url))
+    if (pathWithoutLocale.startsWith('/buyer') && companyType !== 'buyer') {
+      return redirectWithCookies(`/${locale}/seller/dashboard`)
     }
 
-    // Onay sayfası sadece admin
-    if (pathname.startsWith('/buyer/approvals') && role !== 'admin') {
-      return NextResponse.redirect(new URL('/buyer/orders', request.url))
+    if (pathWithoutLocale.startsWith('/buyer/approvals') && role !== 'admin') {
+      return redirectWithCookies(`/${locale}/buyer/orders`)
     }
   }
 
-  return supabaseResponse
+  // Locale routing: adds prefix if missing, normalises
+  const i18nResponse = handleI18nRouting(request)
+
+  // Merge Supabase auth cookies into the locale response
+  supabaseResponse.cookies.getAll().forEach((c) =>
+    i18nResponse.cookies.set(c.name, c.value)
+  )
+
+  return i18nResponse
 }
 
 export const config = {

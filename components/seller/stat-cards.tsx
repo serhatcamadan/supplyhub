@@ -1,4 +1,7 @@
+'use client'
+
 import Link from 'next/link'
+import { useTranslations } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
 
 interface StatCardsProps {
@@ -9,6 +12,7 @@ interface StatCardsProps {
   processingCount: number
   activeProductsCount: number
   draftProductsCount: number
+  locale: string
 }
 
 export function StatCards({
@@ -19,7 +23,9 @@ export function StatCards({
   processingCount,
   activeProductsCount,
   draftProductsCount,
+  locale,
 }: StatCardsProps) {
+  const t = useTranslations('seller')
   const progressWidth =
     activeOrdersCount > 0 ? Math.round((shippingCount / activeOrdersCount) * 100) : 0
 
@@ -31,7 +37,7 @@ export function StatCards({
         <div className="flex justify-between items-start mb-6 relative z-10">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-              Total Revenue
+              {t('dashboard.stats.totalRevenue')}
             </p>
             <h2 className="text-3xl font-bold tracking-tight text-on-surface mt-1">
               {formatCurrency(totalRevenue)}
@@ -46,7 +52,7 @@ export function StatCards({
             <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>arrow_upward</span>
             12%
           </span>
-          <span className="text-xs text-on-surface-variant">vs last month</span>
+          <span className="text-xs text-on-surface-variant">{t('dashboard.stats.vsLastMonth')}</span>
         </div>
         <svg
           className="absolute bottom-0 left-0 w-full h-16 text-secondary-fixed opacity-20 group-hover:opacity-40 transition-opacity"
@@ -72,7 +78,7 @@ export function StatCards({
         <div className="flex justify-between items-start mb-6">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-              Pending Quotes
+              {t('dashboard.stats.pendingQuotes')}
             </p>
             <h2 className="text-3xl font-bold tracking-tight text-on-surface mt-1">
               {pendingQuotesCount}
@@ -84,13 +90,13 @@ export function StatCards({
         </div>
         <div className="flex items-center justify-between">
           <span className="text-xs text-on-surface-variant">
-            {Math.min(pendingQuotesCount, 3)} require immediate action
+            {t('dashboard.stats.immediateAction', { count: Math.min(pendingQuotesCount, 3) })}
           </span>
           <Link
-            href="/seller/quotes"
+            href={`/${locale}/seller/quotes`}
             className="text-xs font-semibold text-primary hover:underline flex items-center gap-0.5 shrink-0 ml-2"
           >
-            View All
+            {t('dashboard.stats.viewAll')}
             <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>arrow_forward</span>
           </Link>
         </div>
@@ -101,7 +107,7 @@ export function StatCards({
         <div className="flex justify-between items-start mb-6">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-              Active Orders
+              {t('dashboard.stats.activeOrders')}
             </p>
             <h2 className="text-3xl font-bold tracking-tight text-on-surface mt-1">
               {activeOrdersCount}
@@ -119,8 +125,8 @@ export function StatCards({
             />
           </div>
           <div className="flex justify-between mt-2">
-            <span className="text-xs text-on-surface-variant">{shippingCount} shipping</span>
-            <span className="text-xs text-on-surface-variant">{processingCount} processing</span>
+            <span className="text-xs text-on-surface-variant">{t('dashboard.stats.shipping', { count: shippingCount })}</span>
+            <span className="text-xs text-on-surface-variant">{t('dashboard.stats.processing', { count: processingCount })}</span>
           </div>
         </div>
       </div>
@@ -130,7 +136,7 @@ export function StatCards({
         <div className="flex justify-between items-start mb-6">
           <div>
             <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-              Total Products
+              {t('dashboard.stats.totalProducts')}
             </p>
             <h2 className="text-3xl font-bold tracking-tight text-on-surface mt-1">
               {activeProductsCount}
@@ -142,7 +148,7 @@ export function StatCards({
         </div>
         <span className="px-2 py-1 bg-surface-variant text-on-surface-variant text-xs font-semibold rounded flex items-center gap-1 w-fit">
           <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>warning</span>
-          {draftProductsCount} in draft
+          {t('dashboard.stats.inDraft', { count: draftProductsCount })}
         </span>
       </div>
 
