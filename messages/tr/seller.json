@@ -1,1 +1,47 @@
-{}
+{
+  "dashboard": {
+    "heading": "Satıcı Paneli",
+    "subHeading": "Toptan operasyonlarınıza ve performans metriklerinize genel bakış.",
+    "last30Days": "Son 30 Gün",
+    "exportReport": "Rapor İndir",
+    "monthlyRevenue": "Aylık Gelir",
+    "weekly": "Haftalık",
+    "monthly": "Aylık",
+    "months": ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"],
+    "stats": {
+      "totalRevenue": "Toplam Gelir",
+      "vsLastMonth": "önceki aya kıyasla",
+      "pendingQuotes": "Bekleyen Teklifler",
+      "immediateAction": "{count} acil işlem gerekiyor",
+      "viewAll": "Tümünü Gör",
+      "activeOrders": "Aktif Siparişler",
+      "shipping": "{count} kargoda",
+      "processing": "{count} işlemde",
+      "totalProducts": "Toplam Ürün",
+      "inDraft": "{count} taslakta"
+    },
+    "activity": {
+      "heading": "Son Aktiviteler",
+      "orderDelivered": "Sipariş başarıyla teslim edildi:",
+      "newOrder": "Yeni Sipariş #{id} oluşturuldu:",
+      "quoteReceived": "Teklif Talebi",
+      "quoteReceivedFrom": "alındı:",
+      "respond": "Yanıtla",
+      "status": {
+        "pending": "Bekliyor",
+        "confirmed": "Onaylandı",
+        "shipped": "Kargoda",
+        "delivered": "Teslim Edildi"
+      }
+    },
+    "topProducts": {
+      "heading": "En Çok Satan",
+      "viewReport": "Raporu Gör",
+      "units": "adet",
+      "topCategory": "En İyi Kategori"
+    },
+    "chart": {
+      "revenue": "Gelir"
+    }
+  }
+}

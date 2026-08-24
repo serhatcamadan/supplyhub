@@ -1,3 +1,6 @@
+'use client'
+
+import { useTranslations } from 'next-intl'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { Order, QuoteRequest } from '@/types'
 import { buttonVariants } from '@/components/ui/button'
@@ -6,13 +9,7 @@ interface ActivityFeedProps {
   orders: Order[]
   quote: QuoteRequest | null
   buyerNames: Record<string, string>
-}
-
-const STATUS_LABEL: Record<string, string> = {
-  pending: 'Pending',
-  confirmed: 'Confirmed',
-  shipped: 'Shipping',
-  delivered: 'Delivered',
+  locale: string
 }
 
 const STATUS_COLOR: Record<string, string> = {
@@ -22,14 +19,17 @@ const STATUS_COLOR: Record<string, string> = {
   delivered: 'bg-secondary-container/30 text-secondary',
 }
 
-export function ActivityFeed({ orders, quote, buyerNames }: ActivityFeedProps) {
+export function ActivityFeed({ orders, quote, buyerNames, locale }: ActivityFeedProps) {
+  const t = useTranslations('seller')
+
   function getCompanyName(id: string) {
     return buyerNames[id] ?? id
   }
+
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-sm p-6">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xl font-semibold text-on-surface">Recent Activity</h3>
+        <h3 className="text-xl font-semibold text-on-surface">{t('dashboard.activity.heading')}</h3>
         <button className="w-8 h-8 rounded-full hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors">
           <span className="material-symbols-outlined">more_vert</span>
         </button>
@@ -49,8 +49,8 @@ export function ActivityFeed({ orders, quote, buyerNames }: ActivityFeedProps) {
             ? 'bg-secondary-container text-secondary'
             : 'bg-primary-container text-on-primary-container'
           const title = isDelivered
-            ? 'Order delivered successfully to'
-            : `New Order #${order.id.slice(-4).toUpperCase()} placed by`
+            ? t('dashboard.activity.orderDelivered')
+            : t('dashboard.activity.newOrder', { id: order.id.slice(-4).toUpperCase() })
 
           return (
             <div
@@ -80,7 +80,7 @@ export function ActivityFeed({ orders, quote, buyerNames }: ActivityFeedProps) {
                 <span
                   className={`px-2 py-0.5 mt-1 text-[10px] font-semibold rounded inline-block ${STATUS_COLOR[order.status]}`}
                 >
-                  {STATUS_LABEL[order.status]}
+                  {t(`dashboard.activity.status.${order.status}`)}
                 </span>
               </div>
             </div>
@@ -96,7 +96,8 @@ export function ActivityFeed({ orders, quote, buyerNames }: ActivityFeedProps) {
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm text-on-surface">
-                <span className="font-semibold">Quote Request</span> received from{' '}
+                <span className="font-semibold">{t('dashboard.activity.quoteReceived')}</span>{' '}
+                {t('dashboard.activity.quoteReceivedFrom')}{' '}
                 <span className="text-primary cursor-pointer hover:underline">
                   {getCompanyName(quote.buyer_id)}
                 </span>
@@ -112,10 +113,10 @@ export function ActivityFeed({ orders, quote, buyerNames }: ActivityFeedProps) {
             </div>
             <div className="shrink-0">
               <a
-                href="/seller/quotes"
+                href={`/${locale}/seller/quotes`}
                 className={buttonVariants({ variant: 'outline', size: 'sm' })}
               >
-                Respond
+                {t('dashboard.activity.respond')}
               </a>
             </div>
           </div>

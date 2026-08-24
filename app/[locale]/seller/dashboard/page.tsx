@@ -1,3 +1,4 @@
+import { getTranslations, getLocale } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { Button } from '@/components/ui/button'
 import { RevenueChart } from '@/components/seller/revenue-chart'
@@ -5,9 +6,10 @@ import { StatCards } from '@/components/seller/stat-cards'
 import { TopProducts } from '@/components/seller/top-products'
 import { ActivityFeed } from '@/components/seller/activity-feed'
 
-const MONTH_NAMES = ['Oca', 'Şub', 'Mar', 'Nis', 'May', 'Haz', 'Tem', 'Ağu', 'Eyl', 'Eki', 'Kas', 'Ara']
-
-function buildMonthlyRevenue(orders: { status: string; total: number; created_at: string }[]) {
+function buildMonthlyRevenue(
+  orders: { status: string; total: number; created_at: string }[],
+  monthNames: string[]
+) {
   const map: Record<number, number> = {}
   for (const order of orders) {
     if (order.status !== 'delivered') continue
@@ -17,12 +19,16 @@ function buildMonthlyRevenue(orders: { status: string; total: number; created_at
   const now = new Date()
   return Array.from({ length: 7 }, (_, i) => {
     const month = (now.getMonth() - 6 + i + 12) % 12
-    return { month: MONTH_NAMES[month], revenue: map[month] ?? 0 }
+    return { month: monthNames[month], revenue: map[month] ?? 0 }
   })
 }
 
 export default async function SellerDashboardPage() {
-  const supabase = await createClient()
+  const [supabase, t, locale] = await Promise.all([
+    createClient(),
+    getTranslations('seller'),
+    getLocale(),
+  ])
   const { data: { user } } = await supabase.auth.getUser()
   const companyId = user?.user_metadata?.company_id as string
 
@@ -60,27 +66,27 @@ export default async function SellerDashboardPage() {
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
     .slice(0, 2)
   const firstPendingQuote = pendingQuotes[0] ?? null
-  const monthlyRevenue = buildMonthlyRevenue(allOrders)
+
+  const monthNames = t.raw('dashboard.months') as string[]
+  const monthlyRevenue = buildMonthlyRevenue(allOrders, monthNames)
 
   return (
     <div className="p-8 flex flex-col gap-8">
 
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight text-on-surface">Seller Dashboard</h1>
-          <p className="text-sm text-on-surface-variant mt-2">
-            Overview of your wholesale operations and performance metrics.
-          </p>
+          <h1 className="text-4xl font-bold tracking-tight text-on-surface">{t('dashboard.heading')}</h1>
+          <p className="text-sm text-on-surface-variant mt-2">{t('dashboard.subHeading')}</p>
         </div>
         <div className="flex gap-3">
           <Button variant="ghost">
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>calendar_month</span>
-            Last 30 Days
+            {t('dashboard.last30Days')}
             <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>expand_more</span>
           </Button>
           <Button variant="primary">
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>download</span>
-            Export Report
+            {t('dashboard.exportReport')}
           </Button>
         </div>
       </div>
@@ -93,24 +99,25 @@ export default async function SellerDashboardPage() {
         processingCount={processingOrders.length}
         activeProductsCount={activeProducts.length}
         draftProductsCount={draftProducts.length}
+        locale={locale}
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2 bg-surface-container-lowest rounded-xl shadow-sm p-6">
           <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-semibold text-on-surface">Monthly Revenue</h3>
+            <h3 className="text-xl font-semibold text-on-surface">{t('dashboard.monthlyRevenue')}</h3>
             <div className="flex gap-2">
-              <Button variant="ghost" size="sm">Weekly</Button>
-              <Button variant="primary" size="sm">Monthly</Button>
+              <Button variant="ghost" size="sm">{t('dashboard.weekly')}</Button>
+              <Button variant="primary" size="sm">{t('dashboard.monthly')}</Button>
             </div>
           </div>
           <RevenueChart data={monthlyRevenue} />
         </div>
 
-        <TopProducts products={topProducts} />
+        <TopProducts products={topProducts} locale={locale} />
       </div>
 
-      <ActivityFeed orders={recentOrders} quote={firstPendingQuote} buyerNames={buyerNames} />
+      <ActivityFeed orders={recentOrders} quote={firstPendingQuote} buyerNames={buyerNames} locale={locale} />
 
     </div>
   )

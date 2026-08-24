@@ -1,1 +1,47 @@
-{}
+{
+  "dashboard": {
+    "heading": "Seller Dashboard",
+    "subHeading": "Overview of your wholesale operations and performance metrics.",
+    "last30Days": "Last 30 Days",
+    "exportReport": "Export Report",
+    "monthlyRevenue": "Monthly Revenue",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    "stats": {
+      "totalRevenue": "Total Revenue",
+      "vsLastMonth": "vs last month",
+      "pendingQuotes": "Pending Quotes",
+      "immediateAction": "{count} require immediate action",
+      "viewAll": "View All",
+      "activeOrders": "Active Orders",
+      "shipping": "{count} shipping",
+      "processing": "{count} processing",
+      "totalProducts": "Total Products",
+      "inDraft": "{count} in draft"
+    },
+    "activity": {
+      "heading": "Recent Activity",
+      "orderDelivered": "Order delivered successfully to",
+      "newOrder": "New Order #{id} placed by",
+      "quoteReceived": "Quote Request",
+      "quoteReceivedFrom": "received from",
+      "respond": "Respond",
+      "status": {
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "shipped": "Shipping",
+        "delivered": "Delivered"
+      }
+    },
+    "topProducts": {
+      "heading": "Top Selling",
+      "viewReport": "View Report",
+      "units": "units",
+      "topCategory": "Top Category"
+    },
+    "chart": {
+      "revenue": "Revenue"
+    }
+  }
+}
