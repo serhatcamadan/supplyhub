@@ -1,7 +1,7 @@
 -- ================================================================
 -- SupplyHub — Tablo Şeması
 -- Supabase Dashboard → SQL Editor → Yeni sorgu → Yapıştır → Çalıştır
--- Seed verisi: /api/seed endpoint'ini çağır (Login sayfasındaki buton)
+-- Seed verisi : /api/seed endpoint'ini çağır (Login sayfasındaki buton)
 -- ================================================================
 
 create table if not exists companies (
