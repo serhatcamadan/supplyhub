@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
 import { RfqProductCard } from '@/components/buyer/rfq-product-card'
@@ -60,16 +61,24 @@ function IconInput({
 }
 
 export default function BuyerQuoteNewPage() {
+  const router = useRouter()
+
   const [product,      setProduct]      = useState<Product | null>(null)
   const [seller,       setSeller]       = useState<Company | null>(null)
+  const [companyId,    setCompanyId]    = useState<string | null>(null)
   const [qty,          setQty]          = useState('')
   const [deliveryDate, setDeliveryDate] = useState('')
   const [targetPrice,  setTargetPrice]  = useState('')
   const [message,      setMessage]      = useState('')
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitError,  setSubmitError]  = useState<string | null>(null)
 
   useEffect(() => {
     async function load() {
       const supabase = createClient()
+      const { data: { user } } = await supabase.auth.getUser()
+      setCompanyId(user?.user_metadata?.company_id ?? null)
+
       const { data: firstProduct } = await supabase
         .from('products')
         .select('*')
@@ -88,6 +97,24 @@ export default function BuyerQuoteNewPage() {
     }
     load()
   }, [])
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault()
+    if (!product || !companyId) return
+    setIsSubmitting(true)
+    setSubmitError(null)
+    const supabase = createClient()
+    const quantity = parseInt(qty, 10) || product.min_order_qty
+    const { error } = await supabase.from('quote_requests').insert({
+      buyer_id:   companyId,
+      product_id: product.id,
+      quantity,
+      buyer_note: message.trim() || null,
+      status:     'pending',
+    })
+    if (error) { setSubmitError(error.message); setIsSubmitting(false); return }
+    router.push('/buyer/quotes')
+  }
 
   return (
     <div className="flex flex-col w-full relative overflow-hidden">
@@ -113,7 +140,7 @@ export default function BuyerQuoteNewPage() {
 
           {/* Left — form */}
           <div className="lg:col-span-8">
-            <form className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/30 overflow-hidden relative group/form transition-shadow hover:shadow-md duration-300">
+            <form onSubmit={handleSubmit} className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/30 overflow-hidden relative group/form transition-shadow hover:shadow-md duration-300">
               <div className="absolute top-0 left-0 w-full h-0.5 bg-linear-to-r from-primary via-primary-fixed to-secondary-container scale-x-0 group-hover/form:scale-x-100 transition-transform origin-left duration-500" />
 
               <div className="p-8 space-y-10">
@@ -193,11 +220,12 @@ export default function BuyerQuoteNewPage() {
               </div>
 
               <div className="bg-surface-container-low px-8 py-5 border-t border-outline-variant/30 flex items-center justify-between">
+                {submitError && <p className="text-sm text-error">{submitError}</p>}
                 <Button type="button" variant="ghost" size="lg" className="text-on-surface-variant">
                   Save Draft
                 </Button>
-                <Button type="submit" size="lg" className="relative overflow-hidden group/btn shadow-md hover:shadow-lg">
-                  <span className="relative z-10">Submit Request</span>
+                <Button type="submit" size="lg" disabled={isSubmitting} className="relative overflow-hidden group/btn shadow-md hover:shadow-lg">
+                  <span className="relative z-10">{isSubmitting ? 'Gönderiliyor…' : 'Submit Request'}</span>
                   <span className="material-symbols-outlined relative z-10 group-hover/btn:translate-x-1 transition-transform">send</span>
                   <div className="absolute inset-0 bg-white/10 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 z-0" />
                 </Button>

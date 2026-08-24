@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/client'
@@ -11,20 +11,36 @@ import { ProductPricingTiers } from '@/components/seller/product-pricing-tiers'
 import { ProductMedia } from '@/components/seller/product-media'
 import { ProductLogistics } from '@/components/seller/product-logistics'
 
-export default function NewProductPage() {
+export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
 
+  const [productId, setProductId]     = useState<string | null>(null)
   const [name, setName]               = useState('')
   const [category, setCategory]       = useState('')
   const [minOrderQty, setMinOrderQty] = useState('')
   const [description, setDescription] = useState('')
-  const [tiers, setTiers]             = useState<PriceTier[]>([
-    { min_qty: 1,  max_qty: 10,   price: 0 },
-    { min_qty: 11, max_qty: 50,   price: 0 },
-    { min_qty: 51, max_qty: null, price: 0 },
-  ])
+  const [tiers, setTiers]             = useState<PriceTier[]>([])
+  const [isLoading, setIsLoading]     = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
-  const [error, setError]               = useState<string | null>(null)
+  const [error, setError]             = useState<string | null>(null)
+
+  useEffect(() => {
+    async function load() {
+      const { id } = await params
+      setProductId(id)
+      const supabase = createClient()
+      const { data } = await supabase.from('products').select('*').eq('id', id).single()
+      if (data) {
+        setName(data.name)
+        setCategory(data.category)
+        setMinOrderQty(String(data.min_order_qty))
+        setDescription(data.description ?? '')
+        setTiers((data.price_tiers as PriceTier[]) ?? [])
+      }
+      setIsLoading(false)
+    }
+    load()
+  }, [params])
 
   function addTier() {
     setTiers((prev) => {
@@ -48,29 +64,34 @@ export default function NewProductPage() {
 
   async function handleSave() {
     setError(null)
-    if (!name.trim() || !category || !minOrderQty) {
+    if (!name.trim() || !category || !minOrderQty || !productId) {
       setError('Ürün adı, kategori ve minimum sipariş adedi zorunludur.')
       return
     }
     setIsSubmitting(true)
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    const companyId = user?.user_metadata?.company_id
-    if (!companyId) { setError('Oturum bulunamadı.'); setIsSubmitting(false); return }
-
-    const { error: dbError } = await supabase.from('products').insert({
-      seller_id:     companyId,
-      name:          name.trim(),
-      description:   description.trim(),
-      category,
-      min_order_qty: parseInt(minOrderQty, 10),
-      price_tiers:   tiers,
-      status:        'active',
-      image_url:     null,
-    })
+    const { error: dbError } = await supabase
+      .from('products')
+      .update({
+        name:          name.trim(),
+        description:   description.trim(),
+        category,
+        min_order_qty: parseInt(minOrderQty, 10),
+        price_tiers:   tiers,
+      })
+      .eq('id', productId)
 
     if (dbError) { setError(dbError.message); setIsSubmitting(false); return }
     router.push('/seller/products')
+  }
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-96 text-on-surface-variant">
+        <span className="material-symbols-outlined animate-spin mr-2">progress_activity</span>
+        Yükleniyor…
+      </div>
+    )
   }
 
   return (
@@ -81,9 +102,9 @@ export default function NewProductPage() {
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">
             <Link href="/seller/products" className="hover:text-primary transition-colors">Products</Link>
             <span className="material-symbols-outlined text-[16px]">chevron_right</span>
-            <span className="text-on-surface">Add New Product</span>
+            <span className="text-on-surface">Edit Product</span>
           </div>
-          <h1 className="text-2xl font-semibold text-on-surface tracking-tight">Create Product Listing</h1>
+          <h1 className="text-2xl font-semibold text-on-surface tracking-tight">{name || 'Ürün Düzenle'}</h1>
         </div>
         <div className="flex items-center gap-4">
           {error && <p className="text-sm text-error">{error}</p>}
@@ -92,7 +113,7 @@ export default function NewProductPage() {
           </Link>
           <Button type="button" variant="secondary" onClick={handleSave} disabled={isSubmitting} className="active:scale-[0.98]">
             <span className="material-symbols-outlined text-[18px]">save</span>
-            {isSubmitting ? 'Kaydediliyor…' : 'Save Product'}
+            {isSubmitting ? 'Kaydediliyor…' : 'Save Changes'}
           </Button>
         </div>
       </div>

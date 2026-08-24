@@ -12,11 +12,22 @@ const CATEGORIES = [
 const INPUT = 'w-full px-4 py-3 bg-surface border border-outline-variant/40 rounded-lg text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all'
 
 interface ProductBasicInfoProps {
+  name: string
+  onNameChange: (v: string) => void
+  category: string
+  onCategoryChange: (v: string) => void
+  minOrderQty: string
+  onMinOrderQtyChange: (v: string) => void
   description: string
   onDescriptionChange: (v: string) => void
 }
 
-export function ProductBasicInfo({ description, onDescriptionChange }: ProductBasicInfoProps) {
+export function ProductBasicInfo({
+  name, onNameChange,
+  category, onCategoryChange,
+  minOrderQty, onMinOrderQtyChange,
+  description, onDescriptionChange,
+}: ProductBasicInfoProps) {
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-sm p-8 border border-outline-variant/20">
       <SectionHeading icon="info" label="Basic Information" />
@@ -31,6 +42,8 @@ export function ProductBasicInfo({ description, onDescriptionChange }: ProductBa
             type="text"
             required
             placeholder="e.g. Organik Zeytinyağı (5L)"
+            value={name}
+            onChange={(e) => onNameChange(e.target.value)}
             className={INPUT}
           />
         </div>
@@ -41,7 +54,12 @@ export function ProductBasicInfo({ description, onDescriptionChange }: ProductBa
               CATEGORY
             </label>
             <div className="relative">
-              <select id="category" defaultValue="" className={`${INPUT} appearance-none`}>
+              <select
+                id="category"
+                value={category}
+                onChange={(e) => onCategoryChange(e.target.value)}
+                className={`${INPUT} appearance-none`}
+              >
                 <option value="" disabled>Select Category</option>
                 {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
@@ -54,7 +72,15 @@ export function ProductBasicInfo({ description, onDescriptionChange }: ProductBa
             <label htmlFor="min-qty" className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
               MIN. ORDER QUANTITY
             </label>
-            <input id="min-qty" type="number" min={1} placeholder="e.g. 10" className={`${INPUT} font-mono`} />
+            <input
+              id="min-qty"
+              type="number"
+              min={1}
+              placeholder="e.g. 10"
+              value={minOrderQty}
+              onChange={(e) => onMinOrderQtyChange(e.target.value)}
+              className={`${INPUT} font-mono`}
+            />
           </div>
         </div>
 
