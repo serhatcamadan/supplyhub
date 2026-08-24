@@ -235,5 +235,50 @@
       "approve": "Onayla"
     }
   },
-  "quotes": {}
+  "quotes": {
+    "heading": "Teklif Talebi",
+    "subHeading": "Kesin bir toptan fiyat teklifi almak için detaylı özellikleri belirtin. Tedarikçiler genellikle 24–48 saat içinde yanıt verir.",
+    "sections": {
+      "productSelection": "Ürün Seçimi",
+      "requirements": "Gereksinimler",
+      "message": "Tedarikçiye Mesaj"
+    },
+    "fields": {
+      "quantity": "İstenen Miktar",
+      "quantityPlaceholder": "Minimum {min} adet",
+      "quantityHint": "{count}+ adet için fiyat kademeleri mevcut.",
+      "deliveryDate": "Hedef Teslimat Tarihi",
+      "targetPrice": "Hedef Birim Fiyatı",
+      "optional": "(Opsiyonel)",
+      "messageLabel": "Detaylı Özellikler ve Sorgu",
+      "messagePlaceholder": "Malzeme özellikleri, özel ambalaj gereksinimleri, teslimat tercihleri veya referans belgeleri gibi ayrıntıları belirtin…",
+      "charCount": "{count}/1000 karakter"
+    },
+    "actions": {
+      "attachFiles": "Dosya Ekle",
+      "saveDraft": "Taslak Kaydet",
+      "submit": "Talebi Gönder",
+      "submitting": "Gönderiliyor…"
+    },
+    "productCard": {
+      "inStock": "Stokta",
+      "manufacturedBy": "Üretici:",
+      "listPrice": "Liste fiyatı {price}/adetten başlıyor · Min. sipariş: {qty} adet"
+    },
+    "supplier": {
+      "infoHeading": "Tedarikçi Bilgisi",
+      "reviews": "{rating} ({count} yorum)",
+      "viewProfile": "Profili Görüntüle",
+      "stats": {
+        "responseTime": "Yanıt Süresi",
+        "onTimeDelivery": "Zamanında Teslimat",
+        "location": "Konum"
+      }
+    },
+    "buyerProtection": {
+      "heading": "Alıcı Koruması",
+      "description": "Talebiniz SupplyHub'ın güvenli işlem garantisi kapsamındadır. Teslimat onaylanana kadar ödemeler emanette tutulur.",
+      "learnMore": "Daha fazla bilgi"
+    }
+  }
 }

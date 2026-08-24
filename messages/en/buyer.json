@@ -235,5 +235,50 @@
       "approve": "Approve"
     }
   },
-  "quotes": {}
+  "quotes": {
+    "heading": "Request for Quote",
+    "subHeading": "Provide detailed specifications to receive an accurate wholesale quotation. Suppliers typically respond within 24–48 hours.",
+    "sections": {
+      "productSelection": "Product Selection",
+      "requirements": "Requirements",
+      "message": "Message to Supplier"
+    },
+    "fields": {
+      "quantity": "Requested Quantity",
+      "quantityPlaceholder": "Minimum {min} units",
+      "quantityHint": "Pricing tiers available for {count}+ units.",
+      "deliveryDate": "Target Delivery Date",
+      "targetPrice": "Target Price per Unit",
+      "optional": "(Optional)",
+      "messageLabel": "Detailed Specifications & Inquiry",
+      "messagePlaceholder": "Include details such as material grades, custom packaging requirements, shipping preferences, or reference documents...",
+      "charCount": "{count}/1000 characters"
+    },
+    "actions": {
+      "attachFiles": "Attach Files",
+      "saveDraft": "Save Draft",
+      "submit": "Submit Request",
+      "submitting": "Submitting…"
+    },
+    "productCard": {
+      "inStock": "In Stock",
+      "manufacturedBy": "Manufactured by:",
+      "listPrice": "List price from {price} / unit · Min. order: {qty} units"
+    },
+    "supplier": {
+      "infoHeading": "Supplier Info",
+      "reviews": "{rating} ({count} reviews)",
+      "viewProfile": "View Profile",
+      "stats": {
+        "responseTime": "Response Time",
+        "onTimeDelivery": "On-Time Delivery",
+        "location": "Location"
+      }
+    },
+    "buyerProtection": {
+      "heading": "Buyer Protection",
+      "description": "Your request is covered by SupplyHub's secure transaction guarantee. Payments are held in escrow until delivery is confirmed.",
+      "learnMore": "Learn more"
+    }
+  }
 }
