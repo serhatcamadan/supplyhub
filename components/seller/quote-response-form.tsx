@@ -4,6 +4,7 @@ import { useState } from 'react'
 import { formatCurrency } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { QuoteSentScreen } from '@/components/seller/quote-sent-screen'
+import { createClient } from '@/lib/supabase/client'
 
 interface QuoteResponseFormProps {
   quoteId: string
@@ -28,7 +29,7 @@ function defaultValidUntil() {
 }
 
 export function QuoteResponseForm({
-  quoteId: _quoteId,
+  quoteId,
   quantity,
   listPrice,
   existingResponse,
@@ -39,17 +40,30 @@ export function QuoteResponseForm({
   const [leadTime, setLeadTime] = useState('14-21')
   const [validUntil, setValidUntil] = useState(defaultValidUntil())
   const [message, setMessage] = useState(existingResponse.message ?? '')
-  const [savedAt, setSavedAt] = useState<number | null>(existingResponse.price !== null ? Date.now() : null)
-  const [isSent, setIsSent] = useState(false)
+  const [savedAt, setSavedAt]   = useState<number | null>(existingResponse.price !== null ? Date.now() : null)
+  const [isSent, setIsSent]     = useState(false)
+  const [isSaving, setIsSaving] = useState(false)
 
-  const total = price * quantity
+  const total   = price * quantity
   const isSaved = savedAt !== null
 
-  function handleSaveDraft() {
+  async function handleSaveDraft() {
+    setIsSaving(true)
+    const supabase = createClient()
+    await supabase
+      .from('quote_requests')
+      .update({ seller_response_price: price, seller_message: message })
+      .eq('id', quoteId)
     setSavedAt(Date.now())
+    setIsSaving(false)
   }
 
-  function handleSend() {
+  async function handleSend() {
+    const supabase = createClient()
+    await supabase
+      .from('quote_requests')
+      .update({ seller_response_price: price, seller_message: message, status: 'responded' })
+      .eq('id', quoteId)
     setIsSent(true)
   }
 
@@ -191,12 +205,6 @@ export function QuoteResponseForm({
         <div className="flex flex-col gap-2 flex-1">
           <div className="flex justify-between items-end">
             <label className="text-sm font-semibold text-on-surface">Message to Buyer</label>
-            <button className="text-xs font-semibold text-primary flex items-center gap-1 hover:underline">
-              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-                smart_toy
-              </span>
-              Generate AI Draft
-            </button>
           </div>
           <textarea
             value={message}
@@ -213,9 +221,9 @@ export function QuoteResponseForm({
 
       {/* Footer */}
       <div className="p-6 bg-surface-container-low border-t border-outline-variant/20 flex justify-between items-center z-10 shrink-0">
-        <Button variant="outline" onClick={handleSaveDraft}>
+        <Button variant="outline" onClick={handleSaveDraft} disabled={isSaving}>
           <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>save</span>
-          Save Draft
+          {isSaving ? 'Kaydediliyor…' : 'Save Draft'}
         </Button>
         <Button variant="secondary" size="lg" onClick={handleSend} className="hover:-translate-y-0.5 shadow-md">
           Send Quote

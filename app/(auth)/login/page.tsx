@@ -4,6 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { createClient } from '@/lib/supabase/client'
+import { Button } from '@/components/ui/button'
 
 const DEMO_ACCOUNTS = [
   { email: 'ali@freshfarm.com',    name: 'Ali Yılmaz',   sub: 'FreshFarm Gıda A.Ş.',   badge: 'bg-primary/10 text-primary',     label: 'Satıcı Admin' },
@@ -108,10 +109,9 @@ export default function LoginPage() {
                 className="w-full px-4 py-2.5 bg-surface border border-outline-variant/50 rounded-lg text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
             </div>
             {error && <p className="text-xs text-error">{error}</p>}
-            <button type="submit" disabled={loading}
-              className="w-full bg-primary text-on-primary py-2.5 rounded-lg text-sm font-semibold hover:bg-primary-container transition-colors disabled:opacity-60">
+            <Button type="submit" variant="primary" disabled={loading} className="w-full">
               {loading ? 'Giriş yapılıyor…' : 'Giriş Yap'}
-            </button>
+            </Button>
           </form>
 
           <div className="border-t border-outline-variant/40 pt-4">
