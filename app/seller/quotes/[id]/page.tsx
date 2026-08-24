@@ -1,4 +1,4 @@
-import { notFound } from 'next/navigation'
+import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { getInitials } from '@/lib/utils'
@@ -32,6 +32,13 @@ export default async function QuoteDetailPage({
     .single()
 
   if (!quote) notFound()
+
+  async function decline() {
+    'use server'
+    const sb = await createClient()
+    await sb.from('quote_requests').update({ status: 'declined' }).eq('id', id)
+    redirect('/seller/quotes')
+  }
 
   const [{ data: productData }, { data: buyerData }] = await Promise.all([
     supabase.from('products').select('*').eq('id', quote.product_id).single(),
@@ -79,10 +86,12 @@ export default async function QuoteDetailPage({
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>print</span>
             Print
           </Button>
-          <Button variant="outline" className="text-error hover:bg-error-container/50">
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>block</span>
-            Decline
-          </Button>
+          <form action={decline}>
+            <Button type="submit" variant="outline" className="text-error hover:bg-error-container/50">
+              <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>block</span>
+              Decline
+            </Button>
+          </form>
         </div>
       </div>
 

@@ -88,30 +88,30 @@
 
 ## 4. Form Submitleri — Supabase Yazma
 
-### 4.1 Yeni Ürün Kaydet
+### ✅ 4.1 Yeni Ürün Kaydet
 **Dosya:** `app/seller/products/new/page.tsx`
 - "Save Product" butonunun `onClick`'i yok
 - Form state'inden (`tiers`, `description`, vs.) `products` tablosuna insert yap
 - Başarı sonrası `/seller/products`'a yönlendir
 
-### 4.2 Ürün Düzenleme Sayfası Oluştur
+### ✅ 4.2 Ürün Düzenleme Sayfası Oluştur
 **Dosya:** `app/seller/products/[id]/edit/page.tsx` — **sayfa yok**
 - `components/seller/product-row-actions.tsx`'te link var ama route yok
 - `new/page.tsx` ile aynı bileşenleri kullanarak düzenleme sayfası oluştur
 - Supabase'ten mevcut ürün verisini çekip formu doldur, submit'te update yap
 
-### 4.3 Quote Yanıtını Kaydet / Gönder
+### ✅ 4.3 Quote Yanıtını Kaydet / Gönder
 **Dosya:** `components/seller/quote-response-form.tsx`
 - "Save Draft" ve "Send Quote" sadece local state değiştiriyor
 - "Save Draft" → `quote_requests` tablosunu `seller_response_price` ve `seller_message` ile update et
 - "Send Quote" → aynı update + `status = 'responded'` olarak kaydet
 
-### 4.4 Quote'u Reddet
+### ✅ 4.4 Quote'u Reddet
 **Dosya:** `app/seller/quotes/[id]/page.tsx`
 - "Decline" butonu işlevsel değil
 - Tıklanınca `quote_requests.status = 'declined'` olarak Supabase'e yaz
 
-### 4.5 RFQ Formu Submit
+### ✅ 4.5 RFQ Formu Submit
 **Dosya:** `app/buyer/quotes/new/page.tsx`
 - Form submit butonu hiçbir şey yazmıyor
 - `quote_requests` tablosuna insert yap, başarı sonrası `/buyer/quotes`'a yönlendir
