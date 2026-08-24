@@ -1,5 +1,10 @@
+'use client'
+
+import { useState } from 'react'
+import { useRouter } from 'next/navigation'
 import { Avatar } from '@/components/ui/avatar'
 import { formatCurrency, formatDate, getInitials } from '@/lib/utils'
+import { createClient } from '@/lib/supabase/client'
 import type { OrderWithDetails } from '@/types'
 
 interface ApprovalCardProps {
@@ -7,6 +12,30 @@ interface ApprovalCardProps {
 }
 
 export function ApprovalCard({ order }: ApprovalCardProps) {
+  const router = useRouter()
+  const [isLoading, setIsLoading] = useState(false)
+
+  async function handleApprove() {
+    setIsLoading(true)
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    await supabase
+      .from('orders')
+      .update({ approved_by: user!.id, status: 'confirmed' })
+      .eq('id', order.id)
+    router.refresh()
+  }
+
+  async function handleReject() {
+    setIsLoading(true)
+    const supabase = createClient()
+    await supabase
+      .from('orders')
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      .update({ needs_approval: false } as any)
+      .eq('id', order.id)
+    router.refresh()
+  }
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-tertiary-container/40 overflow-hidden">
 
@@ -91,11 +120,19 @@ export function ApprovalCard({ order }: ApprovalCardProps) {
           This order exceeds the staff spending limit and requires admin approval.
         </p>
         <div className="flex items-center gap-3">
-          <button className="h-9 px-5 inline-flex items-center gap-2 border border-error/30 text-error text-sm font-semibold rounded-lg hover:bg-error-container/40 transition-colors">
+          <button
+            disabled={isLoading}
+            onClick={handleReject}
+            className="h-9 px-5 inline-flex items-center gap-2 border border-error/30 text-error text-sm font-semibold rounded-lg hover:bg-error-container/40 transition-colors disabled:opacity-50"
+          >
             <span className="material-symbols-outlined text-[18px]">cancel</span>
             Reject
           </button>
-          <button className="h-9 px-5 inline-flex items-center gap-2 bg-secondary text-on-secondary text-sm font-semibold rounded-lg hover:bg-secondary/90 transition-colors shadow-sm">
+          <button
+            disabled={isLoading}
+            onClick={handleApprove}
+            className="h-9 px-5 inline-flex items-center gap-2 bg-secondary text-on-secondary text-sm font-semibold rounded-lg hover:bg-secondary/90 transition-colors shadow-sm disabled:opacity-50"
+          >
             <span className="material-symbols-outlined text-[18px]">check_circle</span>
             Approve
           </button>

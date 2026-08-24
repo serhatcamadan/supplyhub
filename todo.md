@@ -120,7 +120,7 @@
 
 ## 5. Durum Güncelleme Aksiyonları
 
-### 5.1 Seller Orders — Sipariş Durumu Güncelle
+### ✅ 5.1 Seller Orders — Sipariş Durumu Güncelle
 **Dosya:** `components/seller/order-table.tsx`
 - "Confirm", "Ship", "Deliver" butonlarının `onClick`'i yok
 - Her buton ilgili siparişi Supabase'te günceller:
@@ -128,7 +128,7 @@
   - Ship → `status = 'shipped'`
   - Deliver → `status = 'delivered'`
 
-### 5.2 Buyer Approvals — Onayla / Reddet
+### ✅ 5.2 Buyer Approvals — Onayla / Reddet
 **Dosya:** `components/buyer/approval-card.tsx`
 - "Approve" ve "Reject" butonlarının `onClick`'i yok
 - Approve → `approved_by = session.user.id`, `status = 'confirmed'`
