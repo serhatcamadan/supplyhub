@@ -24,9 +24,10 @@ const UNIT_BY_CATEGORY: Record<string, string> = {
 }
 
 export default function BuyerDiscoverPage() {
-  const [category, setCategory]                   = useState(ALL)
-  const [products, setProducts]                   = useState<Product[]>([])
-  const [sellerNames, setSellerNames]             = useState<Record<string, string>>({})
+  const [category, setCategory]     = useState(ALL)
+  const [search, setSearch]         = useState('')
+  const [products, setProducts]     = useState<Product[]>([])
+  const [sellerNames, setSellerNames] = useState<Record<string, string>>({})
 
   useEffect(() => {
     async function load() {
@@ -54,7 +55,13 @@ export default function BuyerDiscoverPage() {
 
   const categories = [ALL, ...Array.from(new Set(products.map((p) => p.category)))]
 
-  const filtered = products.filter((p) => category === ALL || p.category === category)
+  const filtered = products.filter(
+    (p) =>
+      (category === ALL || p.category === category) &&
+      (!search ||
+        p.name.toLowerCase().includes(search.toLowerCase()) ||
+        p.description.toLowerCase().includes(search.toLowerCase()))
+  )
 
   return (
     <div className="p-8 flex flex-col gap-10">
@@ -68,13 +75,19 @@ export default function BuyerDiscoverPage() {
             </p>
           </div>
           <div className="flex items-center gap-3 shrink-0">
+            <div className="relative">
+              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" style={{ fontSize: '18px' }}>search</span>
+              <input
+                type="text"
+                placeholder="Ürün ara…"
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+                className="h-10 pl-9 pr-4 bg-surface border border-outline-variant rounded-lg text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/60 w-56"
+              />
+            </div>
             <Button variant="ghost">
-              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>filter_list</span>
-              Filtrele
-            </Button>
-            <Button variant="primary">
               <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>tune</span>
-              Sırala
+              Filtrele
             </Button>
           </div>
         </div>

@@ -167,22 +167,22 @@
 
 ## 8. İşlevsel Eksiklikler
 
-### 8.1 Buyer Discover Arama
+### ✅ 8.1 Buyer Discover Arama
 **Dosya:** `app/buyer/discover/page.tsx`
 - Topbar'daki global arama ile ürün listesi bağlantılı değil
 - Sayfaya search state ekle, ürün listesini filtrele
 
-### 8.2 Product Tabs İçerikleri
+### ✅ 8.2 Product Tabs İçerikleri
 **Dosya:** `components/buyer/product-tabs.tsx`
 - "Specs" ve "Docs" tab'ları `"yakında eklenecek"` placeholder gösteriyor
 - Gerçek ürün özelliklerini ve belge listesini göster (mock veri bile olsa dolu görünmeli)
 
-### 8.3 Buyer Orders Tekrar Sipariş
+### ✅ 8.3 Buyer Orders Tekrar Sipariş
 **Dosya:** `components/buyer/order-history-table.tsx`
 - "Tekrar Sipariş" hover action `onClick`'i yok
 - Aynı order_items'larla sepete ürün ekle veya yeni sipariş oluştur
 
-### 8.4 Seller Discover "Ürün Ekle" Butonu
+### ✅ 8.4 Seller Discover "Ürün Ekle" Butonu
 **Dosya:** `app/seller/discover/page.tsx`
 - Sağ üstteki "Ürün Ekle" butonu no-op
 - `/seller/products/new`'e yönlendir
