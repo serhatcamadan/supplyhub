@@ -138,13 +138,13 @@
 
 ## 6. Cart Aksiyonları
 
-### 6.1 Cart Checkout
+### ✅ 6.1 Cart Checkout
 **Dosya:** `app/buyer/cart/page.tsx`
 - `onCheckout` şu an `alert('Ödeme akışı yakında ekleniyor…')`
 - Sepet içeriğinden `orders` + `order_items` tablosuna insert yap
 - `total > eşik ise needs_approval = true` mantığını uygula
 
-### 6.2 Cart'tan Teklif Talebi
+### ✅ 6.2 Cart'tan Teklif Talebi
 **Dosya:** `app/buyer/cart/page.tsx`
 - `onRequestQuote` şu an `alert('Teklif talebi yakında ekleniyor…')`
 - Sepetteki ürünlerle `/buyer/quotes/new` sayfasına yönlendir
@@ -153,12 +153,12 @@
 
 ## 7. UI Tutarsızlıkları — Bileşen Kuralı İhlali
 
-### 7.1 Login Sayfası Submit Butonu
+### ✅ 7.1 Login Sayfası Submit Butonu
 **Dosya:** `app/(auth)/login/page.tsx` — satır 111
 - `<button type="submit">` ham HTML kullanıyor
 - `<Button variant="primary">` olarak değiştir
 
-### 7.2 Approvals Export Butonu
+### ✅ 7.2 Approvals Export Butonu
 **Dosya:** `app/buyer/approvals/page.tsx` — satır 27
 - Ham `<button className="h-10 ...">` kullanıyor
 - `<Button variant="outline">` olarak değiştir

@@ -1,11 +1,18 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { createClient } from '@/lib/supabase/client'
 import { CartItemCard, type CartItem } from '@/components/buyer/cart-item'
 import { OrderSummary } from '@/components/buyer/order-summary'
 import { CartPromoBanner } from '@/components/buyer/cart-promo-banner'
+
+const TAX_RATE = 0.20
+const SHIPPING_THRESHOLD = 10_000
+const SHIPPING_COST = 450
+const APPROVAL_THRESHOLD = 50_000
 
 const INITIAL_ITEMS: CartItem[] = [
   {
@@ -38,9 +45,30 @@ const INITIAL_ITEMS: CartItem[] = [
   },
 ]
 
-
 export default function BuyerCartPage() {
+  const router = useRouter()
   const [items, setItems] = useState<CartItem[]>(INITIAL_ITEMS)
+  const [isCheckingOut, setIsCheckingOut] = useState(false)
+  const [checkoutError, setCheckoutError] = useState<string | null>(null)
+
+  // Enrich cart items with real product + seller IDs from Supabase
+  useEffect(() => {
+    async function enrich() {
+      const supabase = createClient()
+      const { data: products } = await supabase
+        .from('products')
+        .select('id, seller_id')
+        .eq('status', 'active')
+        .limit(2)
+      if (!products || products.length === 0) return
+      setItems((prev) =>
+        prev.map((item, i) =>
+          products[i] ? { ...item, productId: products[i].id, sellerId: products[i].seller_id } : item
+        )
+      )
+    }
+    enrich()
+  }, [])
 
   function handleQtyChange(id: string, qty: number) {
     setItems((prev) => prev.map((item) => item.id === id ? { ...item, qty } : item))
@@ -52,6 +80,65 @@ export default function BuyerCartPage() {
 
   function handleClearCart() {
     setItems([])
+  }
+
+  async function handleCheckout() {
+    setIsCheckingOut(true)
+    setCheckoutError(null)
+
+    const supabase = createClient()
+    const { data: { user } } = await supabase.auth.getUser()
+    if (!user) { setIsCheckingOut(false); return }
+
+    const companyId = user.user_metadata?.company_id as string
+    const role = user.user_metadata?.role as string
+    const sellerId = items.find((i) => i.sellerId)?.sellerId
+
+    if (!sellerId) {
+      setCheckoutError('Satıcı bilgisi bulunamadı.')
+      setIsCheckingOut(false)
+      return
+    }
+
+    const taxable = subtotal - volumeDiscount
+    const shipping = subtotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST
+    const tax = Math.round(taxable * TAX_RATE)
+    const grandTotal = taxable + shipping + tax
+    const needsApproval = role === 'staff' && grandTotal > APPROVAL_THRESHOLD
+
+    const { data: order, error: orderErr } = await supabase
+      .from('orders')
+      .insert({
+        buyer_id: companyId,
+        seller_id: sellerId,
+        status: 'pending',
+        total: grandTotal,
+        needs_approval: needsApproval,
+        created_by: user.id,
+      })
+      .select('id')
+      .single()
+
+    if (orderErr || !order) {
+      setCheckoutError(orderErr?.message ?? 'Sipariş oluşturulamadı.')
+      setIsCheckingOut(false)
+      return
+    }
+
+    const orderItems = items
+      .filter((i) => i.productId)
+      .map((i) => ({
+        order_id: order.id,
+        product_id: i.productId!,
+        quantity: i.qty,
+        unit_price: i.unitPrice,
+      }))
+
+    if (orderItems.length > 0) {
+      await supabase.from('order_items').insert(orderItems)
+    }
+
+    router.push('/buyer/orders')
   }
 
   const subtotal = items.reduce((sum, item) => sum + item.originalUnitPrice * item.qty, 0)
@@ -141,12 +228,16 @@ export default function BuyerCartPage() {
 
       {/* ── Right: fixed order summary sidebar ── */}
       <div className="w-full lg:w-96 bg-surface-container-lowest border-t lg:border-t-0 lg:border-l border-outline-variant/30 shadow-xl flex flex-col shrink-0 overflow-y-auto">
+        {checkoutError && (
+          <p className="px-6 pt-4 text-sm text-error">{checkoutError}</p>
+        )}
         <OrderSummary
           subtotal={subtotal}
           volumeDiscount={volumeDiscount}
           itemCount={items.length}
-          onCheckout={() => alert('Ödeme akışı yakında ekleniyor…')}
-          onRequestQuote={() => alert('Teklif talebi yakında ekleniyor…')}
+          onCheckout={handleCheckout}
+          isCheckingOut={isCheckingOut}
+          onRequestQuote={() => router.push('/buyer/quotes/new')}
         />
       </div>
     </div>

@@ -1,6 +1,7 @@
 import { createClient } from '@/lib/supabase/server'
 import { ApprovalCard } from '@/components/buyer/approval-card'
 import { ApprovalStatCards } from '@/components/buyer/approval-stat-cards'
+import { Button } from '@/components/ui/button'
 import type { OrderWithDetails } from '@/types'
 
 export default async function BuyerApprovalsPage() {
@@ -39,10 +40,10 @@ export default async function BuyerApprovalsPage() {
           </p>
         </div>
         <div className="flex gap-3">
-          <button className="h-10 px-4 inline-flex items-center gap-2 bg-surface text-on-surface border border-outline-variant rounded-lg text-xs font-semibold uppercase tracking-wider hover:bg-surface-container-low transition-colors shadow-sm">
+          <Button variant="outline">
             <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>filter_list</span>
             Filter
-          </button>
+          </Button>
         </div>
       </div>
 
