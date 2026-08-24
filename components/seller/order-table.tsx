@@ -56,12 +56,26 @@ function StatusBadge({ status }: { status: OrderStatus }) {
   )
 }
 
-function RowActions({ status }: { status: OrderStatus }) {
+function RowActions({
+  orderId,
+  status,
+  onStatusChange,
+}: {
+  orderId: string
+  status: OrderStatus
+  onStatusChange: (id: string, status: OrderStatus) => void
+}) {
   return (
     <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-      {status === 'pending' && <Button variant="primary" size="sm">Confirm</Button>}
-      {status === 'confirmed' && <Button variant="primary" size="sm">Ship</Button>}
-      {status === 'shipped' && <Button variant="secondary" size="sm">Deliver</Button>}
+      {status === 'pending' && (
+        <Button variant="primary" size="sm" onClick={() => onStatusChange(orderId, 'confirmed')}>Confirm</Button>
+      )}
+      {status === 'confirmed' && (
+        <Button variant="primary" size="sm" onClick={() => onStatusChange(orderId, 'shipped')}>Ship</Button>
+      )}
+      {status === 'shipped' && (
+        <Button variant="secondary" size="sm" onClick={() => onStatusChange(orderId, 'delivered')}>Deliver</Button>
+      )}
       <button className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors">
         <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>more_vert</span>
       </button>
@@ -69,7 +83,13 @@ function RowActions({ status }: { status: OrderStatus }) {
   )
 }
 
-export function OrderTable({ orders }: { orders: OrderWithDetails[] }) {
+export function OrderTable({
+  orders,
+  onStatusChange,
+}: {
+  orders: OrderWithDetails[]
+  onStatusChange: (id: string, status: OrderStatus) => void
+}) {
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 overflow-auto">
@@ -151,7 +171,7 @@ export function OrderTable({ orders }: { orders: OrderWithDetails[] }) {
                   </td>
 
                   <td className="py-4 px-6">
-                    <RowActions status={order.status} />
+                    <RowActions orderId={order.id} status={order.status} onStatusChange={onStatusChange} />
                   </td>
                 </tr>
               ))
