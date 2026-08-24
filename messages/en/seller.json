@@ -1,4 +1,136 @@
 {
+  "quotes": {
+    "heading": "Quote Requests",
+    "subHeading": "Manage incoming RFQs and respond to potential buyers.",
+    "exportCsv": "Export CSV",
+    "stats": {
+      "totalActive": "Total Active RFQs",
+      "pendingResponse": "Pending Response",
+      "converted": "Converted (30d)",
+      "pipelineValue": "Est. Pipeline Value"
+    },
+    "tabs": {
+      "all": "All Requests",
+      "pending": "Pending",
+      "responded": "Responded",
+      "archived": "Archived"
+    },
+    "searchPlaceholder": "Search RFQ ID, Buyer...",
+    "table": {
+      "rfqId": "RFQ ID",
+      "buyerCol": "Buyer",
+      "buyerRole": "Buyer",
+      "product": "Product",
+      "quantity": "Quantity",
+      "dateReceived": "Date Received",
+      "status": "Status",
+      "actionsCol": "Actions",
+      "perUnit": "units",
+      "listLabel": "List:",
+      "offerLabel": "Offer:",
+      "expiringSoon": "Expires soon",
+      "respond": "Respond",
+      "noResults": "No quote requests found.",
+      "pagination": "Showing {shown} of {total} entries",
+      "statusLabel": {
+        "pending": "Pending",
+        "responded": "Responded",
+        "accepted": "Accepted",
+        "declined": "Declined"
+      }
+    },
+    "detail": {
+      "back": "Quotes",
+      "received": "Received:",
+      "heading": "Quote Request",
+      "decline": "Decline",
+      "location": "Turkey",
+      "buyerRole": "Wholesale Buyer",
+      "requestedProducts": "Requested Products",
+      "colItem": "Item",
+      "colQty": "Qty",
+      "colListPrice": "List Price",
+      "totalAtListPrice": "Total at list price:",
+      "minOrder": "Min. order:",
+      "unit": "units",
+      "buyerMessage": "Buyer Message",
+      "noMessage": "No message provided.",
+      "unknownBuyer": "Unknown Buyer",
+      "unknownProduct": "Unknown Product"
+    },
+    "response": {
+      "heading": "Draft Response",
+      "unsaved": "Unsaved",
+      "draftSaved": "Draft Saved",
+      "pricingProposal": "Pricing Proposal",
+      "unitPrice": "Unit Price",
+      "listPriceLabel": "List price:",
+      "totalValue": "Total Value",
+      "volumeDiscount": "Offer volume discount tier for larger quantities",
+      "leadTime": "Estimated Lead Time",
+      "validUntil": "Valid Until",
+      "messageToBuyer": "Message to Buyer",
+      "messagePlaceholder": "Write your response here...",
+      "saveDraft": "Save Draft",
+      "saving": "Saving…",
+      "sendQuote": "Send Quote",
+      "perUnit": "per unit",
+      "leadTimeOptions": {
+        "7-14": "7–14 Days",
+        "14-21": "14–21 Days",
+        "21-30": "21–30 Days",
+        "30+": "30+ Days"
+      }
+    },
+    "sent": {
+      "heading": "Quote Sent!",
+      "description": "Your response has been sent to the buyer. They will be notified shortly.",
+      "backToQuotes": "Back to Quotes"
+    }
+  },
+  "orders": {
+    "heading": "Orders",
+    "subHeading": "Manage and track wholesale orders from your buyers.",
+    "filter": "Filter",
+    "exportCsv": "Export CSV",
+    "stats": {
+      "totalOrders": "Total Orders",
+      "awaitingAction": "Awaiting Action",
+      "inTransit": "In Transit",
+      "totalRevenue": "Total Revenue"
+    },
+    "tabs": {
+      "all": "All Orders",
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "shipped": "Shipped",
+      "delivered": "Delivered"
+    },
+    "searchPlaceholder": "Search order ID, buyer...",
+    "table": {
+      "orderId": "Order ID",
+      "buyer": "Buyer",
+      "date": "Date",
+      "items": "Items",
+      "total": "Total",
+      "status": "Status",
+      "actionsCol": "Actions",
+      "awaitingApproval": "Awaiting approval",
+      "noResults": "No orders found.",
+      "pagination": "Showing {shown} of {total} orders",
+      "statusLabel": {
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "shipped": "Shipped",
+        "delivered": "Delivered"
+      },
+      "rowActions": {
+        "confirm": "Confirm",
+        "ship": "Ship",
+        "deliver": "Deliver"
+      }
+    }
+  },
   "products": {
     "heading": "Product Catalog",
     "subHeading": "Manage your inventory, update pricing, and monitor stock levels across all your active and draft listings.",

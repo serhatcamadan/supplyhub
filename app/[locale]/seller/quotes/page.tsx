@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import { formatCurrency, getInitials } from '@/lib/utils'
 import type { Product } from '@/types'
@@ -9,19 +10,20 @@ import { QuoteTable, type EnrichedQuote } from '@/components/seller/quote-table'
 
 type QuoteTab = 'all' | 'pending' | 'responded' | 'archived'
 
-const TABS = [
-  { value: 'all',       label: 'All Requests' },
-  { value: 'pending',   label: 'Pending' },
-  { value: 'responded', label: 'Responded' },
-  { value: 'archived',  label: 'Archived' },
-]
-
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
 
 export default function SellerQuotesPage() {
-  const [tab, setTab]             = useState<QuoteTab>('all')
-  const [search, setSearch]       = useState('')
-  const [enriched, setEnriched]   = useState<EnrichedQuote[]>([])
+  const t = useTranslations('seller')
+  const [tab, setTab]           = useState<QuoteTab>('all')
+  const [search, setSearch]     = useState('')
+  const [enriched, setEnriched] = useState<EnrichedQuote[]>([])
+
+  const TABS = [
+    { value: 'all',       label: t('quotes.tabs.all') },
+    { value: 'pending',   label: t('quotes.tabs.pending') },
+    { value: 'responded', label: t('quotes.tabs.responded') },
+    { value: 'archived',  label: t('quotes.tabs.archived') },
+  ]
 
   useEffect(() => {
     async function load() {
@@ -62,7 +64,7 @@ export default function SellerQuotesPage() {
         const buyerName = buyerMap[q.buyer_id] ?? q.buyer_id
         const listPrice =
           product?.price_tiers.find(
-            (t) => q.quantity >= t.min_qty && (t.max_qty === null || q.quantity <= t.max_qty)
+            (tier) => q.quantity >= tier.min_qty && (tier.max_qty === null || q.quantity <= tier.max_qty)
           )?.price ?? null
         const ageMs = Date.now() - new Date(q.created_at).getTime()
         return {
@@ -80,11 +82,11 @@ export default function SellerQuotesPage() {
     load()
   }, [])
 
-  const pendingCount    = enriched.filter((q) => q.status === 'pending').length
-  const closedCount     = enriched.filter((q) => q.status === 'accepted' || q.status === 'declined').length
-  const acceptedCount   = enriched.filter((q) => q.status === 'accepted').length
-  const conversionRate  = closedCount > 0 ? Math.round((acceptedCount / closedCount) * 100) : 0
-  const pipelineValue   = enriched
+  const pendingCount   = enriched.filter((q) => q.status === 'pending').length
+  const closedCount    = enriched.filter((q) => q.status === 'accepted' || q.status === 'declined').length
+  const acceptedCount  = enriched.filter((q) => q.status === 'accepted').length
+  const conversionRate = closedCount > 0 ? Math.round((acceptedCount / closedCount) * 100) : 0
+  const pipelineValue  = enriched
     .filter((q) => q.status === 'pending')
     .reduce((sum, q) => sum + q.quantity * (q.listPrice ?? 0), 0)
 
@@ -109,21 +111,19 @@ export default function SellerQuotesPage() {
 
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight text-on-surface">Quote Requests</h1>
-          <p className="text-sm text-on-surface-variant mt-2">
-            Manage incoming RFQs and respond to potential buyers.
-          </p>
+          <h1 className="text-4xl font-bold tracking-tight text-on-surface">{t('quotes.heading')}</h1>
+          <p className="text-sm text-on-surface-variant mt-2">{t('quotes.subHeading')}</p>
         </div>
         <button className="h-10 px-4 inline-flex items-center gap-2 bg-surface text-primary border border-outline-variant rounded-lg text-xs font-semibold uppercase tracking-wider hover:bg-surface-container-low transition-colors shadow-sm">
           <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>download</span>
-          Export CSV
+          {t('quotes.exportCsv')}
         </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <div className="bg-surface-container-lowest p-5 rounded-xl shadow-sm relative overflow-hidden group">
           <div className="absolute right-0 top-0 w-24 h-24 bg-primary/5 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110" />
-          <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">Total Active RFQs</p>
+          <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">{t('quotes.stats.totalActive')}</p>
           <p className="text-4xl font-bold text-on-surface">{enriched.length}</p>
         </div>
 
@@ -131,7 +131,7 @@ export default function SellerQuotesPage() {
           <div className="absolute right-0 top-0 w-24 h-24 bg-tertiary-container/20 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110" />
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">Pending Response</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">{t('quotes.stats.pendingResponse')}</p>
               <p className="text-4xl font-bold text-on-surface">{pendingCount}</p>
             </div>
             <span className="material-symbols-outlined text-on-tertiary-container bg-tertiary-container/30 p-2 rounded-lg shrink-0">schedule</span>
@@ -142,7 +142,7 @@ export default function SellerQuotesPage() {
           <div className="absolute right-0 top-0 w-24 h-24 bg-secondary-fixed-dim/20 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110" />
           <div className="flex justify-between items-start">
             <div>
-              <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">Converted (30d)</p>
+              <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">{t('quotes.stats.converted')}</p>
               <p className="text-4xl font-bold text-on-surface">{conversionRate}%</p>
             </div>
             <span className="material-symbols-outlined text-secondary bg-secondary-fixed/30 p-2 rounded-lg shrink-0">trending_up</span>
@@ -151,7 +151,7 @@ export default function SellerQuotesPage() {
 
         <div className="bg-primary p-5 rounded-xl shadow-md relative overflow-hidden text-on-primary">
           <div className="absolute right-0 top-0 w-32 h-32 bg-white/10 rounded-full blur-xl -mr-10 -mt-10" />
-          <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-on-primary/80">Est. Pipeline Value</p>
+          <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-on-primary/80">{t('quotes.stats.pipelineValue')}</p>
           <p className="text-4xl font-bold tracking-tight relative z-10">{formatCurrency(pipelineValue)}</p>
         </div>
       </div>
@@ -160,10 +160,10 @@ export default function SellerQuotesPage() {
         <TableControls
           tabs={TABS}
           activeTab={tab}
-          onTabChange={(t) => setTab(t as QuoteTab)}
+          onTabChange={(v) => setTab(v as QuoteTab)}
           search={search}
           onSearchChange={setSearch}
-          searchPlaceholder="Search RFQ ID, Buyer..."
+          searchPlaceholder={t('quotes.searchPlaceholder')}
         />
         <QuoteTable quotes={filtered} />
       </div>

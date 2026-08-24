@@ -1,5 +1,6 @@
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
+import { getTranslations, getLocale } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { getInitials } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -8,8 +9,8 @@ import { QuoteResponseForm } from '@/components/seller/quote-response-form'
 import { PrintButton } from '@/components/seller/print-button'
 import type { Product, Company } from '@/types'
 
-function formatReceived(iso: string) {
-  return new Intl.DateTimeFormat('en-US', {
+function formatReceived(iso: string, locale: string) {
+  return new Intl.DateTimeFormat(locale === 'tr' ? 'tr-TR' : 'en-US', {
     month: 'short',
     day: 'numeric',
     year: 'numeric',
@@ -24,7 +25,11 @@ export default async function QuoteDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const supabase = await createClient()
+  const [supabase, t, locale] = await Promise.all([
+    createClient(),
+    getTranslations('seller'),
+    getLocale(),
+  ])
 
   const { data: quote } = await supabase
     .from('quote_requests')
@@ -36,9 +41,10 @@ export default async function QuoteDetailPage({
 
   async function decline() {
     'use server'
+    const loc = await getLocale()
     const sb = await createClient()
     await sb.from('quote_requests').update({ status: 'declined' }).eq('id', id)
-    redirect('/seller/quotes')
+    redirect(`/${loc}/seller/quotes`)
   }
 
   const [{ data: productData }, { data: buyerData }] = await Promise.all([
@@ -51,9 +57,9 @@ export default async function QuoteDetailPage({
 
   const listPrice =
     product?.price_tiers.find(
-      (t) =>
-        quote.quantity >= t.min_qty &&
-        (t.max_qty === null || quote.quantity <= t.max_qty)
+      (tier) =>
+        quote.quantity >= tier.min_qty &&
+        (tier.max_qty === null || quote.quantity <= tier.max_qty)
     )?.price ??
     product?.price_tiers[0]?.price ??
     null
@@ -65,21 +71,21 @@ export default async function QuoteDetailPage({
         <div className="flex flex-col gap-2">
           <div className="flex items-center gap-3">
             <Link
-              href="/seller/quotes"
+              href={`/${locale}/seller/quotes`}
               className="text-xs font-semibold text-on-surface-variant hover:text-on-surface flex items-center gap-1 transition-colors"
             >
               <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>arrow_back</span>
-              Quotes
+              {t('quotes.detail.back')}
             </Link>
             <span className="text-outline-variant">/</span>
             <span className="px-2 py-1 bg-tertiary-container/20 text-on-tertiary-container text-xs font-semibold rounded-md uppercase tracking-wider">
               {quote.id.slice(0, 8).toUpperCase()}
             </span>
             <span className="px-2 py-1 bg-surface-container-high text-on-surface-variant text-xs font-semibold rounded-md">
-              Received: {formatReceived(quote.created_at)}
+              {t('quotes.detail.received')} {formatReceived(quote.created_at, locale)}
             </span>
           </div>
-          <h1 className="text-4xl font-bold tracking-tight text-on-surface">Quote Request</h1>
+          <h1 className="text-4xl font-bold tracking-tight text-on-surface">{t('quotes.detail.heading')}</h1>
         </div>
 
         <div className="flex gap-3">
@@ -87,7 +93,7 @@ export default async function QuoteDetailPage({
           <form action={decline}>
             <Button type="submit" variant="outline" className="text-error hover:bg-error-container/50">
               <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>block</span>
-              Decline
+              {t('quotes.detail.decline')}
             </Button>
           </form>
         </div>
@@ -95,10 +101,10 @@ export default async function QuoteDetailPage({
 
       <div className="flex flex-1 gap-6 min-h-0">
         <QuoteDetailPanel
-          buyerName={buyer?.name ?? 'Unknown Buyer'}
+          buyerName={buyer?.name ?? t('quotes.detail.unknownBuyer')}
           buyerInitials={buyer ? getInitials(buyer.name) : '??'}
           buyerMessage={quote.buyer_note}
-          productName={product?.name ?? 'Unknown Product'}
+          productName={product?.name ?? t('quotes.detail.unknownProduct')}
           productId={quote.product_id}
           productCategory={product?.category ?? '—'}
           quantity={quote.quantity}

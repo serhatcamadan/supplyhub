@@ -1,3 +1,6 @@
+'use client'
+
+import { useTranslations } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
 import { Avatar } from '@/components/ui/avatar'
 
@@ -24,6 +27,8 @@ export function QuoteDetailPanel({
   listPrice,
   minOrderQty,
 }: QuoteDetailPanelProps) {
+  const t = useTranslations('seller')
+
   return (
     <div className="flex-1 flex flex-col bg-surface rounded-2xl shadow-sm overflow-hidden border border-outline-variant/30">
 
@@ -39,9 +44,9 @@ export function QuoteDetailPanel({
           <h2 className="text-2xl font-semibold text-on-surface">{buyerName}</h2>
           <div className="flex items-center gap-2 mt-1 text-on-surface-variant">
             <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>location_on</span>
-            <span className="text-sm">Turkey</span>
+            <span className="text-sm">{t('quotes.detail.location')}</span>
             <span className="w-1 h-1 rounded-full bg-outline-variant" />
-            <span className="text-sm">Wholesale Buyer</span>
+            <span className="text-sm">{t('quotes.detail.buyerRole')}</span>
           </div>
         </div>
       </div>
@@ -55,7 +60,7 @@ export function QuoteDetailPanel({
             <span className="material-symbols-outlined text-primary" style={{ fontSize: '20px' }}>
               inventory_2
             </span>
-            Requested Products
+            {t('quotes.detail.requestedProducts')}
           </h3>
 
           <div className="bg-surface-container-lowest rounded-xl border border-outline-variant/30 overflow-hidden">
@@ -63,13 +68,13 @@ export function QuoteDetailPanel({
               <thead>
                 <tr className="bg-surface-container-low border-b border-outline-variant/30">
                   <th className="p-4 text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-                    Item
+                    {t('quotes.detail.colItem')}
                   </th>
                   <th className="p-4 text-xs font-semibold uppercase tracking-wider text-on-surface-variant text-right">
-                    Qty
+                    {t('quotes.detail.colQty')}
                   </th>
                   <th className="p-4 text-xs font-semibold uppercase tracking-wider text-on-surface-variant text-right">
-                    List Price
+                    {t('quotes.detail.colListPrice')}
                   </th>
                 </tr>
               </thead>
@@ -94,10 +99,10 @@ export function QuoteDetailPanel({
                     </div>
                   </td>
                   <td className="p-4 text-right font-mono text-sm text-on-surface">
-                    {quantity.toLocaleString('tr-TR')} adet
+                    {quantity.toLocaleString('tr-TR')} {t('quotes.detail.unit')}
                   </td>
                   <td className="p-4 text-right font-mono text-sm text-on-surface">
-                    {listPrice ? `${formatCurrency(listPrice)}/adet` : '—'}
+                    {listPrice ? `${formatCurrency(listPrice)}/${t('quotes.detail.unit')}` : '—'}
                   </td>
                 </tr>
               </tbody>
@@ -105,28 +110,28 @@ export function QuoteDetailPanel({
 
             <div className="p-4 bg-surface-container-lowest border-t border-outline-variant/20 flex justify-between items-center">
               <span className="text-xs text-on-surface-variant">
-                Total at list price:{' '}
+                {t('quotes.detail.totalAtListPrice')}{' '}
                 <strong className="text-on-surface">
                   {listPrice ? formatCurrency(listPrice * quantity) : '—'}
                 </strong>
               </span>
               <span className="text-xs text-on-surface-variant">
-                Min. order:{' '}
-                <strong className="text-on-surface">{minOrderQty} adet</strong>
+                {t('quotes.detail.minOrder')}{' '}
+                <strong className="text-on-surface">{minOrderQty} {t('quotes.detail.unit')}</strong>
               </span>
             </div>
           </div>
         </section>
 
         {/* Buyer Message */}
-        {buyerMessage ? (
-          <section>
-            <h3 className="text-base font-semibold text-on-surface mb-3 flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary" style={{ fontSize: '20px' }}>
-                chat
-              </span>
-              Buyer Message
-            </h3>
+        <section>
+          <h3 className="text-base font-semibold text-on-surface mb-3 flex items-center gap-2">
+            <span className="material-symbols-outlined text-primary" style={{ fontSize: '20px' }}>
+              chat
+            </span>
+            {t('quotes.detail.buyerMessage')}
+          </h3>
+          {buyerMessage ? (
             <div className="p-5 bg-surface-container-lowest rounded-xl border border-outline-variant/30 relative overflow-hidden">
               <span
                 className="material-symbols-outlined absolute top-3 left-3 text-outline-variant/20 select-none pointer-events-none"
@@ -138,20 +143,12 @@ export function QuoteDetailPanel({
                 {buyerMessage}
               </p>
             </div>
-          </section>
-        ) : (
-          <section>
-            <h3 className="text-base font-semibold text-on-surface mb-3 flex items-center gap-2">
-              <span className="material-symbols-outlined text-primary" style={{ fontSize: '20px' }}>
-                chat
-              </span>
-              Buyer Message
-            </h3>
+          ) : (
             <div className="p-5 bg-surface-container-lowest rounded-xl border border-dashed border-outline-variant/50 text-center">
-              <p className="text-sm text-on-surface-variant italic">No message provided.</p>
+              <p className="text-sm text-on-surface-variant italic">{t('quotes.detail.noMessage')}</p>
             </div>
-          </section>
-        )}
+          )}
+        </section>
 
       </div>
     </div>
