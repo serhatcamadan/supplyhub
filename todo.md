@@ -153,12 +153,12 @@
 
 ## 7. UI Tutarsızlıkları — Bileşen Kuralı İhlali
 
-### 7.1 Login Sayfası Submit Butonu
+### ✅ 7.1 Login Sayfası Submit Butonu
 **Dosya:** `app/(auth)/login/page.tsx` — satır 111
 - `<button type="submit">` ham HTML kullanıyor
 - `<Button variant="primary">` olarak değiştir
 
-### 7.2 Approvals Export Butonu
+### ✅ 7.2 Approvals Export Butonu
 **Dosya:** `app/buyer/approvals/page.tsx` — satır 27
 - Ham `<button className="h-10 ...">` kullanıyor
 - `<Button variant="outline">` olarak değiştir
