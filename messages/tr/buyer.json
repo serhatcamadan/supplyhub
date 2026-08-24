@@ -1,1 +1,120 @@
-{}
+{
+  "discover": {
+    "heading": "Ürün Keşfi",
+    "subHeading": "Onaylı toptan tedarikçilerden yüksek kaliteli ürünleri keşfedin ve tedarik zincirinizi güçlendirin.",
+    "searchPlaceholder": "Ürün ara…",
+    "filter": "Filtrele",
+    "allCategory": "Tümü",
+    "unknownSupplier": "Bilinmeyen Tedarikçi",
+    "noProducts": "Bu kategoride ürün bulunamadı.",
+    "breadcrumb": "Keşfet",
+    "priceTrend": "Fiyat Trendi (30 Gün)",
+    "priceTrendStable": "Stabil",
+    "badges": {
+      "organic": "Organik",
+      "natural": "Doğal",
+      "fresh": "Taze",
+      "fastDelivery": "Hızlı Teslimat"
+    },
+    "units": {
+      "bottle": "/ şişe",
+      "sack": "/ çuval",
+      "piece": "/ adet",
+      "pack": "/ paket"
+    },
+    "features": {
+      "oils": [
+        "Soğuk sıkım tekniği ile üretilmiş",
+        "AB organik sertifikalı",
+        "Ege bölgesi zeytinlerinden",
+        "Cam şişe, ışık geçirmez ambalaj"
+      ],
+      "grains": [
+        "Doğrudan değirmenden tedarik",
+        "Yüksek protein içeriği (%13+)",
+        "Standart 25 kg çuval ambalaj",
+        "Uzun raf ömrü (18 ay)"
+      ],
+      "natural": [
+        "Saf ve katkısız, ham bal",
+        "Karadeniz yayla çiçeklerinden",
+        "Mikrobiyolojik test onaylı",
+        "Yıl boyunca stok garantisi"
+      ],
+      "legumes": [
+        "Günlük taze üretim",
+        "Serbest gezen tavuk yumurtası",
+        "500g vakumlu paket",
+        "Soğuk zincir taşımacılık"
+      ]
+    }
+  },
+  "productDetail": {
+    "specs": {
+      "category": "Kategori",
+      "minOrderQty": "Min. Sipariş Miktarı",
+      "startingPrice": "Başlangıç Fiyatı",
+      "priceRange": "Fiyat Aralığı",
+      "priceTiers": "Fiyat Kademeleri",
+      "deliveryTime": "Teslimat Süresi",
+      "warehouseLocation": "Depo Konumu",
+      "shelfLife": "Raf Ömrü"
+    },
+    "specValues": {
+      "pieces": "{count} adet",
+      "tiers": "{count} kademe",
+      "pricePerPiece": "/ adet",
+      "deliveryDays": "7–14 iş günü",
+      "warehouseLocation": "Türkiye",
+      "shelfLife": "18 ay"
+    }
+  },
+  "productCard": {
+    "from": "İtibaren",
+    "perUnit": "/ adet",
+    "min": "Min:",
+    "pieces": "adet",
+    "favoriteLabel": "Favorilere ekle"
+  },
+  "productTabs": {
+    "overview": "Genel Bakış",
+    "specs": "Teknik Özellikler",
+    "docs": "Belgeler",
+    "keyFeatures": "Temel Özellikler",
+    "noSpecs": "Teknik özellik bilgisi mevcut değil.",
+    "documents": {
+      "sds": "Ürün Güvenlik Bilgi Formu (SDS)",
+      "quality": "Kalite Güvencesi Sertifikası",
+      "organic": "Organik Sertifikasyon",
+      "lab": "Laboratuvar Test Raporu"
+    }
+  },
+  "orderPanel": {
+    "listPrice": "Liste Fiyatı",
+    "perUnit": "/ adet",
+    "total": "Toplam:",
+    "inStock": "Stokta mevcut",
+    "bulkDiscount": "Toplu Alım İndirimleri",
+    "minUnitsWithSeller": "Min. {count} adet · {seller}",
+    "nextTierHint": "{count} adet daha ekleyin → {price}/adet",
+    "quantity": "Miktar",
+    "minQuantity": "Min. {count} adet",
+    "decrement": "Azalt",
+    "increment": "Artır",
+    "addToCart": "Sepete Ekle",
+    "requestQuote": "Özel Teklif İste",
+    "freeShipping": "500₺ üzeri siparişlerde ücretsiz kargo · 24 saat içinde kargoda"
+  },
+  "sellerInfo": {
+    "heading": "Tedarikçi Bilgileri",
+    "verifiedSupplier": "Onaylı Tedarikçi",
+    "responseTime": "Yanıt Süresi",
+    "responseTimeValue": "< 2 saat",
+    "onTimeDelivery": "Zamanında Teslimat",
+    "viewProfile": "Tedarikçi Profilini Gör"
+  },
+  "cart": {},
+  "orders": {},
+  "approvals": {},
+  "quotes": {}
+}

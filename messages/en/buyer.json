@@ -1,1 +1,120 @@
-{}
+{
+  "discover": {
+    "heading": "Product Discovery",
+    "subHeading": "Discover high-quality products from verified wholesale suppliers and strengthen your supply chain.",
+    "searchPlaceholder": "Search products…",
+    "filter": "Filter",
+    "allCategory": "All",
+    "unknownSupplier": "Unknown Supplier",
+    "noProducts": "No products found in this category.",
+    "breadcrumb": "Discover",
+    "priceTrend": "Price Trend (30 Days)",
+    "priceTrendStable": "Stable",
+    "badges": {
+      "organic": "Organic",
+      "natural": "Natural",
+      "fresh": "Fresh",
+      "fastDelivery": "Fast Delivery"
+    },
+    "units": {
+      "bottle": "/ bottle",
+      "sack": "/ sack",
+      "piece": "/ unit",
+      "pack": "/ pack"
+    },
+    "features": {
+      "oils": [
+        "Produced using cold-press technique",
+        "EU organic certified",
+        "From Aegean region olives",
+        "Glass bottle, light-proof packaging"
+      ],
+      "grains": [
+        "Sourced directly from the mill",
+        "High protein content (13%+)",
+        "Standard 25 kg sack packaging",
+        "Long shelf life (18 months)"
+      ],
+      "natural": [
+        "Pure and additive-free raw honey",
+        "From Black Sea highland flowers",
+        "Microbiological test approved",
+        "Year-round stock guarantee"
+      ],
+      "legumes": [
+        "Daily fresh production",
+        "Free-range chicken eggs",
+        "500g vacuum pack",
+        "Cold chain transport"
+      ]
+    }
+  },
+  "productDetail": {
+    "specs": {
+      "category": "Category",
+      "minOrderQty": "Min. Order Quantity",
+      "startingPrice": "Starting Price",
+      "priceRange": "Price Range",
+      "priceTiers": "Price Tiers",
+      "deliveryTime": "Delivery Time",
+      "warehouseLocation": "Warehouse Location",
+      "shelfLife": "Shelf Life"
+    },
+    "specValues": {
+      "pieces": "{count} units",
+      "tiers": "{count} tiers",
+      "pricePerPiece": "/ unit",
+      "deliveryDays": "7–14 business days",
+      "warehouseLocation": "Turkey",
+      "shelfLife": "18 months"
+    }
+  },
+  "productCard": {
+    "from": "From",
+    "perUnit": "/ unit",
+    "min": "Min:",
+    "pieces": "units",
+    "favoriteLabel": "Add to favourites"
+  },
+  "productTabs": {
+    "overview": "Overview",
+    "specs": "Specifications",
+    "docs": "Documents",
+    "keyFeatures": "Key Features",
+    "noSpecs": "No specification data available.",
+    "documents": {
+      "sds": "Safety Data Sheet (SDS)",
+      "quality": "Quality Assurance Certificate",
+      "organic": "Organic Certification",
+      "lab": "Laboratory Test Report"
+    }
+  },
+  "orderPanel": {
+    "listPrice": "List Price",
+    "perUnit": "/ unit",
+    "total": "Total:",
+    "inStock": "In stock",
+    "bulkDiscount": "Bulk Purchase Discounts",
+    "minUnitsWithSeller": "Min. {count} units · {seller}",
+    "nextTierHint": "Add {count} more → {price}/unit",
+    "quantity": "Quantity",
+    "minQuantity": "Min. {count} units",
+    "decrement": "Decrease",
+    "increment": "Increase",
+    "addToCart": "Add to Cart",
+    "requestQuote": "Request Custom Quote",
+    "freeShipping": "Free shipping on orders over ₺500 · Dispatched within 24 hours"
+  },
+  "sellerInfo": {
+    "heading": "Supplier Information",
+    "verifiedSupplier": "Verified Supplier",
+    "responseTime": "Response Time",
+    "responseTimeValue": "< 2 hours",
+    "onTimeDelivery": "On-Time Delivery",
+    "viewProfile": "View Supplier Profile"
+  },
+  "cart": {},
+  "orders": {},
+  "approvals": {},
+  "quotes": {}
+}
