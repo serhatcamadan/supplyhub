@@ -2,14 +2,18 @@
 
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
+import { useLocale, useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import type { Product } from '@/types'
+import { buttonVariants } from '@/components/ui/button'
 import { ProductControls } from '@/components/seller/product-controls'
 import { ProductTable } from '@/components/seller/product-table'
 
 export default function SellerProductsPage() {
   const [search, setSearch] = useState('')
   const [products, setProducts] = useState<Product[]>([])
+  const t = useTranslations('seller')
+  const locale = useLocale()
 
   useEffect(() => {
     async function load() {
@@ -36,18 +40,17 @@ export default function SellerProductsPage() {
 
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-4xl font-bold tracking-tight text-on-surface">Product Catalog</h1>
+          <h1 className="text-4xl font-bold tracking-tight text-on-surface">{t('products.heading')}</h1>
           <p className="text-sm text-on-surface-variant mt-2 max-w-2xl">
-            Manage your inventory, update pricing, and monitor stock levels across all your active
-            and draft listings.
+            {t('products.subHeading')}
           </p>
         </div>
         <Link
-          href="/seller/products/new"
-          className="bg-primary text-on-primary hover:bg-primary-container transition-colors px-5 py-3 rounded-lg text-sm font-semibold flex items-center gap-2 shadow-sm hover:shadow-md shrink-0 ml-6"
+          href={`/${locale}/seller/products/new`}
+          className={buttonVariants({ variant: 'primary' }) + ' shrink-0 ml-6'}
         >
           <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>add</span>
-          New Product
+          {t('products.newProduct')}
         </Link>
       </div>
 

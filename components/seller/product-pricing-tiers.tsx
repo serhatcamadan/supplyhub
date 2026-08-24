@@ -1,3 +1,6 @@
+'use client'
+
+import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 import { SectionHeading } from '@/components/ui/section-heading'
 import type { PriceTier } from '@/types'
@@ -13,29 +16,31 @@ interface ProductPricingTiersProps {
 const CELL = 'w-full px-3 py-2 bg-surface-container-lowest border border-outline-variant/30 rounded font-mono text-sm outline-none focus:border-primary focus:ring-1 focus:ring-primary'
 
 export function ProductPricingTiers({ tiers, onAdd, onRemove, onUpdateMax, onUpdatePrice }: ProductPricingTiersProps) {
-  const displayTiers = tiers.map((t, i) => ({
-    ...t,
+  const t = useTranslations('seller')
+
+  const displayTiers = tiers.map((tier, i) => ({
+    ...tier,
     min_qty: i === 0 ? 1 : (tiers[i - 1].max_qty ?? 0) + 1,
   }))
 
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-sm p-8 border border-outline-variant/20">
       <div className="flex items-center justify-between mb-4">
-        <SectionHeading icon="payments" label="Tiered Pricing" className="mb-0" />
+        <SectionHeading icon="payments" label={t('products.pricing.heading')} className="mb-0" />
         <button type="button" onClick={onAdd} className="flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary/80 transition-colors">
           <span className="material-symbols-outlined text-[16px]">add</span>
-          Add Tier
+          {t('products.pricing.addTier')}
         </button>
       </div>
       <p className="text-xs text-on-surface-variant mb-6">
-        Define wholesale volume discounts to encourage larger orders. The last open-ended tier is the base price.
+        {t('products.pricing.hint')}
       </p>
 
       <div className="w-full border border-outline-variant/20 rounded-lg overflow-hidden">
         <div className="grid grid-cols-12 bg-surface-container-low px-4 py-3 border-b border-outline-variant/20 text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-          <div className="col-span-4">MIN QUANTITY</div>
-          <div className="col-span-4">MAX QUANTITY</div>
-          <div className="col-span-3 text-right">UNIT PRICE (₺)</div>
+          <div className="col-span-4">{t('products.pricing.minQty')}</div>
+          <div className="col-span-4">{t('products.pricing.maxQty')}</div>
+          <div className="col-span-3 text-right">{t('products.pricing.unitPrice')}</div>
           <div className="col-span-1" />
         </div>
 

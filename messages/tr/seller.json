@@ -1,4 +1,68 @@
 {
+  "products": {
+    "heading": "Ürün Kataloğu",
+    "subHeading": "Envanterinizi yönetin, fiyatlandırmayı güncelleyin ve tüm aktif ve taslak listelerinizde stok seviyelerini izleyin.",
+    "newProduct": "Yeni Ürün",
+    "controls": {
+      "searchPlaceholder": "Ad, SKU veya kategoriye göre ara...",
+      "filters": "Filtreler",
+      "categoryAll": "Kategori: Tümü",
+      "showing": "{total} üründen {filtered} tanesi gösteriliyor"
+    },
+    "table": {
+      "image": "Görsel",
+      "productInfo": "Ürün Bilgisi",
+      "category": "Kategori",
+      "priceRange": "Fiyat Aralığı (Kademeli)",
+      "stockLevel": "Stok Seviyesi",
+      "status": "Durum",
+      "actions": "İşlemler",
+      "perUnit": "birim fiyatı",
+      "rowsPerPage": "Sayfa başına satır",
+      "noResults": "Aramanızla eşleşen ürün yok."
+    },
+    "status": {
+      "active": "Aktif",
+      "draft": "Taslak",
+      "inactive": "Pasif"
+    },
+    "form": {
+      "breadcrumbProducts": "Ürünler",
+      "breadcrumbNew": "Yeni Ürün Ekle",
+      "heading": "Ürün Listesi Oluştur",
+      "cancel": "İptal",
+      "saving": "Kaydediliyor…",
+      "save": "Ürünü Kaydet",
+      "errorRequired": "Ürün adı, kategori ve minimum sipariş adedi zorunludur.",
+      "errorNoSession": "Oturum bulunamadı."
+    },
+    "basicInfo": {
+      "heading": "Temel Bilgiler",
+      "name": "ÜRÜN ADI",
+      "namePlaceholder": "ör. Organik Zeytinyağı (5L)",
+      "category": "KATEGORİ",
+      "categorySelect": "Kategori Seçin",
+      "minQty": "MİN. SİPARİŞ ADEDİ",
+      "description": "DETAYLI AÇIKLAMA",
+      "descriptionPlaceholder": "Teknik özellikleri, malzeme detaylarını ve kullanım alanlarını belirtin...",
+      "markdownHint": "Biçimlendirme için markdown kullanın."
+    },
+    "pricing": {
+      "heading": "Kademeli Fiyatlandırma",
+      "addTier": "Kademe Ekle",
+      "hint": "Daha fazla sipariş teşvik etmek için toptan hacim iskontolarını tanımlayın. Son açık uçlu kademe baz fiyattır.",
+      "minQty": "MİN ADEDİ",
+      "maxQty": "MAKS ADEDİ",
+      "unitPrice": "BİRİM FİYAT (₺)"
+    },
+    "logistics": {
+      "heading": "Lojistik",
+      "available": "Siparişe Açık",
+      "availableHint": "Ürün alıcılara görünür",
+      "weight": "AĞIRLIK (KG)",
+      "leadTime": "TESLİMAT SÜRESİ (GÜN)"
+    }
+  },
   "dashboard": {
     "heading": "Satıcı Paneli",
     "subHeading": "Toptan operasyonlarınıza ve performans metriklerinize genel bakış.",

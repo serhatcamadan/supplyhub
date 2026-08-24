@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useLocale, useTranslations } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import type { PriceTier } from '@/types'
 import { Button } from '@/components/ui/button'
@@ -13,6 +14,8 @@ import { ProductLogistics } from '@/components/seller/product-logistics'
 
 export default function NewProductPage() {
   const router = useRouter()
+  const t = useTranslations('seller')
+  const locale = useLocale()
 
   const [name, setName]               = useState('')
   const [category, setCategory]       = useState('')
@@ -39,24 +42,24 @@ export default function NewProductPage() {
   }
 
   function updateMax(idx: number, value: number | null) {
-    setTiers((prev) => prev.map((t, i) => (i === idx ? { ...t, max_qty: value } : t)))
+    setTiers((prev) => prev.map((tier, i) => (i === idx ? { ...tier, max_qty: value } : tier)))
   }
 
   function updatePrice(idx: number, value: number) {
-    setTiers((prev) => prev.map((t, i) => (i === idx ? { ...t, price: value } : t)))
+    setTiers((prev) => prev.map((tier, i) => (i === idx ? { ...tier, price: value } : tier)))
   }
 
   async function handleSave() {
     setError(null)
     if (!name.trim() || !category || !minOrderQty) {
-      setError('Ürün adı, kategori ve minimum sipariş adedi zorunludur.')
+      setError(t('products.form.errorRequired'))
       return
     }
     setIsSubmitting(true)
     const supabase = createClient()
     const { data: { user } } = await supabase.auth.getUser()
     const companyId = user?.user_metadata?.company_id
-    if (!companyId) { setError('Oturum bulunamadı.'); setIsSubmitting(false); return }
+    if (!companyId) { setError(t('products.form.errorNoSession')); setIsSubmitting(false); return }
 
     const { error: dbError } = await supabase.from('products').insert({
       seller_id:     companyId,
@@ -70,7 +73,7 @@ export default function NewProductPage() {
     })
 
     if (dbError) { setError(dbError.message); setIsSubmitting(false); return }
-    router.push('/seller/products')
+    router.push(`/${locale}/seller/products`)
   }
 
   return (
@@ -79,20 +82,22 @@ export default function NewProductPage() {
       <div className="flex items-center justify-between px-8 py-8 border-b border-outline-variant/20 bg-surface">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">
-            <Link href="/seller/products" className="hover:text-primary transition-colors">Products</Link>
+            <Link href={`/${locale}/seller/products`} className="hover:text-primary transition-colors">
+              {t('products.form.breadcrumbProducts')}
+            </Link>
             <span className="material-symbols-outlined text-[16px]">chevron_right</span>
-            <span className="text-on-surface">Add New Product</span>
+            <span className="text-on-surface">{t('products.form.breadcrumbNew')}</span>
           </div>
-          <h1 className="text-2xl font-semibold text-on-surface tracking-tight">Create Product Listing</h1>
+          <h1 className="text-2xl font-semibold text-on-surface tracking-tight">{t('products.form.heading')}</h1>
         </div>
         <div className="flex items-center gap-4">
           {error && <p className="text-sm text-error">{error}</p>}
-          <Link href="/seller/products" className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface hover:bg-surface-container-high transition-colors">
-            Cancel
+          <Link href={`/${locale}/seller/products`} className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface hover:bg-surface-container-high transition-colors">
+            {t('products.form.cancel')}
           </Link>
           <Button type="button" variant="secondary" onClick={handleSave} disabled={isSubmitting} className="active:scale-[0.98]">
             <span className="material-symbols-outlined text-[18px]">save</span>
-            {isSubmitting ? 'Kaydediliyor…' : 'Save Product'}
+            {isSubmitting ? t('products.form.saving') : t('products.form.save')}
           </Button>
         </div>
       </div>

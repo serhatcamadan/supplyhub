@@ -1,4 +1,68 @@
 {
+  "products": {
+    "heading": "Product Catalog",
+    "subHeading": "Manage your inventory, update pricing, and monitor stock levels across all your active and draft listings.",
+    "newProduct": "New Product",
+    "controls": {
+      "searchPlaceholder": "Search by name, SKU, or category...",
+      "filters": "Filters",
+      "categoryAll": "Category: All",
+      "showing": "Showing {filtered} of {total} products"
+    },
+    "table": {
+      "image": "Image",
+      "productInfo": "Product Info",
+      "category": "Category",
+      "priceRange": "Price Range (Tiered)",
+      "stockLevel": "Stock Level",
+      "status": "Status",
+      "actions": "Actions",
+      "perUnit": "per unit",
+      "rowsPerPage": "Rows per page",
+      "noResults": "No products match your search."
+    },
+    "status": {
+      "active": "Active",
+      "draft": "Draft",
+      "inactive": "Inactive"
+    },
+    "form": {
+      "breadcrumbProducts": "Products",
+      "breadcrumbNew": "Add New Product",
+      "heading": "Create Product Listing",
+      "cancel": "Cancel",
+      "saving": "Saving…",
+      "save": "Save Product",
+      "errorRequired": "Product name, category and minimum order quantity are required.",
+      "errorNoSession": "Session not found."
+    },
+    "basicInfo": {
+      "heading": "Basic Information",
+      "name": "PRODUCT NAME",
+      "namePlaceholder": "e.g. Organic Olive Oil (5L)",
+      "category": "CATEGORY",
+      "categorySelect": "Select Category",
+      "minQty": "MIN. ORDER QUANTITY",
+      "description": "DETAILED DESCRIPTION",
+      "descriptionPlaceholder": "Provide technical specifications, material details, and applications...",
+      "markdownHint": "Use markdown for formatting."
+    },
+    "pricing": {
+      "heading": "Tiered Pricing",
+      "addTier": "Add Tier",
+      "hint": "Define wholesale volume discounts to encourage larger orders. The last open-ended tier is the base price.",
+      "minQty": "MIN QUANTITY",
+      "maxQty": "MAX QUANTITY",
+      "unitPrice": "UNIT PRICE (₺)"
+    },
+    "logistics": {
+      "heading": "Logistics",
+      "available": "Available for Order",
+      "availableHint": "Product is visible to buyers",
+      "weight": "WEIGHT (KG)",
+      "leadTime": "LEAD TIME (DAYS)"
+    }
+  },
   "dashboard": {
     "heading": "Seller Dashboard",
     "subHeading": "Overview of your wholesale operations and performance metrics.",
