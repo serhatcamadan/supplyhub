@@ -1,5 +1,6 @@
 'use client'
 
+import { useTranslations } from 'next-intl'
 import {
   ResponsiveContainer,
   AreaChart,
@@ -16,6 +17,9 @@ interface RevenueChartProps {
 }
 
 export function RevenueChart({ data }: RevenueChartProps) {
+  const t = useTranslations('seller')
+  const revenueLabel = t('dashboard.chart.revenue')
+
   return (
     <ResponsiveContainer width="100%" height={240}>
       <AreaChart data={data} margin={{ top: 4, right: 4, left: 0, bottom: 0 }}>
@@ -35,7 +39,7 @@ export function RevenueChart({ data }: RevenueChartProps) {
           width={36}
         />
         <Tooltip
-          formatter={(value) => [typeof value === 'number' ? formatCurrency(value) : value, 'Gelir']}
+          formatter={(value) => [typeof value === 'number' ? formatCurrency(value) : value, revenueLabel]}
           contentStyle={{ fontSize: 13, borderRadius: 8, border: '1px solid #e2e8f0' }}
         />
         <Area

@@ -1,4 +1,7 @@
+'use client'
+
 import Link from 'next/link'
+import { useTranslations, useLocale } from 'next-intl'
 import { formatCurrency, formatDate, cn } from '@/lib/utils'
 import type { QuoteRequest } from '@/types'
 import { buttonVariants } from '@/components/ui/button'
@@ -15,46 +18,41 @@ export interface EnrichedQuote extends QuoteRequest {
   isExpiring: boolean
 }
 
-const STATUS_CONFIG: Record<
+const STATUS_STYLE: Record<
   QuoteRequest['status'],
-  { label: string; className: string; icon?: string; dot?: boolean }
+  { className: string; icon?: string; dot?: boolean }
 > = {
-  pending: {
-    label: 'Pending',
-    className: 'bg-tertiary-container/20 text-on-tertiary-container',
-    dot: true,
-  },
-  responded: {
-    label: 'Responded',
-    className: 'bg-secondary-container/30 text-on-secondary-container',
-    icon: 'done_all',
-  },
-  accepted: {
-    label: 'Accepted',
-    className: 'bg-secondary-container/50 text-secondary',
-    icon: 'check_circle',
-  },
-  declined: {
-    label: 'Declined',
-    className: 'bg-error-container/30 text-on-error-container',
-    icon: 'cancel',
-  },
+  pending:   { className: 'bg-tertiary-container/20 text-on-tertiary-container', dot: true },
+  responded: { className: 'bg-secondary-container/30 text-on-secondary-container', icon: 'done_all' },
+  accepted:  { className: 'bg-secondary-container/50 text-secondary', icon: 'check_circle' },
+  declined:  { className: 'bg-error-container/30 text-on-error-container', icon: 'cancel' },
 }
 
-function StatusBadge({ status }: { status: QuoteRequest['status'] }) {
-  const cfg = STATUS_CONFIG[status]
+function QuoteStatusBadge({ status, label }: { status: QuoteRequest['status']; label: string }) {
+  const cfg = STATUS_STYLE[status]
   return (
     <span className={cn('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold', cfg.className)}>
       {cfg.dot && <span className="w-1.5 h-1.5 rounded-full bg-current" />}
-      {cfg.icon && (
-        <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>{cfg.icon}</span>
-      )}
-      {cfg.label}
+      {cfg.icon && <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>{cfg.icon}</span>}
+      {label}
     </span>
   )
 }
 
 export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
+  const t = useTranslations('seller')
+  const locale = useLocale()
+
+  const headers = [
+    t('quotes.table.rfqId'),
+    t('quotes.table.buyerCol'),
+    t('quotes.table.product'),
+    t('quotes.table.quantity'),
+    t('quotes.table.dateReceived'),
+    t('quotes.table.status'),
+    t('quotes.table.actionsCol'),
+  ]
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 overflow-auto">
@@ -64,7 +62,7 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
               <th className="py-3 px-6 w-12">
                 <input type="checkbox" className="rounded border-outline-variant text-primary focus:ring-primary" />
               </th>
-              {['RFQ ID', 'Buyer', 'Product', 'Quantity', 'Date Received', 'Status', 'Actions'].map((h, i) => (
+              {headers.map((h, i) => (
                 <th
                   key={h}
                   className={cn(
@@ -80,7 +78,7 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
 
           <tbody className="divide-y divide-outline-variant/20">
             {quotes.length === 0 ? (
-              <TableEmptyRow icon="request_quote" message="No quote requests found." colSpan={8} />
+              <TableEmptyRow icon="request_quote" message={t('quotes.table.noResults')} colSpan={8} />
             ) : (
               quotes.map((quote) => (
                 <tr
@@ -104,7 +102,7 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
                         <p className="text-sm font-semibold text-on-surface leading-tight">
                           {quote.buyerName}
                         </p>
-                        <p className="text-xs text-on-surface-variant">Buyer</p>
+                        <p className="text-xs text-on-surface-variant">{t('quotes.table.buyerRole')}</p>
                       </div>
                     </div>
                   </td>
@@ -114,7 +112,7 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
                     <p className="text-xs text-on-surface-variant">{quote.productCategory}</p>
                     {quote.listPrice && (
                       <p className="text-xs text-on-surface-variant mt-0.5">
-                        List: {formatCurrency(quote.listPrice)}/adet
+                        {t('quotes.table.listLabel')} {formatCurrency(quote.listPrice)}/{t('quotes.table.perUnit')}
                       </p>
                     )}
                   </td>
@@ -123,33 +121,36 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
                     <span className="font-mono text-sm text-on-surface">
                       {quote.quantity.toLocaleString('tr-TR')}
                     </span>
-                    <span className="text-xs text-on-surface-variant ml-1">adet</span>
+                    <span className="text-xs text-on-surface-variant ml-1">{t('quotes.table.perUnit')}</span>
                   </td>
 
                   <td className="py-4 px-6">
                     <p className="text-sm text-on-surface">{formatDate(quote.created_at)}</p>
                     {quote.status === 'pending' && quote.isExpiring && (
-                      <p className="text-xs text-error font-medium">Expires soon</p>
+                      <p className="text-xs text-error font-medium">{t('quotes.table.expiringSoon')}</p>
                     )}
                     {quote.seller_response_price && (
                       <p className="text-xs text-secondary font-medium">
-                        Offer: {formatCurrency(quote.seller_response_price)}/adet
+                        {t('quotes.table.offerLabel')} {formatCurrency(quote.seller_response_price)}/{t('quotes.table.perUnit')}
                       </p>
                     )}
                   </td>
 
                   <td className="py-4 px-6">
-                    <StatusBadge status={quote.status} />
+                    <QuoteStatusBadge
+                      status={quote.status}
+                      label={t(`quotes.table.statusLabel.${quote.status}`)}
+                    />
                   </td>
 
                   <td className="py-4 px-6 text-right">
                     <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
                       {quote.status === 'pending' && (
                         <Link
-                          href={`/seller/quotes/${quote.id}`}
+                          href={`/${locale}/seller/quotes/${quote.id}`}
                           className={buttonVariants({ variant: 'primary', size: 'sm' })}
                         >
-                          Respond
+                          {t('quotes.table.respond')}
                         </Link>
                       )}
                       <button className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors">
@@ -164,7 +165,7 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
         </table>
       </div>
 
-      <TablePagination label={`Showing ${quotes.length} of ${quotes.length} entries`} />
+      <TablePagination label={t('quotes.table.pagination', { shown: quotes.length, total: quotes.length })} />
     </div>
   )
 }

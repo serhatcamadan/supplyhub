@@ -1,4 +1,7 @@
+'use client'
+
 import Link from 'next/link'
+import { useTranslations, useLocale } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
 import type { Product } from '@/types'
 
@@ -9,6 +12,7 @@ export type ProductBadge = {
 
 interface ProductCardProps {
   product: Product
+  locale?: string
   sellerName: string
   rating: number
   unit?: string
@@ -25,16 +29,17 @@ export function ProductCard({
   product,
   sellerName,
   rating,
-  unit = '/ adet',
+  unit,
   badge,
   favorited = false,
 }: ProductCardProps) {
+  const t = useTranslations('buyer')
+  const locale = useLocale()
   const fromPrice = product.price_tiers[0]?.price ?? 0
 
   return (
     <div className="group bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 flex flex-col relative">
 
-      {/* Optional badge — top-left */}
       {badge && (
         <div className="absolute top-4 left-4 z-10">
           <span className={`${BADGE_CLASS[badge.colorScheme]} px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wider shadow-sm`}>
@@ -43,12 +48,11 @@ export function ProductCard({
         </div>
       )}
 
-      {/* Favorite — top-right, outside Link to prevent nested interactivity */}
       <button
         className={`absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center bg-surface/80 backdrop-blur-sm rounded-full transition-colors shadow-sm ${
           favorited ? 'text-error' : 'text-on-surface-variant hover:text-error'
         }`}
-        aria-label="Favorilere ekle"
+        aria-label={t('productCard.favoriteLabel')}
       >
         <span
           className="material-symbols-outlined"
@@ -58,10 +62,8 @@ export function ProductCard({
         </span>
       </button>
 
-      {/* Clickable content */}
-      <Link href={`/buyer/discover/${product.id}`} className="flex flex-col flex-1">
+      <Link href={`/${locale}/buyer/discover/${product.id}`} className="flex flex-col flex-1">
 
-        {/* Image */}
         <div className="relative w-full h-52 bg-surface-container overflow-hidden">
           {product.image_url ? (
             <img
@@ -81,7 +83,6 @@ export function ProductCard({
           )}
         </div>
 
-        {/* Body */}
         <div className="p-5 flex flex-col flex-1 gap-4">
           <div>
             <div className="flex items-center gap-1.5 mb-1.5">
@@ -91,16 +92,15 @@ export function ProductCard({
             <h3 className="text-sm font-semibold text-on-surface line-clamp-2 leading-5">{product.name}</h3>
           </div>
 
-          {/* Price + meta */}
           <div className="mt-auto pt-3 border-t border-surface-container flex flex-col gap-2">
             <div className="flex items-baseline gap-1">
-              <span className="text-xs text-on-surface-variant uppercase font-semibold tracking-wider">İtibaren</span>
+              <span className="text-xs text-on-surface-variant uppercase font-semibold tracking-wider">{t('productCard.from')}</span>
               <span className="text-xl font-bold text-primary">{formatCurrency(fromPrice)}</span>
-              <span className="text-xs text-on-surface-variant">{unit}</span>
+              <span className="text-xs text-on-surface-variant">{unit ?? t('productCard.perUnit')}</span>
             </div>
             <div className="flex items-center justify-between">
               <span className="text-xs text-on-surface-variant bg-surface-container px-2 py-1 rounded-lg">
-                Min: {product.min_order_qty} adet
+                {t('productCard.min')} {product.min_order_qty} {t('productCard.pieces')}
               </span>
               <div className="flex items-center gap-1">
                 <span

@@ -1,0 +1,243 @@
+{
+  "quotes": {
+    "heading": "Teklif Talepleri",
+    "subHeading": "Gelen RFQ'ları yönetin ve potansiyel alıcılara yanıt verin.",
+    "exportCsv": "CSV İndir",
+    "stats": {
+      "totalActive": "Toplam Aktif RFQ",
+      "pendingResponse": "Yanıt Bekliyor",
+      "converted": "Dönüştürülen (30g)",
+      "pipelineValue": "Tahmini Boru Hattı"
+    },
+    "tabs": {
+      "all": "Tüm Talepler",
+      "pending": "Bekliyor",
+      "responded": "Yanıtlandı",
+      "archived": "Arşivlendi"
+    },
+    "searchPlaceholder": "RFQ ID, Alıcı ara...",
+    "table": {
+      "rfqId": "RFQ ID",
+      "buyerCol": "Alıcı",
+      "buyerRole": "Alıcı",
+      "product": "Ürün",
+      "quantity": "Miktar",
+      "dateReceived": "Alınma Tarihi",
+      "status": "Durum",
+      "actionsCol": "İşlemler",
+      "perUnit": "adet",
+      "listLabel": "Liste:",
+      "offerLabel": "Teklif:",
+      "expiringSoon": "Yakında Sona Eriyor",
+      "respond": "Yanıtla",
+      "noResults": "Teklif talebi bulunamadı.",
+      "pagination": "{total} talepten {shown} tanesi gösteriliyor",
+      "statusLabel": {
+        "pending": "Bekliyor",
+        "responded": "Yanıtlandı",
+        "accepted": "Kabul Edildi",
+        "declined": "Reddedildi"
+      }
+    },
+    "detail": {
+      "back": "Teklifler",
+      "received": "Alındı:",
+      "heading": "Teklif Talebi",
+      "decline": "Reddet",
+      "location": "Türkiye",
+      "buyerRole": "Toptan Alıcı",
+      "requestedProducts": "Talep Edilen Ürünler",
+      "colItem": "Ürün",
+      "colQty": "Miktar",
+      "colListPrice": "Liste Fiyatı",
+      "totalAtListPrice": "Liste fiyatıyla toplam:",
+      "minOrder": "Min. sipariş:",
+      "unit": "adet",
+      "buyerMessage": "Alıcı Mesajı",
+      "noMessage": "Mesaj girilmemiş.",
+      "unknownBuyer": "Bilinmeyen Alıcı",
+      "unknownProduct": "Bilinmeyen Ürün"
+    },
+    "response": {
+      "heading": "Taslak Yanıt",
+      "unsaved": "Kaydedilmedi",
+      "draftSaved": "Taslak Kaydedildi",
+      "pricingProposal": "Fiyat Teklifi",
+      "unitPrice": "Birim Fiyat",
+      "listPriceLabel": "Liste fiyatı:",
+      "totalValue": "Toplam Değer",
+      "volumeDiscount": "Daha fazla sipariş için hacim indirimi teklif et",
+      "leadTime": "Tahmini Teslimat Süresi",
+      "validUntil": "Geçerlilik Tarihi",
+      "messageToBuyer": "Alıcıya Mesaj",
+      "messagePlaceholder": "Yanıtınızı buraya yazın...",
+      "saveDraft": "Taslak Kaydet",
+      "saving": "Kaydediliyor…",
+      "sendQuote": "Teklif Gönder",
+      "perUnit": "adet başına",
+      "leadTimeOptions": {
+        "7-14": "7–14 Gün",
+        "14-21": "14–21 Gün",
+        "21-30": "21–30 Gün",
+        "30+": "30+ Gün"
+      }
+    },
+    "sent": {
+      "heading": "Teklif Gönderildi!",
+      "description": "Yanıtınız alıcıya gönderildi. Kısa süre içinde bildirilecek.",
+      "backToQuotes": "Tekliflere Dön"
+    }
+  },
+  "orders": {
+    "heading": "Siparişler",
+    "subHeading": "Alıcılarınızdan gelen toptan siparişleri yönetin ve takip edin.",
+    "filter": "Filtrele",
+    "exportCsv": "CSV İndir",
+    "stats": {
+      "totalOrders": "Toplam Sipariş",
+      "awaitingAction": "Eylem Bekliyor",
+      "inTransit": "Kargoda",
+      "totalRevenue": "Toplam Gelir"
+    },
+    "tabs": {
+      "all": "Tüm Siparişler",
+      "pending": "Bekliyor",
+      "confirmed": "Onaylandı",
+      "shipped": "Kargoda",
+      "delivered": "Teslim Edildi"
+    },
+    "searchPlaceholder": "Sipariş ID, alıcı ara...",
+    "table": {
+      "orderId": "Sipariş ID",
+      "buyer": "Alıcı",
+      "date": "Tarih",
+      "items": "Ürünler",
+      "total": "Toplam",
+      "status": "Durum",
+      "actionsCol": "İşlemler",
+      "awaitingApproval": "Onay Bekliyor",
+      "noResults": "Sipariş bulunamadı.",
+      "pagination": "{total} siparişten {shown} tanesi gösteriliyor",
+      "statusLabel": {
+        "pending": "Bekliyor",
+        "confirmed": "Onaylandı",
+        "shipped": "Kargoda",
+        "delivered": "Teslim Edildi"
+      },
+      "rowActions": {
+        "confirm": "Onayla",
+        "ship": "Kargoya Ver",
+        "deliver": "Teslim Et"
+      }
+    }
+  },
+  "products": {
+    "heading": "Ürün Kataloğu",
+    "subHeading": "Envanterinizi yönetin, fiyatlandırmayı güncelleyin ve tüm aktif ve taslak listelerinizde stok seviyelerini izleyin.",
+    "newProduct": "Yeni Ürün",
+    "controls": {
+      "searchPlaceholder": "Ad, SKU veya kategoriye göre ara...",
+      "filters": "Filtreler",
+      "categoryAll": "Kategori: Tümü",
+      "showing": "{total} üründen {filtered} tanesi gösteriliyor"
+    },
+    "table": {
+      "image": "Görsel",
+      "productInfo": "Ürün Bilgisi",
+      "category": "Kategori",
+      "priceRange": "Fiyat Aralığı (Kademeli)",
+      "stockLevel": "Stok Seviyesi",
+      "status": "Durum",
+      "actions": "İşlemler",
+      "perUnit": "birim fiyatı",
+      "rowsPerPage": "Sayfa başına satır",
+      "noResults": "Aramanızla eşleşen ürün yok."
+    },
+    "status": {
+      "active": "Aktif",
+      "draft": "Taslak",
+      "inactive": "Pasif"
+    },
+    "form": {
+      "breadcrumbProducts": "Ürünler",
+      "breadcrumbNew": "Yeni Ürün Ekle",
+      "heading": "Ürün Listesi Oluştur",
+      "cancel": "İptal",
+      "saving": "Kaydediliyor…",
+      "save": "Ürünü Kaydet",
+      "errorRequired": "Ürün adı, kategori ve minimum sipariş adedi zorunludur.",
+      "errorNoSession": "Oturum bulunamadı."
+    },
+    "basicInfo": {
+      "heading": "Temel Bilgiler",
+      "name": "ÜRÜN ADI",
+      "namePlaceholder": "ör. Organik Zeytinyağı (5L)",
+      "category": "KATEGORİ",
+      "categorySelect": "Kategori Seçin",
+      "minQty": "MİN. SİPARİŞ ADEDİ",
+      "description": "DETAYLI AÇIKLAMA",
+      "descriptionPlaceholder": "Teknik özellikleri, malzeme detaylarını ve kullanım alanlarını belirtin...",
+      "markdownHint": "Biçimlendirme için markdown kullanın."
+    },
+    "pricing": {
+      "heading": "Kademeli Fiyatlandırma",
+      "addTier": "Kademe Ekle",
+      "hint": "Daha fazla sipariş teşvik etmek için toptan hacim iskontolarını tanımlayın. Son açık uçlu kademe baz fiyattır.",
+      "minQty": "MİN ADEDİ",
+      "maxQty": "MAKS ADEDİ",
+      "unitPrice": "BİRİM FİYAT (₺)"
+    },
+    "logistics": {
+      "heading": "Lojistik",
+      "available": "Siparişe Açık",
+      "availableHint": "Ürün alıcılara görünür",
+      "weight": "AĞIRLIK (KG)",
+      "leadTime": "TESLİMAT SÜRESİ (GÜN)"
+    }
+  },
+  "dashboard": {
+    "heading": "Satıcı Paneli",
+    "subHeading": "Toptan operasyonlarınıza ve performans metriklerinize genel bakış.",
+    "last30Days": "Son 30 Gün",
+    "exportReport": "Rapor İndir",
+    "monthlyRevenue": "Aylık Gelir",
+    "weekly": "Haftalık",
+    "monthly": "Aylık",
+    "months": ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"],
+    "stats": {
+      "totalRevenue": "Toplam Gelir",
+      "vsLastMonth": "önceki aya kıyasla",
+      "pendingQuotes": "Bekleyen Teklifler",
+      "immediateAction": "{count} acil işlem gerekiyor",
+      "viewAll": "Tümünü Gör",
+      "activeOrders": "Aktif Siparişler",
+      "shipping": "{count} kargoda",
+      "processing": "{count} işlemde",
+      "totalProducts": "Toplam Ürün",
+      "inDraft": "{count} taslakta"
+    },
+    "activity": {
+      "heading": "Son Aktiviteler",
+      "orderDelivered": "Sipariş başarıyla teslim edildi:",
+      "newOrder": "Yeni Sipariş #{id} oluşturuldu:",
+      "quoteReceived": "Teklif Talebi",
+      "quoteReceivedFrom": "alındı:",
+      "respond": "Yanıtla",
+      "status": {
+        "pending": "Bekliyor",
+        "confirmed": "Onaylandı",
+        "shipped": "Kargoda",
+        "delivered": "Teslim Edildi"
+      }
+    },
+    "topProducts": {
+      "heading": "En Çok Satan",
+      "viewReport": "Raporu Gör",
+      "units": "adet",
+      "topCategory": "En İyi Kategori"
+    },
+    "chart": {
+      "revenue": "Gelir"
+    }
+  }
+}

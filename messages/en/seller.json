@@ -1,0 +1,243 @@
+{
+  "quotes": {
+    "heading": "Quote Requests",
+    "subHeading": "Manage incoming RFQs and respond to potential buyers.",
+    "exportCsv": "Export CSV",
+    "stats": {
+      "totalActive": "Total Active RFQs",
+      "pendingResponse": "Pending Response",
+      "converted": "Converted (30d)",
+      "pipelineValue": "Est. Pipeline Value"
+    },
+    "tabs": {
+      "all": "All Requests",
+      "pending": "Pending",
+      "responded": "Responded",
+      "archived": "Archived"
+    },
+    "searchPlaceholder": "Search RFQ ID, Buyer...",
+    "table": {
+      "rfqId": "RFQ ID",
+      "buyerCol": "Buyer",
+      "buyerRole": "Buyer",
+      "product": "Product",
+      "quantity": "Quantity",
+      "dateReceived": "Date Received",
+      "status": "Status",
+      "actionsCol": "Actions",
+      "perUnit": "units",
+      "listLabel": "List:",
+      "offerLabel": "Offer:",
+      "expiringSoon": "Expires soon",
+      "respond": "Respond",
+      "noResults": "No quote requests found.",
+      "pagination": "Showing {shown} of {total} entries",
+      "statusLabel": {
+        "pending": "Pending",
+        "responded": "Responded",
+        "accepted": "Accepted",
+        "declined": "Declined"
+      }
+    },
+    "detail": {
+      "back": "Quotes",
+      "received": "Received:",
+      "heading": "Quote Request",
+      "decline": "Decline",
+      "location": "Turkey",
+      "buyerRole": "Wholesale Buyer",
+      "requestedProducts": "Requested Products",
+      "colItem": "Item",
+      "colQty": "Qty",
+      "colListPrice": "List Price",
+      "totalAtListPrice": "Total at list price:",
+      "minOrder": "Min. order:",
+      "unit": "units",
+      "buyerMessage": "Buyer Message",
+      "noMessage": "No message provided.",
+      "unknownBuyer": "Unknown Buyer",
+      "unknownProduct": "Unknown Product"
+    },
+    "response": {
+      "heading": "Draft Response",
+      "unsaved": "Unsaved",
+      "draftSaved": "Draft Saved",
+      "pricingProposal": "Pricing Proposal",
+      "unitPrice": "Unit Price",
+      "listPriceLabel": "List price:",
+      "totalValue": "Total Value",
+      "volumeDiscount": "Offer volume discount tier for larger quantities",
+      "leadTime": "Estimated Lead Time",
+      "validUntil": "Valid Until",
+      "messageToBuyer": "Message to Buyer",
+      "messagePlaceholder": "Write your response here...",
+      "saveDraft": "Save Draft",
+      "saving": "Saving…",
+      "sendQuote": "Send Quote",
+      "perUnit": "per unit",
+      "leadTimeOptions": {
+        "7-14": "7–14 Days",
+        "14-21": "14–21 Days",
+        "21-30": "21–30 Days",
+        "30+": "30+ Days"
+      }
+    },
+    "sent": {
+      "heading": "Quote Sent!",
+      "description": "Your response has been sent to the buyer. They will be notified shortly.",
+      "backToQuotes": "Back to Quotes"
+    }
+  },
+  "orders": {
+    "heading": "Orders",
+    "subHeading": "Manage and track wholesale orders from your buyers.",
+    "filter": "Filter",
+    "exportCsv": "Export CSV",
+    "stats": {
+      "totalOrders": "Total Orders",
+      "awaitingAction": "Awaiting Action",
+      "inTransit": "In Transit",
+      "totalRevenue": "Total Revenue"
+    },
+    "tabs": {
+      "all": "All Orders",
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "shipped": "Shipped",
+      "delivered": "Delivered"
+    },
+    "searchPlaceholder": "Search order ID, buyer...",
+    "table": {
+      "orderId": "Order ID",
+      "buyer": "Buyer",
+      "date": "Date",
+      "items": "Items",
+      "total": "Total",
+      "status": "Status",
+      "actionsCol": "Actions",
+      "awaitingApproval": "Awaiting approval",
+      "noResults": "No orders found.",
+      "pagination": "Showing {shown} of {total} orders",
+      "statusLabel": {
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "shipped": "Shipped",
+        "delivered": "Delivered"
+      },
+      "rowActions": {
+        "confirm": "Confirm",
+        "ship": "Ship",
+        "deliver": "Deliver"
+      }
+    }
+  },
+  "products": {
+    "heading": "Product Catalog",
+    "subHeading": "Manage your inventory, update pricing, and monitor stock levels across all your active and draft listings.",
+    "newProduct": "New Product",
+    "controls": {
+      "searchPlaceholder": "Search by name, SKU, or category...",
+      "filters": "Filters",
+      "categoryAll": "Category: All",
+      "showing": "Showing {filtered} of {total} products"
+    },
+    "table": {
+      "image": "Image",
+      "productInfo": "Product Info",
+      "category": "Category",
+      "priceRange": "Price Range (Tiered)",
+      "stockLevel": "Stock Level",
+      "status": "Status",
+      "actions": "Actions",
+      "perUnit": "per unit",
+      "rowsPerPage": "Rows per page",
+      "noResults": "No products match your search."
+    },
+    "status": {
+      "active": "Active",
+      "draft": "Draft",
+      "inactive": "Inactive"
+    },
+    "form": {
+      "breadcrumbProducts": "Products",
+      "breadcrumbNew": "Add New Product",
+      "heading": "Create Product Listing",
+      "cancel": "Cancel",
+      "saving": "Saving…",
+      "save": "Save Product",
+      "errorRequired": "Product name, category and minimum order quantity are required.",
+      "errorNoSession": "Session not found."
+    },
+    "basicInfo": {
+      "heading": "Basic Information",
+      "name": "PRODUCT NAME",
+      "namePlaceholder": "e.g. Organic Olive Oil (5L)",
+      "category": "CATEGORY",
+      "categorySelect": "Select Category",
+      "minQty": "MIN. ORDER QUANTITY",
+      "description": "DETAILED DESCRIPTION",
+      "descriptionPlaceholder": "Provide technical specifications, material details, and applications...",
+      "markdownHint": "Use markdown for formatting."
+    },
+    "pricing": {
+      "heading": "Tiered Pricing",
+      "addTier": "Add Tier",
+      "hint": "Define wholesale volume discounts to encourage larger orders. The last open-ended tier is the base price.",
+      "minQty": "MIN QUANTITY",
+      "maxQty": "MAX QUANTITY",
+      "unitPrice": "UNIT PRICE (₺)"
+    },
+    "logistics": {
+      "heading": "Logistics",
+      "available": "Available for Order",
+      "availableHint": "Product is visible to buyers",
+      "weight": "WEIGHT (KG)",
+      "leadTime": "LEAD TIME (DAYS)"
+    }
+  },
+  "dashboard": {
+    "heading": "Seller Dashboard",
+    "subHeading": "Overview of your wholesale operations and performance metrics.",
+    "last30Days": "Last 30 Days",
+    "exportReport": "Export Report",
+    "monthlyRevenue": "Monthly Revenue",
+    "weekly": "Weekly",
+    "monthly": "Monthly",
+    "months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    "stats": {
+      "totalRevenue": "Total Revenue",
+      "vsLastMonth": "vs last month",
+      "pendingQuotes": "Pending Quotes",
+      "immediateAction": "{count} require immediate action",
+      "viewAll": "View All",
+      "activeOrders": "Active Orders",
+      "shipping": "{count} shipping",
+      "processing": "{count} processing",
+      "totalProducts": "Total Products",
+      "inDraft": "{count} in draft"
+    },
+    "activity": {
+      "heading": "Recent Activity",
+      "orderDelivered": "Order delivered successfully to",
+      "newOrder": "New Order #{id} placed by",
+      "quoteReceived": "Quote Request",
+      "quoteReceivedFrom": "received from",
+      "respond": "Respond",
+      "status": {
+        "pending": "Pending",
+        "confirmed": "Confirmed",
+        "shipped": "Shipping",
+        "delivered": "Delivered"
+      }
+    },
+    "topProducts": {
+      "heading": "Top Selling",
+      "viewReport": "View Report",
+      "units": "units",
+      "topCategory": "Top Category"
+    },
+    "chart": {
+      "revenue": "Revenue"
+    }
+  }
+}

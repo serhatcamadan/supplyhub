@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
 import { getUnitPrice, getTotalPrice, getNextTier } from '@/lib/pricing'
 import { Button } from '@/components/ui/button'
@@ -18,6 +19,7 @@ export function ProductOrderPanel({
   sellerName,
   rating = 4.8,
 }: ProductOrderPanelProps) {
+  const t = useTranslations('buyer')
   const [qty, setQty] = useState(product.min_order_qty)
 
   const sortedTiers = [...product.price_tiers].sort((a, b) => a.min_qty - b.min_qty)
@@ -27,7 +29,7 @@ export function ProductOrderPanel({
   const nextTier = getNextTier(qty, product.price_tiers)
 
   const activeIndex = sortedTiers.findIndex(
-    (t) => qty >= t.min_qty && (t.max_qty === null || qty <= t.max_qty)
+    (tier) => qty >= tier.min_qty && (tier.max_qty === null || qty <= tier.max_qty)
   )
 
   function decrement() {
@@ -64,34 +66,34 @@ export function ProductOrderPanel({
       <div>
         <h1 className="text-2xl font-bold text-on-surface leading-tight">{product.name}</h1>
         <p className="text-sm text-on-surface-variant mt-1">
-          Min. {product.min_order_qty} adet · {sellerName}
+          {t('orderPanel.minUnitsWithSeller', { count: product.min_order_qty, seller: sellerName })}
         </p>
       </div>
 
       <div className="pt-4 border-t border-outline-variant/30">
         <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-widest mb-1">
-          Liste Fiyatı
+          {t('orderPanel.listPrice')}
         </p>
         <div className="flex items-end gap-2">
           <span className="text-4xl font-bold text-on-surface">{formatCurrency(displayPrice)}</span>
-          <span className="text-sm text-on-surface-variant mb-1.5">/ adet</span>
+          <span className="text-sm text-on-surface-variant mb-1.5">{t('orderPanel.perUnit')}</span>
         </div>
         {totalPrice && (
           <p className="text-sm text-on-surface-variant mt-1">
-            Toplam:{' '}
+            {t('orderPanel.total')}{' '}
             <span className="font-semibold text-on-surface">{formatCurrency(totalPrice)}</span>
           </p>
         )}
         <p className="text-xs text-secondary mt-2 flex items-center gap-1">
           <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>inventory_2</span>
-          Stokta mevcut
+          {t('orderPanel.inStock')}
         </p>
       </div>
 
       <div className="bg-surface-container-lowest rounded-lg overflow-hidden shadow-sm border border-outline-variant/20">
         <div className="bg-primary-container/10 px-4 py-2 flex items-center gap-2">
           <span className="material-symbols-outlined text-primary" style={{ fontSize: '18px' }}>sell</span>
-          <span className="text-sm font-semibold text-primary">Toplu Alım İndirimleri</span>
+          <span className="text-sm font-semibold text-primary">{t('orderPanel.bulkDiscount')}</span>
         </div>
         <div className="divide-y divide-outline-variant/20">
           {sortedTiers.map((tier, idx) => (
@@ -109,19 +111,21 @@ export function ProductOrderPanel({
         <div className="flex items-center gap-2 px-3 py-2 bg-secondary/5 rounded-lg border border-secondary/20 text-xs text-secondary">
           <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>trending_down</span>
           <span>
-            <strong>{nextTier.min_qty - qty} adet</strong> daha ekleyin →{' '}
-            <strong>{formatCurrency(nextTier.price)}/adet</strong>
+            {t('orderPanel.nextTierHint', {
+              count: nextTier.min_qty - qty,
+              price: formatCurrency(nextTier.price),
+            })}
           </span>
         </div>
       )}
 
       <div className="pt-4 border-t border-outline-variant/30 flex flex-col gap-4">
         <div>
-          <label className="block text-sm font-semibold text-on-surface mb-2">Miktar</label>
+          <label className="block text-sm font-semibold text-on-surface mb-2">{t('orderPanel.quantity')}</label>
           <div className="flex items-center w-36 border border-outline-variant rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-primary focus-within:border-primary transition-all bg-surface-container-lowest shadow-sm">
             <button
               onClick={decrement}
-              aria-label="Azalt"
+              aria-label={t('orderPanel.decrement')}
               className="px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors border-r border-outline-variant/30"
             >
               <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>remove</span>
@@ -135,29 +139,31 @@ export function ProductOrderPanel({
             />
             <button
               onClick={increment}
-              aria-label="Artır"
+              aria-label={t('orderPanel.increment')}
               className="px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors border-l border-outline-variant/30"
             >
               <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>add</span>
             </button>
           </div>
-          <p className="text-xs text-on-surface-variant mt-1">Min. {product.min_order_qty} adet</p>
+          <p className="text-xs text-on-surface-variant mt-1">
+            {t('orderPanel.minQuantity', { count: product.min_order_qty })}
+          </p>
         </div>
 
         <div className="flex flex-col gap-3">
           <Button variant="primary" size="lg" className="w-full justify-center">
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>add_shopping_cart</span>
-            Sepete Ekle
+            {t('orderPanel.addToCart')}
           </Button>
           <Button variant="outline" size="lg" className="w-full justify-center text-primary">
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>request_quote</span>
-            Özel Teklif İste
+            {t('orderPanel.requestQuote')}
           </Button>
         </div>
 
         <p className="text-xs text-on-surface-variant text-center flex items-center justify-center gap-1">
           <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>local_shipping</span>
-          500₺ üzeri siparişlerde ücretsiz kargo · 24 saat içinde kargoda
+          {t('orderPanel.freeShipping')}
         </p>
       </div>
     </div>

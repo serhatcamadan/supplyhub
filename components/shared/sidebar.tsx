@@ -2,24 +2,25 @@
 
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
+import { useTranslations, useLocale } from 'next-intl'
 import { cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 
 const SELLER_NAV = [
-  { href: '/seller/dashboard',  label: 'Dashboard',        icon: 'grid_view' },
-  { href: '/seller/products',   label: 'Products',         icon: 'inventory_2' },
-  { href: '/seller/quotes',     label: 'Quote Requests',   icon: 'request_quote' },
-  { href: '/seller/orders',     label: 'Orders',           icon: 'shopping_bag' },
-  { href: '/seller/discover',   label: 'Market Discovery', icon: 'query_stats' },
-]
+  { href: '/seller/dashboard', key: 'seller.dashboard', icon: 'grid_view' },
+  { href: '/seller/products',  key: 'seller.products',  icon: 'inventory_2' },
+  { href: '/seller/quotes',    key: 'seller.quotes',    icon: 'request_quote' },
+  { href: '/seller/orders',    key: 'seller.orders',    icon: 'shopping_bag' },
+  { href: '/seller/discover',  key: 'seller.discover',  icon: 'query_stats' },
+] as const
 
 const BUYER_NAV = [
-  { href: '/buyer/discover',   label: 'Discovery',         icon: 'search' },
-  { href: '/buyer/cart',       label: 'Shopping Cart',     icon: 'shopping_cart' },
-  { href: '/buyer/orders',     label: 'Order History',     icon: 'history' },
-  { href: '/buyer/quotes',     label: 'Quote Requests',    icon: 'outgoing_mail' },
-  { href: '/buyer/approvals',  label: 'Pending Approvals', icon: 'pending_actions' },
-]
+  { href: '/buyer/discover',   key: 'buyer.discover',   icon: 'search' },
+  { href: '/buyer/cart',       key: 'buyer.cart',       icon: 'shopping_cart' },
+  { href: '/buyer/orders',     key: 'buyer.orders',     icon: 'history' },
+  { href: '/buyer/quotes',     key: 'buyer.quotes',     icon: 'outgoing_mail' },
+  { href: '/buyer/approvals',  key: 'buyer.approvals',  icon: 'pending_actions' },
+] as const
 
 interface SidebarProps {
   portal: 'seller' | 'buyer'
@@ -28,21 +29,29 @@ interface SidebarProps {
 export function Sidebar({ portal }: SidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
+  const t = useTranslations('sidebar')
+  const locale = useLocale()
 
   const navItems = portal === 'seller' ? SELLER_NAV : BUYER_NAV
+
+  // Strip locale prefix before matching against bare /seller/... paths
+  const pathWithoutLocale = pathname.replace(`/${locale}`, '') || '/'
 
   async function handleLogout() {
     const supabase = createClient()
     await supabase.auth.signOut()
-    router.push('/login')
+    router.push(`/${locale}/login`)
   }
 
-  function navLink(item: { href: string; label: string; icon: string }) {
-    const active = pathname === item.href || pathname.startsWith(item.href + '/')
+  function navLink(item: { href: string; key: string; icon: string }) {
+    const active =
+      pathWithoutLocale === item.href ||
+      pathWithoutLocale.startsWith(item.href + '/')
+
     return (
       <Link
         key={item.href}
-        href={item.href}
+        href={`/${locale}${item.href}`}
         className={cn(
           'flex items-center px-4 py-2.5 text-sm transition-colors rounded-lg',
           active
@@ -53,7 +62,7 @@ export function Sidebar({ portal }: SidebarProps) {
         <span className="material-symbols-outlined mr-3" style={{ fontSize: '20px' }}>
           {item.icon}
         </span>
-        {item.label}
+        {t(item.key)}
       </Link>
     )
   }
@@ -76,7 +85,7 @@ export function Sidebar({ portal }: SidebarProps) {
           <span className="material-symbols-outlined mr-3" style={{ fontSize: '20px' }}>
             logout
           </span>
-          Sign Out
+          {t('signOut')}
         </button>
       </div>
     </aside>

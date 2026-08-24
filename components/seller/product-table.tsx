@@ -1,3 +1,6 @@
+'use client'
+
+import { useTranslations } from 'next-intl'
 import { cn, formatCurrency } from '@/lib/utils'
 import { StatusBadge } from '@/components/seller/status-badge'
 import { StockBar } from '@/components/seller/stock-bar'
@@ -21,6 +24,8 @@ const MOCK_STOCK: Record<string, number> = {
 }
 
 export function ProductTable({ products }: ProductTableProps) {
+  const t = useTranslations('seller')
+
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-md overflow-hidden">
       <div className="overflow-x-auto">
@@ -33,13 +38,13 @@ export function ProductTable({ products }: ProductTableProps) {
                   className="w-4 h-4 rounded border-outline-variant text-primary focus:ring-primary bg-surface cursor-pointer"
                 />
               </th>
-              <th className="p-4 w-20 text-xs font-semibold uppercase tracking-wider text-on-surface">Image</th>
-              <th className="p-4 min-w-60 text-xs font-semibold uppercase tracking-wider text-on-surface">Product Info</th>
-              <th className="p-4 text-xs font-semibold uppercase tracking-wider text-on-surface">Category</th>
-              <th className="p-4 text-right text-xs font-semibold uppercase tracking-wider text-on-surface">Price Range (Tiered)</th>
-              <th className="p-4 text-right text-xs font-semibold uppercase tracking-wider text-on-surface">Stock Level</th>
-              <th className="p-4 text-center text-xs font-semibold uppercase tracking-wider text-on-surface">Status</th>
-              <th className="p-4 text-right text-xs font-semibold uppercase tracking-wider text-on-surface">Actions</th>
+              <th className="p-4 w-20 text-xs font-semibold uppercase tracking-wider text-on-surface">{t('products.table.image')}</th>
+              <th className="p-4 min-w-60 text-xs font-semibold uppercase tracking-wider text-on-surface">{t('products.table.productInfo')}</th>
+              <th className="p-4 text-xs font-semibold uppercase tracking-wider text-on-surface">{t('products.table.category')}</th>
+              <th className="p-4 text-right text-xs font-semibold uppercase tracking-wider text-on-surface">{t('products.table.priceRange')}</th>
+              <th className="p-4 text-right text-xs font-semibold uppercase tracking-wider text-on-surface">{t('products.table.stockLevel')}</th>
+              <th className="p-4 text-center text-xs font-semibold uppercase tracking-wider text-on-surface">{t('products.table.status')}</th>
+              <th className="p-4 text-right text-xs font-semibold uppercase tracking-wider text-on-surface">{t('products.table.actions')}</th>
             </tr>
           </thead>
 
@@ -53,7 +58,7 @@ export function ProductTable({ products }: ProductTableProps) {
                   >
                     inventory_2
                   </span>
-                  <span className="text-sm text-on-surface-variant">No products match your search.</span>
+                  <span className="text-sm text-on-surface-variant">{t('products.table.noResults')}</span>
                 </td>
               </tr>
             ) : (
@@ -104,7 +109,7 @@ export function ProductTable({ products }: ProductTableProps) {
                       <span className="text-sm font-semibold text-on-surface block">
                         {formatCurrency(min)} – {formatCurrency(max)}
                       </span>
-                      <span className="text-xs text-on-surface-variant">per unit</span>
+                      <span className="text-xs text-on-surface-variant">{t('products.table.perUnit')}</span>
                     </td>
                     <td className="p-4 text-right">
                       <StockBar productId={product.id} />
@@ -125,7 +130,7 @@ export function ProductTable({ products }: ProductTableProps) {
 
       <div className="border-t border-outline-variant/30 p-4 flex items-center justify-between">
         <span className="text-xs text-on-surface-variant">
-          Rows per page: <strong>10</strong>
+          {t('products.table.rowsPerPage')}: <strong>10</strong>
         </span>
         <div className="flex items-center gap-1">
           <button className="w-8 h-8 flex items-center justify-center rounded-md text-on-surface-variant hover:bg-surface-container transition-colors">

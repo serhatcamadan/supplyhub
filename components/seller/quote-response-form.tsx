@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { QuoteSentScreen } from '@/components/seller/quote-sent-screen'
@@ -16,13 +17,6 @@ interface QuoteResponseFormProps {
   }
 }
 
-const LEAD_TIME_OPTIONS = [
-  { value: '7-14', label: '7–14 Days' },
-  { value: '14-21', label: '14–21 Days' },
-  { value: '21-30', label: '21–30 Days' },
-  { value: '30+', label: '30+ Days' },
-]
-
 function defaultValidUntil() {
   const d = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
   return d.toISOString().split('T')[0]
@@ -34,6 +28,7 @@ export function QuoteResponseForm({
   listPrice,
   existingResponse,
 }: QuoteResponseFormProps) {
+  const t = useTranslations('seller')
   const initialPrice = existingResponse.price ?? listPrice ?? 0
   const [price, setPrice] = useState<number>(initialPrice)
   const [volumeDiscount, setVolumeDiscount] = useState(false)
@@ -46,6 +41,13 @@ export function QuoteResponseForm({
 
   const total   = price * quantity
   const isSaved = savedAt !== null
+
+  const LEAD_TIME_OPTIONS = [
+    { value: '7-14',  label: t('quotes.response.leadTimeOptions.7-14') },
+    { value: '14-21', label: t('quotes.response.leadTimeOptions.14-21') },
+    { value: '21-30', label: t('quotes.response.leadTimeOptions.21-30') },
+    { value: '30+',   label: t('quotes.response.leadTimeOptions.30+') },
+  ]
 
   async function handleSaveDraft() {
     setIsSaving(true)
@@ -79,12 +81,10 @@ export function QuoteResponseForm({
 
       {/* Header */}
       <div className="p-6 border-b border-outline-variant/20 flex justify-between items-center bg-surface/50 backdrop-blur-sm z-10 shrink-0">
-        <h2 className="text-2xl font-semibold text-on-surface">Draft Response</h2>
+        <h2 className="text-2xl font-semibold text-on-surface">{t('quotes.response.heading')}</h2>
         <span className="px-3 py-1 bg-surface-container-high rounded-full text-xs font-semibold text-on-surface-variant flex items-center gap-1.5">
-          <span
-            className={`w-2 h-2 rounded-full transition-colors ${isSaved ? 'bg-secondary' : 'bg-on-tertiary-container'}`}
-          />
-          {isSaved ? 'Draft Saved' : 'Unsaved'}
+          <span className={`w-2 h-2 rounded-full transition-colors ${isSaved ? 'bg-secondary' : 'bg-on-tertiary-container'}`} />
+          {isSaved ? t('quotes.response.draftSaved') : t('quotes.response.unsaved')}
         </span>
       </div>
 
@@ -94,15 +94,15 @@ export function QuoteResponseForm({
         {/* Pricing Proposal */}
         <div className="space-y-6">
           <h3 className="text-base font-semibold text-on-surface border-b border-outline-variant/20 pb-2">
-            Pricing Proposal
+            {t('quotes.response.pricingProposal')}
           </h3>
 
           <div className="bg-surface rounded-xl p-5 border border-outline-variant/20">
             <div className="flex justify-between items-end mb-3">
-              <label className="text-base font-semibold text-on-surface">Unit Price</label>
+              <label className="text-base font-semibold text-on-surface">{t('quotes.response.unitPrice')}</label>
               {listPrice && (
                 <span className="text-xs text-on-surface-variant">
-                  List price: {formatCurrency(listPrice)}/adet
+                  {t('quotes.response.listPriceLabel')} {formatCurrency(listPrice)}/{t('quotes.response.perUnit')}
                 </span>
               )}
             </div>
@@ -124,11 +124,11 @@ export function QuoteResponseForm({
                   className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg py-3 pl-8 pr-4 font-mono text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-sm"
                 />
               </div>
-              <span className="text-sm text-on-surface-variant shrink-0">per adet</span>
+              <span className="text-sm text-on-surface-variant shrink-0">{t('quotes.response.perUnit')}</span>
               <div className="h-10 w-px bg-outline-variant/30 shrink-0" />
               <div className="text-right shrink-0 min-w-25">
                 <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-                  Total Value
+                  {t('quotes.response.totalValue')}
                 </p>
                 <p className="text-xl font-bold text-primary mt-0.5">
                   {formatCurrency(total)}
@@ -144,9 +144,7 @@ export function QuoteResponseForm({
                   onChange={(e) => setVolumeDiscount(e.target.checked)}
                   className="w-4 h-4 rounded text-primary focus:ring-primary border-outline-variant"
                 />
-                <span className="text-sm text-on-surface">
-                  Offer volume discount tier for larger quantities
-                </span>
+                <span className="text-sm text-on-surface">{t('quotes.response.volumeDiscount')}</span>
               </label>
             </div>
           </div>
@@ -154,7 +152,7 @@ export function QuoteResponseForm({
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <label className="text-sm font-semibold text-on-surface block">
-                Estimated Lead Time
+                {t('quotes.response.leadTime')}
               </label>
               <div className="relative group">
                 <span
@@ -165,16 +163,11 @@ export function QuoteResponseForm({
                 </span>
                 <select
                   value={leadTime}
-                  onChange={(e) => {
-                    setLeadTime(e.target.value)
-                    setSavedAt(null)
-                  }}
+                  onChange={(e) => { setLeadTime(e.target.value); setSavedAt(null) }}
                   className="w-full bg-surface border border-outline-variant rounded-lg py-3 pl-10 pr-8 text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary appearance-none shadow-sm"
                 >
                   {LEAD_TIME_OPTIONS.map((opt) => (
-                    <option key={opt.value} value={opt.value}>
-                      {opt.label}
-                    </option>
+                    <option key={opt.value} value={opt.value}>{opt.label}</option>
                   ))}
                 </select>
                 <span
@@ -187,14 +180,11 @@ export function QuoteResponseForm({
             </div>
 
             <div className="space-y-2">
-              <label className="text-sm font-semibold text-on-surface block">Valid Until</label>
+              <label className="text-sm font-semibold text-on-surface block">{t('quotes.response.validUntil')}</label>
               <input
                 type="date"
                 value={validUntil}
-                onChange={(e) => {
-                  setValidUntil(e.target.value)
-                  setSavedAt(null)
-                }}
+                onChange={(e) => { setValidUntil(e.target.value); setSavedAt(null) }}
                 className="w-full bg-surface border border-outline-variant rounded-lg py-3 px-4 text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary shadow-sm"
               />
             </div>
@@ -203,17 +193,12 @@ export function QuoteResponseForm({
 
         {/* Message */}
         <div className="flex flex-col gap-2 flex-1">
-          <div className="flex justify-between items-end">
-            <label className="text-sm font-semibold text-on-surface">Message to Buyer</label>
-          </div>
+          <label className="text-sm font-semibold text-on-surface">{t('quotes.response.messageToBuyer')}</label>
           <textarea
             value={message}
-            onChange={(e) => {
-              setMessage(e.target.value)
-              setSavedAt(null)
-            }}
+            onChange={(e) => { setMessage(e.target.value); setSavedAt(null) }}
             className="flex-1 min-h-40 bg-surface border border-outline-variant rounded-xl p-4 text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary resize-none shadow-sm"
-            placeholder="Write your response here..."
+            placeholder={t('quotes.response.messagePlaceholder')}
           />
         </div>
 
@@ -223,10 +208,10 @@ export function QuoteResponseForm({
       <div className="p-6 bg-surface-container-low border-t border-outline-variant/20 flex justify-between items-center z-10 shrink-0">
         <Button variant="outline" onClick={handleSaveDraft} disabled={isSaving}>
           <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>save</span>
-          {isSaving ? 'Kaydediliyor…' : 'Save Draft'}
+          {isSaving ? t('quotes.response.saving') : t('quotes.response.saveDraft')}
         </Button>
         <Button variant="secondary" size="lg" onClick={handleSend} className="hover:-translate-y-0.5 shadow-md">
-          Send Quote
+          {t('quotes.response.sendQuote')}
           <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>send</span>
         </Button>
       </div>

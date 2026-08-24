@@ -1,20 +1,26 @@
+'use client'
+
+import { useTranslations } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
 import type { Product } from '@/types'
 
 interface TopProductsProps {
   products: Product[]
+  locale: string
 }
 
 const MOCK_UNITS = [450, 320, 185]
 const MOCK_REVENUE = [12000, 8500, 5200]
 
-export function TopProducts({ products }: TopProductsProps) {
+export function TopProducts({ products, locale }: TopProductsProps) {
+  const t = useTranslations('seller')
+
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-sm p-6 flex flex-col">
       <div className="flex justify-between items-center mb-6">
-        <h3 className="text-xl font-semibold text-on-surface">Top Selling</h3>
-        <a href="/seller/products" className="text-xs font-semibold text-primary hover:underline">
-          View Report
+        <h3 className="text-xl font-semibold text-on-surface">{t('dashboard.topProducts.heading')}</h3>
+        <a href={`/${locale}/seller/products`} className="text-xs font-semibold text-primary hover:underline">
+          {t('dashboard.topProducts.viewReport')}
         </a>
       </div>
 
@@ -39,7 +45,7 @@ export function TopProducts({ products }: TopProductsProps) {
             <div className="text-right shrink-0">
               <p className="font-mono text-xs font-semibold text-on-surface">
                 {MOCK_UNITS[i]}{' '}
-                <span className="text-on-surface-variant font-normal">units</span>
+                <span className="text-on-surface-variant font-normal">{t('dashboard.topProducts.units')}</span>
               </p>
               <p className="text-xs text-secondary">+{formatCurrency(MOCK_REVENUE[i] ?? 0)}</p>
             </div>
@@ -79,7 +85,7 @@ export function TopProducts({ products }: TopProductsProps) {
         </div>
         <div>
           <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-1">
-            Top Category
+            {t('dashboard.topProducts.topCategory')}
           </p>
           <p className="text-base font-semibold text-on-surface">
             {products[0]?.category ?? '—'}{' '}
