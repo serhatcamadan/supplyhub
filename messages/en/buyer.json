@@ -113,7 +113,62 @@
     "onTimeDelivery": "On-Time Delivery",
     "viewProfile": "View Supplier Profile"
   },
-  "cart": {},
+  "cart": {
+    "heading": "Shopping Cart",
+    "itemCount": "{count} product types",
+    "clearCart": "Clear Cart",
+    "saveAsTemplate": "Save this cart as template",
+    "empty": {
+      "heading": "Your cart is empty",
+      "subtext": "Click the button below to discover supplier products.",
+      "cta": "Discover Products"
+    },
+    "checkoutError": {
+      "noSeller": "Seller information not found.",
+      "orderFailed": "Could not create order."
+    },
+    "item": {
+      "supplier": "Supplier",
+      "quantity": "Quantity",
+      "decrement": "Decrease",
+      "increment": "Increase",
+      "remove": "Remove",
+      "perUnit": "/ unit",
+      "stock": {
+        "in_stock": "IN STOCK",
+        "low_stock": "LOW STOCK"
+      }
+    },
+    "promo": {
+      "heading": "Bulk Discount Opportunity",
+      "subtext": "Add {count} more of {name} to reach Tier 3 pricing.",
+      "cta": "Add Now"
+    },
+    "summary": {
+      "heading": "Order Summary",
+      "subtotal": "Subtotal",
+      "volumeDiscount": "Volume Discount",
+      "shipping": "Shipping",
+      "shippingFree": "Free",
+      "shippingNudge": "Add {amount} more for free shipping",
+      "tax": "VAT ({rate}%)",
+      "total": "Total Amount",
+      "saved": "You saved {amount}",
+      "promoLabel": "Promo Code / Purchase Order No.",
+      "promoPlaceholder": "PROMO or PO-XXXX",
+      "promoApply": "Apply",
+      "promoApplied": "Applied",
+      "promoAppliedMsg": "Code applied",
+      "checkout": "Complete Order",
+      "checkoutLoading": "Processing…",
+      "requestQuote": "Request Official Quote",
+      "trust": {
+        "ssl": "SSL-protected payment",
+        "verified": "Verified suppliers",
+        "support": "B2B support line"
+      }
+    }
+  },
   "orders": {},
   "approvals": {},
   "quotes": {}

@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
+import { useTranslations, useLocale } from 'next-intl'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { createClient } from '@/lib/supabase/client'
@@ -47,11 +48,12 @@ const INITIAL_ITEMS: CartItem[] = [
 
 export default function BuyerCartPage() {
   const router = useRouter()
+  const t = useTranslations('buyer')
+  const locale = useLocale()
   const [items, setItems] = useState<CartItem[]>(INITIAL_ITEMS)
   const [isCheckingOut, setIsCheckingOut] = useState(false)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
 
-  // Enrich cart items with real product + seller IDs from Supabase
   useEffect(() => {
     async function enrich() {
       const supabase = createClient()
@@ -95,7 +97,7 @@ export default function BuyerCartPage() {
     const sellerId = items.find((i) => i.sellerId)?.sellerId
 
     if (!sellerId) {
-      setCheckoutError('Satıcı bilgisi bulunamadı.')
+      setCheckoutError(t('cart.checkoutError.noSeller'))
       setIsCheckingOut(false)
       return
     }
@@ -120,7 +122,7 @@ export default function BuyerCartPage() {
       .single()
 
     if (orderErr || !order) {
-      setCheckoutError(orderErr?.message ?? 'Sipariş oluşturulamadı.')
+      setCheckoutError(orderErr?.message ?? t('cart.checkoutError.orderFailed'))
       setIsCheckingOut(false)
       return
     }
@@ -138,7 +140,7 @@ export default function BuyerCartPage() {
       await supabase.from('order_items').insert(orderItems)
     }
 
-    router.push('/buyer/orders')
+    router.push(`/${locale}/buyer/orders`)
   }
 
   const subtotal = items.reduce((sum, item) => sum + item.originalUnitPrice * item.qty, 0)
@@ -152,15 +154,13 @@ export default function BuyerCartPage() {
   return (
     <div className="flex flex-col lg:flex-row h-[calc(100vh-4rem)]">
 
-      {/* ── Left: scrollable cart area ── */}
       <div className="flex-1 overflow-y-auto px-4 lg:px-8 py-8">
         <div className="max-w-4xl mx-auto space-y-6">
 
-          {/* Page header */}
           <div className="flex items-center justify-between">
             <div>
-              <h1 className="text-2xl font-bold text-on-surface">Alışveriş Sepeti</h1>
-              <p className="text-sm text-on-surface-variant mt-0.5">{items.length} ürün türü</p>
+              <h1 className="text-2xl font-bold text-on-surface">{t('cart.heading')}</h1>
+              <p className="text-sm text-on-surface-variant mt-0.5">{t('cart.itemCount', { count: items.length })}</p>
             </div>
             {items.length > 0 && (
               <Button
@@ -170,13 +170,12 @@ export default function BuyerCartPage() {
                 className="text-error hover:bg-error/10 hover:text-error"
               >
                 <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>delete_sweep</span>
-                Sepeti Temizle
+                {t('cart.clearCart')}
               </Button>
             )}
           </div>
 
           {items.length === 0 ? (
-            /* Empty state */
             <div className="flex flex-col items-center justify-center py-24 gap-6 text-center">
               <div className="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center">
                 <span className="material-symbols-outlined text-on-surface-variant/40" style={{ fontSize: '48px' }}>
@@ -184,25 +183,21 @@ export default function BuyerCartPage() {
                 </span>
               </div>
               <div>
-                <p className="text-lg font-semibold text-on-surface">Sepetiniz boş</p>
-                <p className="text-sm text-on-surface-variant mt-1">
-                  Tedarikçi ürünlerini keşfetmek için aşağıdaki butona tıklayın.
-                </p>
+                <p className="text-lg font-semibold text-on-surface">{t('cart.empty.heading')}</p>
+                <p className="text-sm text-on-surface-variant mt-1">{t('cart.empty.subtext')}</p>
               </div>
               <Link
-                href="/buyer/discover"
+                href={`/${locale}/buyer/discover`}
                 className="inline-flex items-center gap-2 font-semibold text-sm bg-primary text-on-primary px-6 py-3 rounded-xl hover:bg-primary-container transition-colors shadow-sm"
               >
                 <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>explore</span>
-                Ürünleri Keşfet
+                {t('cart.empty.cta')}
               </Link>
             </div>
           ) : (
             <>
-              {/* Upsell banner */}
-              {nuggingItem && <CartPromoBanner item={nuggingItem} />}
+              {nuggingItem && <CartPromoBanner item={nuggingItem} locale={locale} />}
 
-              {/* Cart items */}
               <div className="space-y-4">
                 {items.map((item) => (
                   <CartItemCard
@@ -214,11 +209,10 @@ export default function BuyerCartPage() {
                 ))}
               </div>
 
-              {/* Save as template link */}
               <div className="flex items-center justify-center pt-2">
                 <button className="flex items-center gap-1.5 text-sm text-on-surface-variant hover:text-primary transition-colors">
                   <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>bookmark_add</span>
-                  Bu sepeti şablon olarak kaydet
+                  {t('cart.saveAsTemplate')}
                 </button>
               </div>
             </>
@@ -226,7 +220,6 @@ export default function BuyerCartPage() {
         </div>
       </div>
 
-      {/* ── Right: fixed order summary sidebar ── */}
       <div className="w-full lg:w-96 bg-surface-container-lowest border-t lg:border-t-0 lg:border-l border-outline-variant/30 shadow-xl flex flex-col shrink-0 overflow-y-auto">
         {checkoutError && (
           <p className="px-6 pt-4 text-sm text-error">{checkoutError}</p>
@@ -237,7 +230,7 @@ export default function BuyerCartPage() {
           itemCount={items.length}
           onCheckout={handleCheckout}
           isCheckingOut={isCheckingOut}
-          onRequestQuote={() => router.push('/buyer/quotes/new')}
+          onRequestQuote={() => router.push(`/${locale}/buyer/quotes/new`)}
         />
       </div>
     </div>

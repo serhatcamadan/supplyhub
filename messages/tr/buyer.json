@@ -113,7 +113,62 @@
     "onTimeDelivery": "Zamanında Teslimat",
     "viewProfile": "Tedarikçi Profilini Gör"
   },
-  "cart": {},
+  "cart": {
+    "heading": "Alışveriş Sepeti",
+    "itemCount": "{count} ürün türü",
+    "clearCart": "Sepeti Temizle",
+    "saveAsTemplate": "Bu sepeti şablon olarak kaydet",
+    "empty": {
+      "heading": "Sepetiniz boş",
+      "subtext": "Tedarikçi ürünlerini keşfetmek için aşağıdaki butona tıklayın.",
+      "cta": "Ürünleri Keşfet"
+    },
+    "checkoutError": {
+      "noSeller": "Satıcı bilgisi bulunamadı.",
+      "orderFailed": "Sipariş oluşturulamadı."
+    },
+    "item": {
+      "supplier": "Tedarikçi",
+      "quantity": "Miktar",
+      "decrement": "Azalt",
+      "increment": "Artır",
+      "remove": "Kaldır",
+      "perUnit": "/ adet",
+      "stock": {
+        "in_stock": "STOKTA",
+        "low_stock": "AZ STOK"
+      }
+    },
+    "promo": {
+      "heading": "Toplu İndirim Fırsatı",
+      "subtext": "{name} için {count} adet daha ekleyerek Tier 3 fiyatına ulaşın.",
+      "cta": "Hemen Ekle"
+    },
+    "summary": {
+      "heading": "Sipariş Özeti",
+      "subtotal": "Ara Toplam",
+      "volumeDiscount": "Hacim İndirimi",
+      "shipping": "Kargo",
+      "shippingFree": "Ücretsiz",
+      "shippingNudge": "{amount} daha ekleyin, kargo ücretsiz",
+      "tax": "KDV (%{rate})",
+      "total": "Toplam Tutar",
+      "saved": "{amount} tasarruf ettiniz",
+      "promoLabel": "Promosyon Kodu / Sipariş No",
+      "promoPlaceholder": "PROMO veya PO-XXXX",
+      "promoApply": "Uygula",
+      "promoApplied": "Uygulandı",
+      "promoAppliedMsg": "Kod uygulandı",
+      "checkout": "Siparişi Tamamla",
+      "checkoutLoading": "İşleniyor…",
+      "requestQuote": "Resmi Teklif Talep Et",
+      "trust": {
+        "ssl": "SSL korumalı ödeme",
+        "verified": "Doğrulanmış tedarikçiler",
+        "support": "B2B destek hattı"
+      }
+    }
+  },
   "orders": {},
   "approvals": {},
   "quotes": {}
