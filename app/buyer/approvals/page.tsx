@@ -1,13 +1,29 @@
-import { getOrdersWithDetails } from '@/lib/mock-data'
+import { createClient } from '@/lib/supabase/server'
 import { ApprovalCard } from '@/components/buyer/approval-card'
 import { ApprovalStatCards } from '@/components/buyer/approval-stat-cards'
+import type { OrderWithDetails } from '@/types'
 
-const BUYER_ID = 'company-buyer-1'
+export default async function BuyerApprovalsPage() {
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+  const companyId = user?.user_metadata?.company_id as string
 
-export default function BuyerApprovalsPage() {
-  const pendingApprovals = getOrdersWithDetails().filter(
-    (o) => o.buyer_id === BUYER_ID && o.needs_approval && !o.approved_by
-  )
+  const { data } = await supabase
+    .from('orders')
+    .select(`
+      *,
+      buyer:companies!orders_buyer_id_fkey(*),
+      seller:companies!orders_seller_id_fkey(*),
+      created_by_user:users!orders_created_by_fkey(*),
+      approved_by_user:users!orders_approved_by_fkey(*),
+      items:order_items(*, product:products(*))
+    `)
+    .eq('buyer_id', companyId)
+    .eq('needs_approval', true)
+    .is('approved_by', null)
+    .order('created_at', { ascending: false })
+
+  const pendingApprovals = (data as unknown as OrderWithDetails[]) ?? []
 
   const totalValue = pendingApprovals.reduce((sum, o) => sum + o.total, 0)
   const totalItems = pendingApprovals.reduce((sum, o) => sum + o.items.length, 0)
@@ -15,7 +31,6 @@ export default function BuyerApprovalsPage() {
   return (
     <div className="px-8 py-8 max-w-360 mx-auto space-y-8">
 
-      {/* Header */}
       <div className="flex items-end justify-between flex-wrap gap-4">
         <div>
           <h1 className="text-4xl font-bold tracking-tight text-on-surface">Pending Approvals</h1>
@@ -37,7 +52,6 @@ export default function BuyerApprovalsPage() {
         totalValue={totalValue}
       />
 
-      {/* Approvals list */}
       {pendingApprovals.length === 0 ? (
         <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 py-20 flex flex-col items-center gap-4 text-center">
           <div className="w-16 h-16 bg-secondary-fixed/20 rounded-full flex items-center justify-center">
