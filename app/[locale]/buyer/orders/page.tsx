@@ -1,4 +1,4 @@
-import { getTranslations } from 'next-intl/server'
+import { getTranslations, getLocale } from 'next-intl/server'
 import { createClient } from '@/lib/supabase/server'
 import { formatCurrency } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
@@ -8,7 +8,7 @@ import { OrdersCsvButton } from '@/components/buyer/orders-csv-button'
 import type { OrderWithDetails } from '@/types'
 
 export default async function BuyerOrdersPage() {
-  const [supabase, t] = await Promise.all([createClient(), getTranslations('buyer')])
+  const [supabase, t, locale] = await Promise.all([createClient(), getTranslations('buyer'), getLocale()])
   const { data: { user } } = await supabase.auth.getUser()
   const companyId = user?.user_metadata?.company_id as string
 
@@ -48,7 +48,7 @@ export default async function BuyerOrdersPage() {
 
       <OrderStatCards
         totalOrders={orders.length}
-        totalSpend={formatCurrency(totalSpend)}
+        totalSpend={formatCurrency(totalSpend, locale)}
         inTransit={inTransit}
       />
 

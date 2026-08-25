@@ -36,7 +36,7 @@ export default async function LocaleLayout({
   const messages = await getMessages()
 
   return (
-    <html lang={locale} className={`${inter.className} h-full antialiased`}>
+    <html lang={locale} dir="ltr" className={`${inter.className} h-full antialiased`}>
       <head>
         <link
           rel="stylesheet"

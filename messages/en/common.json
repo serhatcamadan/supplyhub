@@ -21,6 +21,11 @@
     "shipped": "Shipped",
     "delivered": "Delivered"
   },
+  "notifications": {
+    "heading": "Notifications",
+    "markAllRead": "Mark all as read",
+    "viewAll": "View all notifications"
+  },
   "emptyState": {
     "noOrders": "No orders found.",
     "noQuotes": "No quote requests found.",

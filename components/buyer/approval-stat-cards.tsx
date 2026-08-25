@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
 
 interface ApprovalStatCardsProps {
@@ -11,6 +11,7 @@ interface ApprovalStatCardsProps {
 
 export function ApprovalStatCards({ pendingCount, totalItems, totalValue }: ApprovalStatCardsProps) {
   const t = useTranslations('buyer')
+  const locale = useLocale()
 
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -39,7 +40,7 @@ export function ApprovalStatCards({ pendingCount, totalItems, totalValue }: Appr
       <div className="bg-primary p-5 rounded-xl shadow-md relative overflow-hidden text-on-primary">
         <div className="absolute right-0 top-0 w-32 h-32 bg-white/10 rounded-full blur-xl -mr-10 -mt-10" />
         <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-on-primary/80">{t('approvals.stats.totalValue')}</p>
-        <p className="text-4xl font-bold tracking-tight relative z-10">{formatCurrency(totalValue)}</p>
+        <p className="text-4xl font-bold tracking-tight relative z-10">{formatCurrency(totalValue, locale)}</p>
       </div>
     </div>
   )

@@ -21,6 +21,11 @@
     "shipped": "Kargoda",
     "delivered": "Teslim Edildi"
   },
+  "notifications": {
+    "heading": "Bildirimler",
+    "markAllRead": "Tümünü okundu işaretle",
+    "viewAll": "Tüm bildirimleri gör"
+  },
   "emptyState": {
     "noOrders": "Sipariş bulunamadı.",
     "noQuotes": "Teklif talebi bulunamadı.",
