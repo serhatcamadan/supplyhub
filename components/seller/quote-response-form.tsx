@@ -117,6 +117,7 @@ export function QuoteResponseForm({
                   step="0.01"
                   min={0}
                   value={price}
+                  data-testid="response-price"
                   onChange={(e) => {
                     setPrice(parseFloat(e.target.value) || 0)
                     setSavedAt(null)
@@ -210,7 +211,7 @@ export function QuoteResponseForm({
           <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>save</span>
           {isSaving ? t('quotes.response.saving') : t('quotes.response.saveDraft')}
         </Button>
-        <Button variant="secondary" size="lg" onClick={handleSend} className="hover:-translate-y-0.5 shadow-md">
+        <Button variant="secondary" size="lg" onClick={handleSend} className="hover:-translate-y-0.5 shadow-md" data-testid="send-quote">
           {t('quotes.response.sendQuote')}
           <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>send</span>
         </Button>

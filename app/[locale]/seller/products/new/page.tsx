@@ -91,11 +91,11 @@ export default function NewProductPage() {
           <h1 className="text-2xl font-semibold text-on-surface tracking-tight">{t('products.form.heading')}</h1>
         </div>
         <div className="flex items-center gap-4">
-          {error && <p className="text-sm text-error">{error}</p>}
+          {error && <p className="text-sm text-error" data-testid="product-error">{error}</p>}
           <Link href={`/${locale}/seller/products`} className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface hover:bg-surface-container-high transition-colors">
             {t('products.form.cancel')}
           </Link>
-          <Button type="button" variant="secondary" onClick={handleSave} disabled={isSubmitting} className="active:scale-[0.98]">
+          <Button type="button" variant="secondary" onClick={handleSave} disabled={isSubmitting} className="active:scale-[0.98]" data-testid="save-product">
             <span className="material-symbols-outlined text-[18px]">save</span>
             {isSubmitting ? t('products.form.saving') : t('products.form.save')}
           </Button>

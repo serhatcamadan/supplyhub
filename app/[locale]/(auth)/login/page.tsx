@@ -105,18 +105,18 @@ export default function LoginPage() {
               <label htmlFor="email" className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
                 {t('login.email')}
               </label>
-              <input id="email" name="email" type="email" required autoComplete="email"
+              <input id="email" name="email" type="email" required autoComplete="email" data-testid="email"
                 className="w-full px-4 py-2.5 bg-surface border border-outline-variant/50 rounded-lg text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
             </div>
             <div className="flex flex-col gap-1.5">
               <label htmlFor="password" className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
                 {t('login.password')}
               </label>
-              <input id="password" name="password" type="password" required autoComplete="current-password"
+              <input id="password" name="password" type="password" required autoComplete="current-password" data-testid="password"
                 className="w-full px-4 py-2.5 bg-surface border border-outline-variant/50 rounded-lg text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
             </div>
-            {error && <p className="text-xs text-error">{error}</p>}
-            <Button type="submit" variant="primary" disabled={loading} className="w-full">
+            {error && <p className="text-xs text-error" data-testid="error-msg">{error}</p>}
+            <Button type="submit" variant="primary" disabled={loading} className="w-full" data-testid="submit">
               {loading ? t('login.submitting') : t('login.submit')}
             </Button>
           </form>
