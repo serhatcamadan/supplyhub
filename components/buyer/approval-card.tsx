@@ -132,6 +132,7 @@ export function ApprovalCard({ order }: ApprovalCardProps) {
           <button
             disabled={isLoading}
             onClick={handleApprove}
+            data-testid="approve-btn"
             className="h-9 px-5 inline-flex items-center gap-2 bg-secondary text-on-secondary text-sm font-semibold rounded-lg hover:bg-secondary/90 transition-colors shadow-sm disabled:opacity-50"
           >
             <span className="material-symbols-outlined text-[18px]">check_circle</span>
