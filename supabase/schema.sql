@@ -3,7 +3,7 @@
 -- Supabase Dashboard → SQL Editor → Yeni sorgu → Yapıştır → Çalıştır
 -- Seed verisi : /api/seed endpoint'ini çağır (Login sayfasındaki buton)
 -- ================================================================
-
+-- github actions deneme
 create table if not exists companies (
   id          uuid primary key default gen_random_uuid(),
   name        text not null,
