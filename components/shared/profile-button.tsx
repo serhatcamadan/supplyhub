@@ -54,6 +54,7 @@ export function ProfileButton({ userName, userRole }: ProfileButtonProps) {
       {/* Topbar trigger */}
       <button
         onClick={() => setOpen(true)}
+        data-testid="profile-btn"
         className="flex items-center gap-3 pl-6 border-l border-outline-variant hover:opacity-80 transition-opacity"
       >
         <div className="text-right hidden sm:block">
@@ -112,7 +113,7 @@ export function ProfileButton({ userName, userRole }: ProfileButtonProps) {
 
         {/* Sign Out */}
         <div className="p-6 border-t border-outline-variant/30">
-          <Button variant="destructive" size="lg" onClick={handleSignOut} className="w-full">
+          <Button variant="destructive" size="lg" onClick={handleSignOut} className="w-full" data-testid="sign-out-btn">
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>logout</span>
             {t('profile.signOut')}
           </Button>

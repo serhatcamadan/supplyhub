@@ -154,6 +154,7 @@ export function OrderSummary({
             onClick={onCheckout}
             disabled={isCheckingOut}
             className="w-full"
+            data-testid="checkout"
           >
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>shopping_bag</span>
             {isCheckingOut ? t('cart.summary.checkoutLoading') : t('cart.summary.checkout')}

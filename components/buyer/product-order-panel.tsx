@@ -135,6 +135,7 @@ export function ProductOrderPanel({
               value={qty}
               min={product.min_order_qty}
               onChange={handleInput}
+              data-testid="qty-input"
               className="w-full text-center bg-transparent border-none focus:outline-none text-sm font-semibold text-on-surface h-10 appearance-none"
             />
             <button
@@ -151,7 +152,7 @@ export function ProductOrderPanel({
         </div>
 
         <div className="flex flex-col gap-3">
-          <Button variant="primary" size="lg" className="w-full justify-center">
+          <Button variant="primary" size="lg" className="w-full justify-center" data-testid="add-to-cart">
             <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>add_shopping_cart</span>
             {t('orderPanel.addToCart')}
           </Button>
