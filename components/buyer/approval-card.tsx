@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { Avatar } from '@/components/ui/avatar'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
@@ -14,6 +14,7 @@ interface ApprovalCardProps {
 
 export function ApprovalCard({ order }: ApprovalCardProps) {
   const t = useTranslations('buyer')
+  const locale = useLocale()
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -78,13 +79,13 @@ export function ApprovalCard({ order }: ApprovalCardProps) {
 
           <div>
             <p className="text-xs font-semibold text-on-surface-variant">{t('approvals.card.dateLabel')}</p>
-            <p className="text-sm text-on-surface">{formatDate(order.created_at)}</p>
+            <p className="text-sm text-on-surface">{formatDate(order.created_at, locale)}</p>
           </div>
         </div>
 
         <div className="text-right">
           <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-0.5">{t('approvals.card.totalLabel')}</p>
-          <p className="text-2xl font-bold text-on-surface">{formatCurrency(order.total)}</p>
+          <p className="text-2xl font-bold text-on-surface">{formatCurrency(order.total, locale)}</p>
         </div>
       </div>
 
@@ -106,8 +107,8 @@ export function ApprovalCard({ order }: ApprovalCardProps) {
               >
                 <td className="py-3 px-6 font-medium text-on-surface">{item.product.name}</td>
                 <td className="py-3 px-4 text-right text-on-surface-variant">{item.quantity.toLocaleString('tr-TR')}</td>
-                <td className="py-3 px-4 text-right text-on-surface-variant">{formatCurrency(item.unit_price)}</td>
-                <td className="py-3 px-6 text-right font-semibold text-on-surface">{formatCurrency(item.unit_price * item.quantity)}</td>
+                <td className="py-3 px-4 text-right text-on-surface-variant">{formatCurrency(item.unit_price, locale)}</td>
+                <td className="py-3 px-6 text-right font-semibold text-on-surface">{formatCurrency(item.unit_price * item.quantity, locale)}</td>
               </tr>
             ))}
           </tbody>

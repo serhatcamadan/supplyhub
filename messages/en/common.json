@@ -14,5 +14,17 @@
       "language": "Language & Region"
     },
     "signOut": "Sign Out"
+  },
+  "status": {
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "shipped": "Shipped",
+    "delivered": "Delivered"
+  },
+  "emptyState": {
+    "noOrders": "No orders found.",
+    "noQuotes": "No quote requests found.",
+    "noProducts": "No products match your search.",
+    "noApprovals": "No pending approvals."
   }
 }
