@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 
 type Notification = {
@@ -66,6 +67,7 @@ export function NotificationBell() {
   const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS)
   const containerRef = useRef<HTMLDivElement>(null)
   const pathname     = usePathname()
+  const t            = useTranslations('common')
   const allNotificationsHref = pathname.startsWith('/buyer') ? '/buyer/notifications' : '/seller/notifications'
 
   const unreadCount = notifications.filter((n) => !n.read).length
@@ -109,12 +111,12 @@ export function NotificationBell() {
       >
         {/* Header */}
         <div className="px-6 py-4 flex justify-between items-center bg-surface-container-low border-b border-outline-variant/20">
-          <h3 className="text-base font-semibold text-on-surface">Notifications</h3>
+          <h3 className="text-base font-semibold text-on-surface">{t('notifications.heading')}</h3>
           <button
             onClick={markAllRead}
             className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors"
           >
-            Mark all as read
+            {t('notifications.markAllRead')}
           </button>
         </div>
 
@@ -173,7 +175,7 @@ export function NotificationBell() {
             onClick={() => setOpen(false)}
             className="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 group/link"
           >
-            View all notifications
+            {t('notifications.viewAll')}
             <span className="material-symbols-outlined text-[15px] group-hover/link:translate-x-1 transition-transform">
               arrow_forward
             </span>

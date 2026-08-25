@@ -112,7 +112,7 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
                     <p className="text-xs text-on-surface-variant">{quote.productCategory}</p>
                     {quote.listPrice && (
                       <p className="text-xs text-on-surface-variant mt-0.5">
-                        {t('quotes.table.listLabel')} {formatCurrency(quote.listPrice)}/{t('quotes.table.perUnit')}
+                        {t('quotes.table.listLabel')} {formatCurrency(quote.listPrice!, locale)}/{t('quotes.table.perUnit')}
                       </p>
                     )}
                   </td>
@@ -125,13 +125,13 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
                   </td>
 
                   <td className="py-4 px-6">
-                    <p className="text-sm text-on-surface">{formatDate(quote.created_at)}</p>
+                    <p className="text-sm text-on-surface">{formatDate(quote.created_at, locale)}</p>
                     {quote.status === 'pending' && quote.isExpiring && (
                       <p className="text-xs text-error font-medium">{t('quotes.table.expiringSoon')}</p>
                     )}
                     {quote.seller_response_price && (
                       <p className="text-xs text-secondary font-medium">
-                        {t('quotes.table.offerLabel')} {formatCurrency(quote.seller_response_price)}/{t('quotes.table.perUnit')}
+                        {t('quotes.table.offerLabel')} {formatCurrency(quote.seller_response_price!, locale)}/{t('quotes.table.perUnit')}
                       </p>
                     )}
                   </td>

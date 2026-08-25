@@ -65,8 +65,8 @@ export default async function BuyerProductDetailPage({
   const specs = [
     { label: t('productDetail.specs.category'),         value: product.category },
     { label: t('productDetail.specs.minOrderQty'),      value: t('productDetail.specValues.pieces', { count: product.min_order_qty }) },
-    { label: t('productDetail.specs.startingPrice'),    value: formatCurrency(minPrice) + ' ' + t('productDetail.specValues.pricePerPiece') },
-    { label: t('productDetail.specs.priceRange'),       value: `${formatCurrency(minPrice)} – ${formatCurrency(maxPrice)}` },
+    { label: t('productDetail.specs.startingPrice'),    value: formatCurrency(minPrice, locale) + ' ' + t('productDetail.specValues.pricePerPiece') },
+    { label: t('productDetail.specs.priceRange'),       value: `${formatCurrency(minPrice, locale)} – ${formatCurrency(maxPrice, locale)}` },
     { label: t('productDetail.specs.priceTiers'),       value: t('productDetail.specValues.tiers', { count: product.price_tiers.length }) },
     { label: t('productDetail.specs.deliveryTime'),     value: t('productDetail.specValues.deliveryDays') },
     { label: t('productDetail.specs.warehouseLocation'),value: t('productDetail.specValues.warehouseLocation') },

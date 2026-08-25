@@ -14,5 +14,22 @@
       "language": "Dil & Bölge"
     },
     "signOut": "Çıkış Yap"
+  },
+  "status": {
+    "pending": "Bekliyor",
+    "confirmed": "Onaylandı",
+    "shipped": "Kargoda",
+    "delivered": "Teslim Edildi"
+  },
+  "notifications": {
+    "heading": "Bildirimler",
+    "markAllRead": "Tümünü okundu işaretle",
+    "viewAll": "Tüm bildirimleri gör"
+  },
+  "emptyState": {
+    "noOrders": "Sipariş bulunamadı.",
+    "noQuotes": "Teklif talebi bulunamadı.",
+    "noProducts": "Aramanızla eşleşen ürün yok.",
+    "noApprovals": "Onay bekleyen sipariş yok."
   }
 }
