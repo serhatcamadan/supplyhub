@@ -121,6 +121,7 @@ export function QuoteResponseForm({
                     setPrice(parseFloat(e.target.value) || 0)
                     setSavedAt(null)
                   }}
+                  data-testid="response-price"
                   className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg py-3 pl-8 pr-4 font-mono text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-sm"
                 />
               </div>
@@ -210,7 +211,7 @@ export function QuoteResponseForm({
           <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>save</span>
           {isSaving ? t('quotes.response.saving') : t('quotes.response.saveDraft')}
         </Button>
-        <Button variant="secondary" size="lg" onClick={handleSend} className="hover:-translate-y-0.5 shadow-md">
+        <Button variant="secondary" size="lg" onClick={handleSend} className="hover:-translate-y-0.5 shadow-md" data-testid="send-quote">
           {t('quotes.response.sendQuote')}
           <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>send</span>
         </Button>

@@ -95,7 +95,7 @@ export default function NewProductPage() {
           <Link href={`/${locale}/seller/products`} className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface hover:bg-surface-container-high transition-colors">
             {t('products.form.cancel')}
           </Link>
-          <Button type="button" variant="secondary" onClick={handleSave} disabled={isSubmitting} className="active:scale-[0.98]">
+          <Button type="button" variant="secondary" onClick={handleSave} disabled={isSubmitting} className="active:scale-[0.98]" data-testid="save-product">
             <span className="material-symbols-outlined text-[18px]">save</span>
             {isSubmitting ? t('products.form.saving') : t('products.form.save')}
           </Button>

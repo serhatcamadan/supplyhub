@@ -3,16 +3,17 @@
 declare global {
   namespace Cypress {
     interface Chainable {
-      loginAs(role: 'sellerAdmin' | 'buyerAdmin' | 'buyerStaff'): Chainable<void>
+      loginAs(role: 'sellerAdmin' | 'buyerAdmin' | 'buyerStaff' | 'buyerAdmin2'): Chainable<void>
       resetDb(): Chainable<void>
     }
   }
 }
 
 const CREDENTIALS = {
-  sellerAdmin: { email: Cypress.env('SELLER_EMAIL')      as string },
-  buyerAdmin:  { email: Cypress.env('BUYER_ADMIN_EMAIL') as string },
-  buyerStaff:  { email: Cypress.env('BUYER_STAFF_EMAIL') as string },
+  sellerAdmin: { email: Cypress.env('SELLER_EMAIL')       as string },
+  buyerAdmin:  { email: Cypress.env('BUYER_ADMIN_EMAIL')  as string },
+  buyerStaff:  { email: Cypress.env('BUYER_STAFF_EMAIL')  as string },
+  buyerAdmin2: { email: Cypress.env('BUYER_ADMIN2_EMAIL') as string },
 } as const
 
 Cypress.Commands.add('loginAs', (role) => {

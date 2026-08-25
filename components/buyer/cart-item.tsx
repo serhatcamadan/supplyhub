@@ -49,7 +49,7 @@ export function CartItemCard({ item, onQtyChange, onRemove }: CartItemCardProps)
   }
 
   return (
-    <div className="bg-surface-container-lowest rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col sm:flex-row gap-6 relative overflow-hidden">
+    <div data-testid="cart-item" className="bg-surface-container-lowest rounded-xl p-4 shadow-sm hover:shadow-md transition-shadow flex flex-col sm:flex-row gap-6 relative overflow-hidden">
 
       <div className="w-24 h-24 sm:w-32 sm:h-32 rounded-lg flex-shrink-0 overflow-hidden bg-surface-container relative group">
         {item.imageUrl ? (
