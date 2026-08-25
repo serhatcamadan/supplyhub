@@ -9,8 +9,8 @@
     "lint": "eslint",
     "test:unit": "vitest run",
     "test:unit:watch": "vitest",
-    "cypress:open": "cypress open",
-    "cypress:run": "cypress run"
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.7.1",
@@ -29,12 +29,12 @@
     "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.62.1",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "@vitejs/plugin-react": "^6.1.0",
-    "cypress": "^15.21.0",
     "eslint": "^9",
     "eslint-config-next": "16.3.0",
     "tailwindcss": "^4",

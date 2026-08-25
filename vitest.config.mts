@@ -6,6 +6,7 @@ export default defineConfig({
   test: {
     environment: 'node',
     globals: true,
+    include: ['lib/**/*.test.ts'],   // sadece lib/ altındaki testleri çalıştır
     alias: {
       '@': import.meta.dirname,
     },
