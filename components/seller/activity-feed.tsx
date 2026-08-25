@@ -21,6 +21,14 @@ const STATUS_COLOR: Record<string, string> = {
 
 export function ActivityFeed({ orders, quote, buyerNames, locale }: ActivityFeedProps) {
   const t = useTranslations('seller')
+  const tCommon = useTranslations('common')
+
+  const STATUS_LABELS: Record<string, string> = {
+    pending:   tCommon('status.pending'),
+    confirmed: tCommon('status.confirmed'),
+    shipped:   tCommon('status.shipped'),
+    delivered: tCommon('status.delivered'),
+  }
 
   function getCompanyName(id: string) {
     return buyerNames[id] ?? id
@@ -71,16 +79,16 @@ export function ActivityFeed({ orders, quote, buyerNames, locale }: ActivityFeed
                     {getCompanyName(order.buyer_id)}
                   </span>
                 </p>
-                <p className="text-xs text-on-surface-variant mt-1">{formatDate(order.created_at)}</p>
+                <p className="text-xs text-on-surface-variant mt-1">{formatDate(order.created_at, locale)}</p>
               </div>
               <div className="text-right shrink-0">
                 <p className="font-mono text-sm font-semibold text-on-surface">
-                  {formatCurrency(order.total)}
+                  {formatCurrency(order.total, locale)}
                 </p>
                 <span
                   className={`px-2 py-0.5 mt-1 text-[10px] font-semibold rounded inline-block ${STATUS_COLOR[order.status]}`}
                 >
-                  {t(`dashboard.activity.status.${order.status}`)}
+                  {STATUS_LABELS[order.status] ?? order.status}
                 </span>
               </div>
             </div>
@@ -109,7 +117,7 @@ export function ActivityFeed({ orders, quote, buyerNames, locale }: ActivityFeed
                   </p>
                 </div>
               )}
-              <p className="text-xs text-on-surface-variant mt-2">{formatDate(quote.created_at)}</p>
+              <p className="text-xs text-on-surface-variant mt-2">{formatDate(quote.created_at, locale)}</p>
             </div>
             <div className="shrink-0">
               <a

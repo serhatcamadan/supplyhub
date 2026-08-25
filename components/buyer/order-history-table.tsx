@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { formatCurrency, formatDate, cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 import type { OrderWithDetails } from '@/types'
@@ -31,8 +31,17 @@ function StatusBadge({ status, label }: { status: OrderStatus; label: string }) 
 
 export function OrderHistoryTable({ orders }: { orders: OrderWithDetails[] }) {
   const t = useTranslations('buyer')
+  const tCommon = useTranslations('common')
+  const locale = useLocale()
   const router = useRouter()
   const [reorderingId, setReorderingId] = useState<string | null>(null)
+
+  const STATUS_LABELS: Record<OrderStatus, string> = {
+    pending:   tCommon('status.pending'),
+    confirmed: tCommon('status.confirmed'),
+    shipped:   tCommon('status.shipped'),
+    delivered: tCommon('status.delivered'),
+  }
 
   const COLUMNS = [
     t('orders.table.orderId'),
@@ -121,19 +130,19 @@ export function OrderHistoryTable({ orders }: { orders: OrderWithDetails[] }) {
                   </td>
 
                   <td className="px-6 py-4 whitespace-nowrap text-sm text-on-surface-variant">
-                    {formatDate(order.created_at)}
+                    {formatDate(order.created_at, locale)}
                   </td>
 
                   <td className="px-6 py-4 whitespace-nowrap text-right">
                     <span className="text-sm font-semibold text-on-surface">
-                      {formatCurrency(order.total)}
+                      {formatCurrency(order.total, locale)}
                     </span>
                   </td>
 
                   <td className="px-6 py-4 whitespace-nowrap">
                     <StatusBadge
                       status={order.status as OrderStatus}
-                      label={t(`orders.table.status.${order.status as OrderStatus}`)}
+                      label={STATUS_LABELS[order.status as OrderStatus]}
                     />
                   </td>
 

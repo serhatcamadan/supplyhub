@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import { formatCurrency, getInitials } from '@/lib/utils'
 import type { Product } from '@/types'
@@ -14,6 +14,7 @@ const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
 
 export default function SellerQuotesPage() {
   const t = useTranslations('seller')
+  const locale = useLocale()
   const [tab, setTab]           = useState<QuoteTab>('all')
   const [search, setSearch]     = useState('')
   const [enriched, setEnriched] = useState<EnrichedQuote[]>([])
@@ -152,7 +153,7 @@ export default function SellerQuotesPage() {
         <div className="bg-primary p-5 rounded-xl shadow-md relative overflow-hidden text-on-primary">
           <div className="absolute right-0 top-0 w-32 h-32 bg-white/10 rounded-full blur-xl -mr-10 -mt-10" />
           <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-on-primary/80">{t('quotes.stats.pipelineValue')}</p>
-          <p className="text-4xl font-bold tracking-tight relative z-10">{formatCurrency(pipelineValue)}</p>
+          <p className="text-4xl font-bold tracking-tight relative z-10">{formatCurrency(pipelineValue, locale)}</p>
         </div>
       </div>
 

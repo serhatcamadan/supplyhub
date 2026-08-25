@@ -40,7 +40,7 @@ export function StatCards({
               {t('dashboard.stats.totalRevenue')}
             </p>
             <h2 className="text-3xl font-bold tracking-tight text-on-surface mt-1">
-              {formatCurrency(totalRevenue)}
+              {formatCurrency(totalRevenue, locale)}
             </h2>
           </div>
           <div className="p-2 bg-secondary-container/20 rounded-lg text-secondary shrink-0">
