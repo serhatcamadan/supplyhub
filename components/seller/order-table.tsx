@@ -1,6 +1,6 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { formatCurrency, formatDate, cn } from '@/lib/utils'
 import type { OrderStatus, OrderWithDetails } from '@/types'
 import { Button } from '@/components/ui/button'
@@ -78,6 +78,15 @@ export function OrderTable({
   onStatusChange: (id: string, status: OrderStatus) => void
 }) {
   const t = useTranslations('seller')
+  const tCommon = useTranslations('common')
+  const locale = useLocale()
+
+  const STATUS_LABELS: Record<OrderStatus, string> = {
+    pending:   tCommon('status.pending'),
+    confirmed: tCommon('status.confirmed'),
+    shipped:   tCommon('status.shipped'),
+    delivered: tCommon('status.delivered'),
+  }
 
   const headers = [
     t('orders.table.orderId'),
@@ -155,7 +164,7 @@ export function OrderTable({
                   </td>
 
                   <td className="py-4 px-6 text-sm text-on-surface-variant">
-                    {formatDate(order.created_at)}
+                    {formatDate(order.created_at, locale)}
                   </td>
 
                   <td className="py-4 px-6">
@@ -167,14 +176,14 @@ export function OrderTable({
 
                   <td className="py-4 px-6 text-right">
                     <span className="font-mono text-sm font-semibold text-on-surface">
-                      {formatCurrency(order.total)}
+                      {formatCurrency(order.total, locale)}
                     </span>
                   </td>
 
                   <td className="py-4 px-6">
                     <OrderStatusBadge
                       status={order.status}
-                      label={t(`orders.table.statusLabel.${order.status}`)}
+                      label={STATUS_LABELS[order.status]}
                     />
                   </td>
 

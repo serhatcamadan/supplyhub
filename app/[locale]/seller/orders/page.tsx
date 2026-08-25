@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import { formatCurrency } from '@/lib/utils'
 import type { OrderStatus, OrderWithDetails } from '@/types'
@@ -12,6 +12,7 @@ type OrderTab = 'all' | 'pending' | 'confirmed' | 'shipped' | 'delivered'
 
 export default function SellerOrdersPage() {
   const t = useTranslations('seller')
+  const locale = useLocale()
   const [tab, setTab]             = useState<OrderTab>('all')
   const [search, setSearch]       = useState('')
   const [allOrders, setAllOrders] = useState<OrderWithDetails[]>([])
@@ -120,7 +121,7 @@ export default function SellerOrdersPage() {
         <div className="bg-primary p-5 rounded-xl shadow-md relative overflow-hidden text-on-primary">
           <div className="absolute right-0 top-0 w-32 h-32 bg-white/10 rounded-full blur-xl -mr-10 -mt-10" />
           <p className="text-xs font-semibold uppercase tracking-wider mb-2 text-on-primary/80">{t('orders.stats.totalRevenue')}</p>
-          <p className="text-4xl font-bold tracking-tight relative z-10">{formatCurrency(totalRevenue)}</p>
+          <p className="text-4xl font-bold tracking-tight relative z-10">{formatCurrency(totalRevenue, locale)}</p>
         </div>
       </div>
 

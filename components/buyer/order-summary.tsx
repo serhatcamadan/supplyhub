@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { formatCurrency } from '@/lib/utils'
 
@@ -54,6 +54,7 @@ export function OrderSummary({
   isCheckingOut = false,
 }: OrderSummaryProps) {
   const t = useTranslations('buyer')
+  const locale = useLocale()
   const [promo, setPromo] = useState('')
   const [applied, setApplied] = useState(false)
 
@@ -81,37 +82,37 @@ export function OrderSummary({
 
       <div className="flex-1 overflow-y-auto px-6 py-5 flex flex-col gap-5">
         <div className="space-y-3">
-          <SummaryRow label={t('cart.summary.subtotal')} value={formatCurrency(subtotal)} />
+          <SummaryRow label={t('cart.summary.subtotal')} value={formatCurrency(subtotal, locale)} />
           {volumeDiscount > 0 && (
             <SummaryRow
               label={t('cart.summary.volumeDiscount')}
-              value={`-${formatCurrency(volumeDiscount)}`}
+              value={`-${formatCurrency(volumeDiscount, locale)}`}
               highlight="discount"
             />
           )}
           <SummaryRow
             label={t('cart.summary.shipping')}
-            value={shipping === 0 ? t('cart.summary.shippingFree') : formatCurrency(shipping)}
+            value={shipping === 0 ? t('cart.summary.shippingFree') : formatCurrency(shipping, locale)}
             subtext={
               shipping > 0
-                ? t('cart.summary.shippingNudge', { amount: formatCurrency(SHIPPING_THRESHOLD - subtotal) })
+                ? t('cart.summary.shippingNudge', { amount: formatCurrency(SHIPPING_THRESHOLD - subtotal, locale) })
                 : undefined
             }
           />
           <SummaryRow
             label={t('cart.summary.tax', { rate: TAX_RATE * 100 })}
-            value={formatCurrency(tax)}
+            value={formatCurrency(tax, locale)}
           />
         </div>
 
         <div className="border-t border-outline-variant/40 pt-4">
           <div className="flex justify-between items-center">
             <span className="text-sm font-semibold text-on-surface">{t('cart.summary.total')}</span>
-            <span className="text-2xl font-bold text-primary">{formatCurrency(total)}</span>
+            <span className="text-2xl font-bold text-primary">{formatCurrency(total, locale)}</span>
           </div>
           {volumeDiscount > 0 && (
             <p className="text-xs text-secondary text-right mt-1">
-              {t('cart.summary.saved', { amount: formatCurrency(volumeDiscount) })}
+              {t('cart.summary.saved', { amount: formatCurrency(volumeDiscount, locale) })}
             </p>
           )}
         </div>
