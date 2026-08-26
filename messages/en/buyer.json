@@ -198,13 +198,7 @@
       "empty": "No orders found.",
       "reorder": "Reorder",
       "reordering": "Processing…",
-      "paginationShowing": "Showing {shown} of {total} orders",
-      "status": {
-        "delivered": "Delivered",
-        "shipped": "Shipped",
-        "confirmed": "Confirmed",
-        "pending": "Processing"
-      }
+      "paginationShowing": "Showing {shown} of {total} orders"
     }
   },
   "approvals": {

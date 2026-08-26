@@ -15,11 +15,13 @@ test('seller pending talebi açar → yanıt verir → başarı ekranı', async 
   await loginAs(page, 'sellerAdmin')
   await page.goto('/tr/seller/quotes')
 
-  // "Yanıtla" linki opacity-0 (hover ile açılır) — force ile doğrudan tıkla
-  await expect(page.getByText(/Bekliyor|Pending/i).first()).toBeVisible()
-  const responseLink = page.getByRole('link', { name: /Yanıtla|Respond/i }).first()
+  // "Yanıtla" linki opacity-0 (hover ile açılır) — data yüklenene kadar bekle, sonra force tıkla
+  // Anchored regex: "Yanıtla" değil "Yanıtlandı" veya başka bir şey eşleşmesin
+  const responseLink = page.getByRole('link', { name: /^Yanıtla$|^Respond$/i }).first()
+  await expect(responseLink).toBeAttached({ timeout: 15000 }) // data yüklenene kadar bekle
   await responseLink.click({ force: true })
   await expect(page).toHaveURL(/\/seller\/quotes\/.+/)
+  await page.waitForLoadState('networkidle') // SSR tamamlanana kadar bekle
 
   // Fiyat gir
   await page.getByTestId('response-price').fill('170')

@@ -198,13 +198,7 @@
       "empty": "Sipariş bulunamadı.",
       "reorder": "Tekrar Sipariş",
       "reordering": "İşleniyor…",
-      "paginationShowing": "{total} siparişten {shown} tanesi gösteriliyor",
-      "status": {
-        "delivered": "Teslim Edildi",
-        "shipped": "Kargoda",
-        "confirmed": "Onaylandı",
-        "pending": "İşleniyor"
-      }
+      "paginationShowing": "{total} siparişten {shown} tanesi gösteriliyor"
     }
   },
   "approvals": {
