@@ -1,16 +1,15 @@
 import { createClient } from '@supabase/supabase-js'
 import type { Database } from '@/lib/supabase/types'
 
-const admin = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  { auth: { autoRefreshToken: false, persistSession: false } }
-)
-
 const daysAgo = (n: number) => new Date(Date.now() - n * 86_400_000).toISOString()
 
 // Resets mutable test data (quotes + orders) to seed state by looking up real IDs from DB.
 export async function POST() {
+  const admin = createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  )
   const { data: companies } = await admin.from('companies').select('id, name, type').order('name')
   if (!companies?.length) return Response.json({ error: 'DB not seeded — call /api/seed first' }, { status: 400 })
 
