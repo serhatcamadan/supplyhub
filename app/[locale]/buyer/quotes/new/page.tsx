@@ -227,7 +227,7 @@ export default function BuyerQuoteNewPage() {
                 <Button type="button" variant="ghost" size="lg" className="text-on-surface-variant">
                   {t('quotes.actions.saveDraft')}
                 </Button>
-                <Button type="submit" size="lg" disabled={isSubmitting} className="relative overflow-hidden group/btn shadow-md hover:shadow-lg">
+                <Button type="submit" size="lg" disabled={isSubmitting} className="relative overflow-hidden group/btn shadow-md hover:shadow-lg" data-testid="rfq-submit">
                   <span className="relative z-10">
                     {isSubmitting ? t('quotes.actions.submitting') : t('quotes.actions.submit')}
                   </span>

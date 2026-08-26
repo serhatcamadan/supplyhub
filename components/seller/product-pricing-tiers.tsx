@@ -50,6 +50,7 @@ export function ProductPricingTiers({ tiers, onAdd, onRemove, onUpdateMax, onUpd
           return (
             <div
               key={idx}
+              data-testid="tier-row"
               className={cn('grid grid-cols-12 items-center px-4 py-3 hover:bg-surface transition-colors', !isLast && 'border-b border-outline-variant/10')}
             >
               <div className="col-span-4 pr-4">
