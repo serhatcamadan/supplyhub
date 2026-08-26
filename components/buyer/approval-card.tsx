@@ -7,6 +7,7 @@ import { Avatar } from '@/components/ui/avatar'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
 import type { OrderWithDetails } from '@/types'
+import { IconCircleCheck, IconCircleX, IconClipboardList, IconInfoCircle } from '@tabler/icons-react'
 
 interface ApprovalCardProps {
   order: OrderWithDetails
@@ -46,7 +47,7 @@ export function ApprovalCard({ order }: ApprovalCardProps) {
       <div className="px-6 py-4 border-b border-outline-variant/20 flex items-center justify-between gap-4 flex-wrap">
         <div className="flex items-center gap-4">
           <div className="flex items-center gap-2">
-            <span className="material-symbols-outlined text-on-tertiary-container bg-tertiary-container/30 p-1.5 rounded-lg text-[18px]">pending_actions</span>
+            <IconClipboardList className="text-on-tertiary-container bg-tertiary-container/30 p-1.5 rounded-lg text-[18px]" />
             <div>
               <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">{t('approvals.card.orderLabel')}</p>
               <p className="text-sm font-bold text-on-surface font-mono">
@@ -117,7 +118,7 @@ export function ApprovalCard({ order }: ApprovalCardProps) {
 
       <div className="px-6 py-4 border-t border-outline-variant/20 bg-surface-container-low flex items-center justify-between gap-4">
         <p className="text-xs text-on-surface-variant flex items-center gap-1.5">
-          <span className="material-symbols-outlined text-[15px]">info</span>
+          <IconInfoCircle className="text-[15px]" />
           {t('approvals.card.limitWarning')}
         </p>
         <div className="flex items-center gap-3">
@@ -126,7 +127,7 @@ export function ApprovalCard({ order }: ApprovalCardProps) {
             onClick={handleReject}
             className="h-9 px-5 inline-flex items-center gap-2 border border-error/30 text-error text-sm font-semibold rounded-lg hover:bg-error-container/40 transition-colors disabled:opacity-50"
           >
-            <span className="material-symbols-outlined text-[18px]">cancel</span>
+            <IconCircleX className="text-[18px]" />
             {t('approvals.card.reject')}
           </button>
           <button
@@ -135,7 +136,7 @@ export function ApprovalCard({ order }: ApprovalCardProps) {
             data-testid="approve-btn"
             className="h-9 px-5 inline-flex items-center gap-2 bg-secondary text-on-secondary text-sm font-semibold rounded-lg hover:bg-secondary/90 transition-colors shadow-sm disabled:opacity-50"
           >
-            <span className="material-symbols-outlined text-[18px]">check_circle</span>
+            <IconCircleCheck className="text-[18px]" />
             {t('approvals.card.approve')}
           </button>
         </div>

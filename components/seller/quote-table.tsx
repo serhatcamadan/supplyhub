@@ -8,6 +8,8 @@ import { buttonVariants } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
 import { TablePagination } from '@/components/ui/table-pagination'
 import { TableEmptyRow } from '@/components/ui/table-empty-row'
+import { IconChecks, IconCircleCheck, IconCircleX, IconDotsVertical, IconFileInvoice } from '@tabler/icons-react'
+import type { ElementType } from 'react'
 
 export interface EnrichedQuote extends QuoteRequest {
   buyerName: string
@@ -20,12 +22,12 @@ export interface EnrichedQuote extends QuoteRequest {
 
 const STATUS_STYLE: Record<
   QuoteRequest['status'],
-  { className: string; icon?: string; dot?: boolean }
+  { className: string; icon?: ElementType; dot?: boolean }
 > = {
   pending:   { className: 'bg-tertiary-container/20 text-on-tertiary-container', dot: true },
-  responded: { className: 'bg-secondary-container/30 text-on-secondary-container', icon: 'done_all' },
-  accepted:  { className: 'bg-secondary-container/50 text-secondary', icon: 'check_circle' },
-  declined:  { className: 'bg-error-container/30 text-on-error-container', icon: 'cancel' },
+  responded: { className: 'bg-secondary-container/30 text-on-secondary-container', icon: IconChecks },
+  accepted:  { className: 'bg-secondary-container/50 text-secondary', icon: IconCircleCheck },
+  declined:  { className: 'bg-error-container/30 text-on-error-container', icon: IconCircleX },
 }
 
 function QuoteStatusBadge({ status, label }: { status: QuoteRequest['status']; label: string }) {
@@ -33,7 +35,7 @@ function QuoteStatusBadge({ status, label }: { status: QuoteRequest['status']; l
   return (
     <span className={cn('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold', cfg.className)}>
       {cfg.dot && <span className="w-1.5 h-1.5 rounded-full bg-current" />}
-      {cfg.icon && <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>{cfg.icon}</span>}
+      {cfg.icon && <cfg.icon size={14} />}
       {label}
     </span>
   )
@@ -78,7 +80,7 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
 
           <tbody className="divide-y divide-outline-variant/20">
             {quotes.length === 0 ? (
-              <TableEmptyRow icon="request_quote" message={t('quotes.table.noResults')} colSpan={8} />
+              <TableEmptyRow icon={IconFileInvoice} message={t('quotes.table.noResults')} colSpan={8} />
             ) : (
               quotes.map((quote) => (
                 <tr
@@ -154,7 +156,7 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
                         </Link>
                       )}
                       <button className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors">
-                        <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>more_vert</span>
+                        <IconDotsVertical size={20} />
                       </button>
                     </div>
                   </td>

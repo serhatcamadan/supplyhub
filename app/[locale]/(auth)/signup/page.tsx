@@ -15,6 +15,7 @@ import { FormError } from '@/components/ui/form-error'
 import { StepIndicator } from '@/components/ui/step-indicator'
 import { RoleCard } from '@/components/auth/role-card'
 import { Button } from '@/components/ui/button'
+import { IconArrowLeft, IconArrowRight, IconBuilding, IconCategory, IconCircleCheck, IconLock, IconMail, IconPackage, IconShoppingBag, IconUser } from '@tabler/icons-react'
 
 type Step = 1 | 2 | 3
 type Role = 'seller' | 'buyer' | null
@@ -153,17 +154,17 @@ export default function SignupPage() {
               <form onSubmit={form1.handleSubmit(handleStep1Submit)} className="flex flex-col gap-6">
                 <h2 className="text-[20px] leading-7 font-semibold text-on-surface">{t('signup.step1.heading')}</h2>
                 <div className="flex flex-col gap-4">
-                  <FormInput label={t('signup.step1.fullName')} id="name" icon="person" placeholder="Jane Doe"
+                  <FormInput label={t('signup.step1.fullName')} id="name" icon={IconUser} placeholder="Jane Doe"
                     error={form1.formState.errors.name?.message} {...form1.register('name')} />
-                  <FormInput label={t('signup.step1.workEmail')} id="email" type="email" icon="mail" placeholder="jane@company.com"
+                  <FormInput label={t('signup.step1.workEmail')} id="email" type="email" icon={IconMail} placeholder="jane@company.com"
                     error={form1.formState.errors.email?.message} {...form1.register('email')} />
-                  <FormInput label={t('signup.step1.password')} id="password" type="password" icon="lock" placeholder="••••••••"
+                  <FormInput label={t('signup.step1.password')} id="password" type="password" icon={IconLock} placeholder="••••••••"
                     helperText={t('signup.step1.passwordHelper')}
                     error={form1.formState.errors.password?.message} {...form1.register('password')} />
                 </div>
                 <button type="submit" className="w-full bg-primary text-on-primary py-3 rounded-lg text-base font-semibold hover:bg-primary-container transition-colors flex items-center justify-center gap-2 mt-2">
                   {t('signup.step1.submit')}
-                  <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_forward</span>
+                  <IconArrowRight size={18} />
                 </button>
                 <p className="text-center text-xs text-on-surface-variant/60">
                   {t('signup.step1.alreadyHave')}{' '}
@@ -186,23 +187,23 @@ export default function SignupPage() {
               </div>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <RoleCard selected={role === 'seller'} onSelect={() => { setRole('seller'); setRoleError(null) }}
-                  icon="inventory_2" iconBg="bg-primary text-on-primary"
+                  icon={IconPackage} iconBg="bg-primary text-on-primary"
                   title={t('signup.step2.sellerTitle')}
                   description={t('signup.step2.sellerDescription')} />
                 <RoleCard selected={role === 'buyer'} onSelect={() => { setRole('buyer'); setRoleError(null) }}
-                  icon="local_mall" iconBg="bg-secondary text-on-secondary"
+                  icon={IconShoppingBag} iconBg="bg-secondary text-on-secondary"
                   title={t('signup.step2.buyerTitle')}
                   description={t('signup.step2.buyerDescription')} />
               </div>
               {roleError && <div className="flex justify-center"><FormError message={roleError} /></div>}
               <div className="flex justify-between">
                 <Button variant="ghost" onClick={() => setStep(1)}>
-                  <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_back</span>
+                  <IconArrowLeft size={18} />
                   {t('signup.step2.back')}
                 </Button>
                 <Button onClick={handleStep2Continue} disabled={!role} className="px-8 py-3 text-base">
                   {t('signup.step2.continue')}
-                  <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_forward</span>
+                  <IconArrowRight size={18} />
                 </Button>
               </div>
             </div>
@@ -214,20 +215,20 @@ export default function SignupPage() {
               <form onSubmit={form3.handleSubmit(handleStep3Submit)} className="flex flex-col gap-6">
                 <h2 className="text-[20px] leading-7 font-semibold text-on-surface">{t('signup.step3.heading')}</h2>
                 <div className="flex flex-col gap-4">
-                  <FormInput label={t('signup.step3.companyName')} id="company" icon="business" placeholder="Acme Corp"
+                  <FormInput label={t('signup.step3.companyName')} id="company" icon={IconBuilding} placeholder="Acme Corp"
                     error={form3.formState.errors.company?.message} {...form3.register('company')} />
-                  <FormSelect label={t('signup.step3.industry')} id="industry" icon="category"
+                  <FormSelect label={t('signup.step3.industry')} id="industry" icon={IconCategory}
                     placeholder={t('signup.step3.industryPlaceholder')}
                     options={industryOptions} error={form3.formState.errors.industry?.message} {...form3.register('industry')} />
                 </div>
                 {submitError && <FormError message={submitError} />}
                 <div className="flex items-center justify-between pt-4 border-t border-surface-container-high">
                   <Button type="button" variant="ghost" size="sm" onClick={() => setStep(2)} disabled={loading} className="p-2">
-                    <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>arrow_back</span>
+                    <IconArrowLeft size={20} />
                   </Button>
                   <Button type="submit" disabled={loading} className="flex-1 ml-4 py-3 text-base">
                     {loading ? t('signup.step3.submitting') : t('signup.step3.submit')}
-                    <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>check_circle</span>
+                    <IconCircleCheck size={18} />
                   </Button>
                 </div>
               </form>

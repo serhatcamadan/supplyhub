@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
+import { IconMinus, IconPhoto, IconPlus, IconX } from '@tabler/icons-react'
 
 export type CartItem = {
   id: string
@@ -60,7 +61,7 @@ export function CartItemCard({ item, onQtyChange, onRemove }: CartItemCardProps)
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">
-            <span className="material-symbols-outlined text-on-surface-variant/20" style={{ fontSize: '40px' }}>image</span>
+            <IconPhoto size={40} className="text-on-surface-variant/20" />
           </div>
         )}
       </div>
@@ -87,7 +88,7 @@ export function CartItemCard({ item, onQtyChange, onRemove }: CartItemCardProps)
             className="text-on-surface-variant hover:text-error transition-colors p-1 rounded-full hover:bg-error-container/30 shrink-0"
             aria-label={t('cart.item.remove')}
           >
-            <span className="material-symbols-outlined">close</span>
+            <IconX />
           </button>
         </div>
 
@@ -100,7 +101,7 @@ export function CartItemCard({ item, onQtyChange, onRemove }: CartItemCardProps)
                 className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-surface-container-high text-on-surface transition-colors"
                 aria-label={t('cart.item.decrement')}
               >
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>remove</span>
+                <IconMinus size={18} />
               </button>
               <input
                 type="number"
@@ -114,7 +115,7 @@ export function CartItemCard({ item, onQtyChange, onRemove }: CartItemCardProps)
                 className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-surface-container-high text-on-surface transition-colors"
                 aria-label={t('cart.item.increment')}
               >
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>add</span>
+                <IconPlus size={18} />
               </button>
             </div>
           </div>

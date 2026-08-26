@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { CategoryChips } from '@/components/buyer/category-chips'
 import { ProductCard, type ProductBadge } from '@/components/buyer/product-card'
 import type { Product } from '@/types'
+import { IconAdjustments, IconSearch, IconSearchOff } from '@tabler/icons-react'
 
 // DB category → badge translation key + colorScheme
 const BADGE_BY_CATEGORY: Record<string, { key: string; colorScheme: ProductBadge['colorScheme'] }> = {
@@ -79,7 +80,7 @@ export default function BuyerDiscoverPage() {
           </div>
           <div className="flex items-center gap-3 shrink-0">
             <div className="relative">
-              <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" style={{ fontSize: '18px' }}>search</span>
+              <IconSearch size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" />
               <input
                 type="text"
                 placeholder={t('discover.searchPlaceholder')}
@@ -89,7 +90,7 @@ export default function BuyerDiscoverPage() {
               />
             </div>
             <Button variant="ghost">
-              <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>tune</span>
+              <IconAdjustments size={18} />
               {t('discover.filter')}
             </Button>
           </div>
@@ -120,7 +121,7 @@ export default function BuyerDiscoverPage() {
         </div>
       ) : (
         <div className="flex flex-col items-center justify-center py-24 gap-4 text-on-surface-variant">
-          <span className="material-symbols-outlined" style={{ fontSize: '48px' }}>search_off</span>
+          <IconSearchOff size={48} />
           <p className="text-sm">{t('discover.noProducts')}</p>
         </div>
       )}

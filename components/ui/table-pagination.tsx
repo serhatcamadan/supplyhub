@@ -1,3 +1,4 @@
+import { IconChevronLeft, IconChevronRight } from '@tabler/icons-react'
 interface TablePaginationProps {
   label: string
 }
@@ -11,13 +12,13 @@ export function TablePagination({ label }: TablePaginationProps) {
           disabled
           className="p-1 text-on-surface-variant opacity-50 cursor-not-allowed rounded-md"
         >
-          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chevron_left</span>
+          <IconChevronLeft size={20} />
         </button>
         <button className="w-8 h-8 flex items-center justify-center text-xs font-semibold bg-primary-container text-on-primary-container rounded-md">
           1
         </button>
         <button className="p-1 text-on-surface-variant rounded-md hover:bg-surface-container-high transition-colors">
-          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chevron_right</span>
+          <IconChevronRight size={20} />
         </button>
       </div>
     </div>

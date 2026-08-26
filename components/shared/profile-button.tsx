@@ -5,6 +5,10 @@ import { useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
+import {
+  IconLogout, IconUserEdit, IconLock, IconMail, IconBell, IconLanguage,
+} from '@tabler/icons-react'
+import type { ElementType } from 'react'
 
 interface ProfileButtonProps {
   userName: string
@@ -17,25 +21,25 @@ export function ProfileButton({ userName, userRole }: ProfileButtonProps) {
   const t = useTranslations('common')
   const locale = useLocale()
 
-  const sections = [
+  const sections: { title: string; items: { icon: ElementType; label: string }[] }[] = [
     {
       title: t('profile.sections.account'),
       items: [
-        { icon: 'person_edit', label: t('profile.items.editProfile') },
-        { icon: 'password',    label: t('profile.items.changePassword') },
+        { icon: IconUserEdit, label: t('profile.items.editProfile') },
+        { icon: IconLock,     label: t('profile.items.changePassword') },
       ],
     },
     {
       title: t('profile.sections.personal'),
       items: [
-        { icon: 'contact_mail', label: t('profile.items.contactInfo') },
+        { icon: IconMail, label: t('profile.items.contactInfo') },
       ],
     },
     {
       title: t('profile.sections.preferences'),
       items: [
-        { icon: 'notifications', label: t('profile.items.notifications') },
-        { icon: 'language',      label: t('profile.items.language') },
+        { icon: IconBell,     label: t('profile.items.notifications') },
+        { icon: IconLanguage, label: t('profile.items.language') },
       ],
     },
   ]
@@ -92,21 +96,19 @@ export function ProfileButton({ userName, userRole }: ProfileButtonProps) {
               <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">
                 {section.title}
               </p>
-              {section.items.map((item) => (
-                <button
-                  key={item.label}
-                  onClick={() => setOpen(false)}
-                  className="w-full flex items-center py-2.5 text-sm text-on-surface hover:text-primary transition-colors group"
-                >
-                  <span
-                    className="material-symbols-outlined mr-3 text-on-surface-variant group-hover:text-primary transition-colors"
-                    style={{ fontSize: '20px' }}
+              {section.items.map((item) => {
+                const ItemIcon = item.icon
+                return (
+                  <button
+                    key={item.label}
+                    onClick={() => setOpen(false)}
+                    className="w-full flex items-center py-2.5 text-sm text-on-surface hover:text-primary transition-colors group"
                   >
-                    {item.icon}
-                  </span>
-                  {item.label}
-                </button>
-              ))}
+                    <ItemIcon size={20} className="mr-3 text-on-surface-variant group-hover:text-primary transition-colors" />
+                    {item.label}
+                  </button>
+                )
+              })}
             </div>
           ))}
         </div>
@@ -114,7 +116,7 @@ export function ProfileButton({ userName, userRole }: ProfileButtonProps) {
         {/* Sign Out */}
         <div className="p-6 border-t border-outline-variant/30">
           <Button variant="destructive" size="lg" onClick={handleSignOut} className="w-full" data-testid="sign-out-btn">
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>logout</span>
+            <IconLogout size={20} />
             {t('profile.signOut')}
           </Button>
         </div>

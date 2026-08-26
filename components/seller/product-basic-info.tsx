@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import { SectionHeading } from '@/components/ui/section-heading'
+import { IconChevronDown, IconInfoCircle } from '@tabler/icons-react'
 
 const CATEGORIES = [
   'Yağlar',
@@ -35,7 +36,7 @@ export function ProductBasicInfo({
 
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-sm p-8 border border-outline-variant/20">
-      <SectionHeading icon="info" label={t('products.basicInfo.heading')} />
+      <SectionHeading icon={IconInfoCircle} label={t('products.basicInfo.heading')} />
 
       <div className="space-y-6">
         <div className="flex flex-col gap-2">
@@ -68,9 +69,7 @@ export function ProductBasicInfo({
                 <option value="" disabled>{t('products.basicInfo.categorySelect')}</option>
                 {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
               </select>
-              <span className="material-symbols-outlined absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none">
-                expand_more
-              </span>
+              <IconChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" />
             </div>
           </div>
           <div className="flex flex-col gap-2">

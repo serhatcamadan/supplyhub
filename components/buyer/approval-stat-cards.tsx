@@ -2,6 +2,7 @@
 
 import { useTranslations, useLocale } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
+import { IconClipboardList, IconPackage } from '@tabler/icons-react'
 
 interface ApprovalStatCardsProps {
   pendingCount: number
@@ -22,7 +23,7 @@ export function ApprovalStatCards({ pendingCount, totalItems, totalValue }: Appr
             <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">{t('approvals.stats.awaiting')}</p>
             <p className="text-4xl font-bold text-on-surface">{pendingCount}</p>
           </div>
-          <span className="material-symbols-outlined text-on-tertiary-container bg-tertiary-container/30 p-2 rounded-lg shrink-0">pending_actions</span>
+          <IconClipboardList className="text-on-tertiary-container bg-tertiary-container/30 p-2 rounded-lg shrink-0" />
         </div>
       </div>
 
@@ -33,7 +34,7 @@ export function ApprovalStatCards({ pendingCount, totalItems, totalValue }: Appr
             <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">{t('approvals.stats.totalItems')}</p>
             <p className="text-4xl font-bold text-on-surface">{totalItems}</p>
           </div>
-          <span className="material-symbols-outlined text-primary bg-primary/5 p-2 rounded-lg shrink-0">inventory_2</span>
+          <IconPackage className="text-primary bg-primary/5 p-2 rounded-lg shrink-0" />
         </div>
       </div>
 

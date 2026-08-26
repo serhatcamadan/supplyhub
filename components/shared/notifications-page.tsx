@@ -4,12 +4,13 @@ import { useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { NotificationItem, type FullNotification } from './notification-item'
 import { NotificationFilterSidebar, FILTERS, type FilterType } from './notification-filter-sidebar'
+import { IconAlertTriangle, IconChecks, IconChevronLeft, IconChevronRight, IconCircleCheck, IconFileInvoice, IconPackage, IconSettings, IconShoppingBag } from '@tabler/icons-react'
 
 const INITIAL: FullNotification[] = [
   {
     id: '1',
     category: 'order',
-    icon: 'shopping_bag',
+    icon: IconShoppingBag,
     iconBg: 'bg-primary-container',
     iconColor: 'text-on-primary-container',
     title: 'Order #ORD-8472 Shipped',
@@ -24,7 +25,7 @@ const INITIAL: FullNotification[] = [
   {
     id: '2',
     category: 'quote',
-    icon: 'request_quote',
+    icon: IconFileInvoice,
     iconBg: 'bg-secondary-container',
     iconColor: 'text-on-secondary-container',
     title: 'New Quote Received: RFQ-992',
@@ -36,7 +37,7 @@ const INITIAL: FullNotification[] = [
   {
     id: '3',
     category: 'system',
-    icon: 'warning',
+    icon: IconAlertTriangle,
     iconBg: 'bg-error-container',
     iconColor: 'text-on-error-container',
     title: 'Payment Failed: Invoice #INV-102',
@@ -48,7 +49,7 @@ const INITIAL: FullNotification[] = [
   {
     id: '4',
     category: 'system',
-    icon: 'verified',
+    icon: IconCircleCheck,
     iconBg: 'bg-surface-container-highest',
     iconColor: 'text-on-surface-variant',
     title: 'Account Verified',
@@ -59,7 +60,7 @@ const INITIAL: FullNotification[] = [
   {
     id: '5',
     category: 'order',
-    icon: 'inventory_2',
+    icon: IconPackage,
     iconBg: 'bg-surface-container-highest',
     iconColor: 'text-on-surface-variant',
     title: 'Low Stock Alert',
@@ -121,11 +122,11 @@ export function NotificationsPage() {
         </div>
         <div className="flex items-center gap-3">
           <Button variant="ghost" onClick={markAllRead} className="gap-2">
-            <span className="material-symbols-outlined text-[20px]">done_all</span>
+            <IconChecks className="text-[20px]" />
             Mark all as read
           </Button>
           <Button variant="ghost" className="w-10 h-10 p-0">
-            <span className="material-symbols-outlined">settings</span>
+            <IconSettings />
           </Button>
         </div>
       </div>
@@ -145,7 +146,7 @@ export function NotificationsPage() {
             {visible.length === 0 ? (
               <div className="py-20 flex flex-col items-center gap-4 text-center">
                 <div className="w-16 h-16 bg-secondary-fixed/20 rounded-full flex items-center justify-center">
-                  <span className="material-symbols-outlined text-secondary text-[32px]">check_circle</span>
+                  <IconCircleCheck className="text-secondary text-[32px]" />
                 </div>
                 <div>
                   <p className="font-semibold text-on-surface text-lg">All caught up!</p>
@@ -164,10 +165,10 @@ export function NotificationsPage() {
               </span>
               <div className="flex gap-2">
                 <button className="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/50 text-on-surface-variant opacity-50 cursor-not-allowed">
-                  <span className="material-symbols-outlined text-[20px]">chevron_left</span>
+                  <IconChevronLeft className="text-[20px]" />
                 </button>
                 <button className="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/50 text-on-surface-variant hover:bg-surface-variant hover:text-primary transition-colors">
-                  <span className="material-symbols-outlined text-[20px]">chevron_right</span>
+                  <IconChevronRight className="text-[20px]" />
                 </button>
               </div>
             </div>

@@ -2,6 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import { Avatar } from '@/components/ui/avatar'
+import { IconArrowRight } from '@tabler/icons-react'
 
 interface SellerInfoCardProps {
   sellerName: string
@@ -37,7 +38,7 @@ export function SellerInfoCard({ sellerName }: SellerInfoCardProps) {
 
       <button className="text-primary text-sm font-semibold flex items-center gap-1 hover:underline w-fit">
         {t('sellerInfo.viewProfile')}
-        <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>arrow_forward</span>
+        <IconArrowRight size={16} />
       </button>
     </div>
   )

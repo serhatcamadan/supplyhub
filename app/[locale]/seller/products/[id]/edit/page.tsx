@@ -10,6 +10,7 @@ import { ProductBasicInfo } from '@/components/seller/product-basic-info'
 import { ProductPricingTiers } from '@/components/seller/product-pricing-tiers'
 import { ProductMedia } from '@/components/seller/product-media'
 import { ProductLogistics } from '@/components/seller/product-logistics'
+import { IconChevronRight, IconDeviceFloppy, IconLoader2 } from '@tabler/icons-react'
 
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
@@ -88,7 +89,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-96 text-on-surface-variant">
-        <span className="material-symbols-outlined animate-spin mr-2">progress_activity</span>
+        <IconLoader2 className="animate-spin mr-2" />
         Yükleniyor…
       </div>
     )
@@ -101,7 +102,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">
             <Link href="/seller/products" className="hover:text-primary transition-colors">Products</Link>
-            <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+            <IconChevronRight className="text-[16px]" />
             <span className="text-on-surface">Edit Product</span>
           </div>
           <h1 className="text-2xl font-semibold text-on-surface tracking-tight">{name || 'Ürün Düzenle'}</h1>
@@ -112,7 +113,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             Cancel
           </Link>
           <Button type="button" variant="secondary" onClick={handleSave} disabled={isSubmitting} className="active:scale-[0.98]">
-            <span className="material-symbols-outlined text-[18px]">save</span>
+            <IconDeviceFloppy className="text-[18px]" />
             {isSubmitting ? 'Kaydediliyor…' : 'Save Changes'}
           </Button>
         </div>

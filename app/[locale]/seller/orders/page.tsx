@@ -7,6 +7,7 @@ import { formatCurrency } from '@/lib/utils'
 import type { OrderStatus, OrderWithDetails } from '@/types'
 import { TableControls } from '@/components/seller/table-controls'
 import { OrderTable } from '@/components/seller/order-table'
+import { IconClock, IconDownload, IconFilter, IconTruck } from '@tabler/icons-react'
 
 type OrderTab = 'all' | 'pending' | 'confirmed' | 'shipped' | 'delivered'
 
@@ -79,11 +80,11 @@ export default function SellerOrdersPage() {
         </div>
         <div className="flex gap-3">
           <button className="h-10 px-4 inline-flex items-center gap-2 bg-surface text-on-surface border border-outline-variant rounded-lg text-xs font-semibold uppercase tracking-wider hover:bg-surface-container-low transition-colors shadow-sm">
-            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>filter_list</span>
+            <IconFilter size={18} />
             {t('orders.filter')}
           </button>
           <button className="h-10 px-4 inline-flex items-center gap-2 bg-surface text-primary border border-outline-variant rounded-lg text-xs font-semibold uppercase tracking-wider hover:bg-surface-container-low transition-colors shadow-sm">
-            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>download</span>
+            <IconDownload size={18} />
             {t('orders.exportCsv')}
           </button>
         </div>
@@ -103,7 +104,7 @@ export default function SellerOrdersPage() {
               <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">{t('orders.stats.awaitingAction')}</p>
               <p className="text-4xl font-bold text-on-surface">{pendingCount}</p>
             </div>
-            <span className="material-symbols-outlined text-on-tertiary-container bg-tertiary-container/30 p-2 rounded-lg shrink-0">schedule</span>
+            <IconClock className="text-on-tertiary-container bg-tertiary-container/30 p-2 rounded-lg shrink-0" />
           </div>
         </div>
 
@@ -114,7 +115,7 @@ export default function SellerOrdersPage() {
               <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">{t('orders.stats.inTransit')}</p>
               <p className="text-4xl font-bold text-on-surface">{shippedCount}</p>
             </div>
-            <span className="material-symbols-outlined text-on-primary-fixed-variant bg-primary-fixed-dim/30 p-2 rounded-lg shrink-0">local_shipping</span>
+            <IconTruck className="text-on-primary-fixed-variant bg-primary-fixed-dim/30 p-2 rounded-lg shrink-0" />
           </div>
         </div>
 

@@ -7,6 +7,7 @@ import { formatCurrency, getInitials } from '@/lib/utils'
 import type { Product } from '@/types'
 import { TableControls } from '@/components/seller/table-controls'
 import { QuoteTable, type EnrichedQuote } from '@/components/seller/quote-table'
+import { IconClock, IconDownload, IconTrendingUp } from '@tabler/icons-react'
 
 type QuoteTab = 'all' | 'pending' | 'responded' | 'archived'
 
@@ -116,7 +117,7 @@ export default function SellerQuotesPage() {
           <p className="text-sm text-on-surface-variant mt-2">{t('quotes.subHeading')}</p>
         </div>
         <button className="h-10 px-4 inline-flex items-center gap-2 bg-surface text-primary border border-outline-variant rounded-lg text-xs font-semibold uppercase tracking-wider hover:bg-surface-container-low transition-colors shadow-sm">
-          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>download</span>
+          <IconDownload size={18} />
           {t('quotes.exportCsv')}
         </button>
       </div>
@@ -135,7 +136,7 @@ export default function SellerQuotesPage() {
               <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">{t('quotes.stats.pendingResponse')}</p>
               <p className="text-4xl font-bold text-on-surface">{pendingCount}</p>
             </div>
-            <span className="material-symbols-outlined text-on-tertiary-container bg-tertiary-container/30 p-2 rounded-lg shrink-0">schedule</span>
+            <IconClock className="text-on-tertiary-container bg-tertiary-container/30 p-2 rounded-lg shrink-0" />
           </div>
         </div>
 
@@ -146,7 +147,7 @@ export default function SellerQuotesPage() {
               <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">{t('quotes.stats.converted')}</p>
               <p className="text-4xl font-bold text-on-surface">{conversionRate}%</p>
             </div>
-            <span className="material-symbols-outlined text-secondary bg-secondary-fixed/30 p-2 rounded-lg shrink-0">trending_up</span>
+            <IconTrendingUp className="text-secondary bg-secondary-fixed/30 p-2 rounded-lg shrink-0" />
           </div>
         </div>
 

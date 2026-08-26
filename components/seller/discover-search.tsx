@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
+import { IconAdjustments, IconSearch } from '@tabler/icons-react'
 
 export function DiscoverSearch() {
   const [query, setQuery] = useState('')
@@ -9,12 +10,7 @@ export function DiscoverSearch() {
   return (
     <section className="flex flex-col sm:flex-row gap-4">
       <div className="relative flex-1 group">
-        <span
-          className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors"
-          style={{ fontSize: '20px' }}
-        >
-          search
-        </span>
+        <IconSearch size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" />
         <input
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -28,7 +24,7 @@ export function DiscoverSearch() {
         </div>
       </div>
       <Button variant="outline" size="lg" className="whitespace-nowrap">
-        <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>tune</span>
+        <IconAdjustments size={18} />
         Filtrele
       </Button>
     </section>

@@ -2,9 +2,11 @@
 
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
+import { IconShoppingBag, IconCreditCard, IconTruck } from '@tabler/icons-react'
+import type { ElementType } from 'react'
 
 interface StatCardProps {
-  icon: string
+  icon: ElementType
   label: string
   value: string
   badge?: string
@@ -23,7 +25,7 @@ const GRADIENT_FROM = {
   tertiary:  'from-on-tertiary-container/5',
 } as const
 
-function StatCard({ icon, label, value, badge, color }: StatCardProps) {
+function StatCard({ icon: Icon, label, value, badge, color }: StatCardProps) {
   return (
     <div className="bg-surface-container-lowest p-6 rounded-2xl shadow-sm border border-outline-variant/20 flex flex-col justify-between h-32 relative overflow-hidden group">
       <div
@@ -31,12 +33,7 @@ function StatCard({ icon, label, value, badge, color }: StatCardProps) {
       />
       <div className="flex items-center justify-between relative z-10">
         <div className="flex items-center gap-3">
-          <span
-            className={cn('material-symbols-outlined p-2 rounded-lg', ICON_COLOR[color])}
-            style={{ fontSize: '20px' }}
-          >
-            {icon}
-          </span>
+          <Icon className={cn('p-2 rounded-lg', ICON_COLOR[color])} size={20} />
           <span className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
             {label}
           </span>
@@ -64,20 +61,20 @@ export function OrderStatCards({ totalOrders, totalSpend, inTransit }: OrderStat
   return (
     <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
       <StatCard
-        icon="shopping_bag"
+        icon={IconShoppingBag}
         label={t('orders.stats.totalOrders')}
         value={String(totalOrders)}
         color="primary"
       />
       <StatCard
-        icon="payments"
+        icon={IconCreditCard}
         label={t('orders.stats.totalSpend')}
         value={totalSpend}
         badge="+12%"
         color="secondary"
       />
       <StatCard
-        icon="local_shipping"
+        icon={IconTruck}
         label={t('orders.stats.inTransit')}
         value={String(inTransit)}
         color="tertiary"

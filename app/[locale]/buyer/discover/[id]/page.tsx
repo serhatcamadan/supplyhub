@@ -8,6 +8,7 @@ import { ProductTabs } from '@/components/buyer/product-tabs'
 import { ProductOrderPanel } from '@/components/buyer/product-order-panel'
 import { SellerInfoCard } from '@/components/buyer/seller-info-card'
 import type { Product, Company } from '@/types'
+import { IconChevronRight } from '@tabler/icons-react'
 
 const CATEGORY_TO_FEATURES_KEY: Record<string, string> = {
   'Yağlar':                'oils',
@@ -80,11 +81,11 @@ export default async function BuyerProductDetailPage({
         <Link href={`/${locale}/buyer/discover`} className="hover:text-primary transition-colors">
           {t('discover.breadcrumb')}
         </Link>
-        <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>chevron_right</span>
+        <IconChevronRight size={16} />
         <Link href={`/${locale}/buyer/discover`} className="hover:text-primary transition-colors">
           {product.category}
         </Link>
-        <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>chevron_right</span>
+        <IconChevronRight size={16} />
         <span className="text-on-surface">{product.name}</span>
       </nav>
 

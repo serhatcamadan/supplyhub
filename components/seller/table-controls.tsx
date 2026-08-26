@@ -1,6 +1,7 @@
 'use client'
 
 import { cn } from '@/lib/utils'
+import { IconFilter, IconSearch } from '@tabler/icons-react'
 
 export interface TabItem {
   value: string
@@ -45,12 +46,7 @@ export function TableControls({
 
       <div className="flex items-center gap-3 w-full sm:w-auto">
         <div className="relative flex-1 sm:w-64 group">
-          <span
-            className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors"
-            style={{ fontSize: '18px' }}
-          >
-            search
-          </span>
+          <IconSearch size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" />
           <input
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
@@ -60,7 +56,7 @@ export function TableControls({
           />
         </div>
         <button className="p-2 text-on-surface-variant hover:bg-surface-container-high rounded-lg transition-colors border border-outline-variant/50">
-          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>filter_list</span>
+          <IconFilter size={20} />
         </button>
       </div>
     </div>

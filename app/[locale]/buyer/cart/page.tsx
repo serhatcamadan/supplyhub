@@ -9,6 +9,7 @@ import { createClient } from '@/lib/supabase/client'
 import { CartItemCard, type CartItem } from '@/components/buyer/cart-item'
 import { OrderSummary } from '@/components/buyer/order-summary'
 import { CartPromoBanner } from '@/components/buyer/cart-promo-banner'
+import { IconBookmarkPlus, IconCompass, IconShoppingCart, IconTrashX } from '@tabler/icons-react'
 
 const TAX_RATE = 0.20
 const SHIPPING_THRESHOLD = 10_000
@@ -169,7 +170,7 @@ export default function BuyerCartPage() {
                 onClick={handleClearCart}
                 className="text-error hover:bg-error/10 hover:text-error"
               >
-                <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>delete_sweep</span>
+                <IconTrashX size={18} />
                 {t('cart.clearCart')}
               </Button>
             )}
@@ -178,9 +179,7 @@ export default function BuyerCartPage() {
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 gap-6 text-center">
               <div className="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center">
-                <span className="material-symbols-outlined text-on-surface-variant/40" style={{ fontSize: '48px' }}>
-                  shopping_cart
-                </span>
+                <IconShoppingCart size={48} className="text-on-surface-variant/40" />
               </div>
               <div>
                 <p className="text-lg font-semibold text-on-surface">{t('cart.empty.heading')}</p>
@@ -190,7 +189,7 @@ export default function BuyerCartPage() {
                 href={`/${locale}/buyer/discover`}
                 className="inline-flex items-center gap-2 font-semibold text-sm bg-primary text-on-primary px-6 py-3 rounded-xl hover:bg-primary-container transition-colors shadow-sm"
               >
-                <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>explore</span>
+                <IconCompass size={20} />
                 {t('cart.empty.cta')}
               </Link>
             </div>
@@ -211,7 +210,7 @@ export default function BuyerCartPage() {
 
               <div className="flex items-center justify-center pt-2">
                 <button className="flex items-center gap-1.5 text-sm text-on-surface-variant hover:text-primary transition-colors">
-                  <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>bookmark_add</span>
+                  <IconBookmarkPlus size={18} />
                   {t('cart.saveAsTemplate')}
                 </button>
               </div>

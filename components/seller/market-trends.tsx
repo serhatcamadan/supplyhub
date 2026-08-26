@@ -1,7 +1,10 @@
+import { IconArrowRight, IconTrendingUp } from '@tabler/icons-react'
+import type { ElementType } from 'react'
+
 export type MarketTrend = {
   category: string
   subcategory: string
-  icon: string
+  icon: ElementType
   growth: string
   demand: string
   demandPct: number
@@ -32,7 +35,7 @@ function TrendCard({ trend }: { trend: MarketTrend }) {
       <div className="flex items-start justify-between relative z-10">
         <div className="flex items-center gap-3">
           <div className={`w-10 h-10 rounded-lg ${c.bg} flex items-center justify-center ${c.text}`}>
-            <span className="material-symbols-outlined" style={{ fontSize: '22px' }}>{trend.icon}</span>
+            <trend.icon size={22} />
           </div>
           <div>
             <h3 className="text-sm font-semibold text-on-surface">{trend.category}</h3>
@@ -40,7 +43,7 @@ function TrendCard({ trend }: { trend: MarketTrend }) {
           </div>
         </div>
         <div className={`flex items-center gap-1 ${c.badge} px-2 py-1 rounded-md text-xs font-semibold`}>
-          <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>trending_up</span>
+          <IconTrendingUp size={14} />
           {trend.growth}
         </div>
       </div>
@@ -65,7 +68,7 @@ export function MarketTrends({ trends }: { trends: MarketTrend[] }) {
         <h2 className="text-xl font-semibold text-on-surface">Yükselen Kategoriler</h2>
         <button className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
           Tümünü Gör
-          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>arrow_forward</span>
+          <IconArrowRight size={16} />
         </button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">

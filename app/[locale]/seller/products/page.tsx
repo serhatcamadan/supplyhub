@@ -8,6 +8,7 @@ import type { Product } from '@/types'
 import { buttonVariants } from '@/components/ui/button'
 import { ProductControls } from '@/components/seller/product-controls'
 import { ProductTable } from '@/components/seller/product-table'
+import { IconPlus } from '@tabler/icons-react'
 
 export default function SellerProductsPage() {
   const [search, setSearch] = useState('')
@@ -49,7 +50,7 @@ export default function SellerProductsPage() {
           href={`/${locale}/seller/products/new`}
           className={buttonVariants({ variant: 'primary' }) + ' shrink-0 ml-6'}
         >
-          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>add</span>
+          <IconPlus size={20} />
           {t('products.newProduct')}
         </Link>
       </div>

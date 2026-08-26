@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import type { CartItem } from '@/components/buyer/cart-item'
+import { IconTag } from '@tabler/icons-react'
 
 interface CartPromoBannerProps {
   item: CartItem
@@ -18,9 +19,7 @@ export function CartPromoBanner({ item, locale }: CartPromoBannerProps) {
       <div className="absolute inset-0 bg-linear-to-r from-primary/8 to-transparent pointer-events-none" />
       <div className="relative flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-start gap-3">
-          <span className="material-symbols-outlined text-primary" style={{ fontSize: '22px' }}>
-            local_offer
-          </span>
+          <IconTag size={22} className="text-primary" />
           <div>
             <p className="text-sm font-semibold text-on-surface">{t('cart.promo.heading')}</p>
             <p className="text-sm text-on-surface-variant mt-0.5">

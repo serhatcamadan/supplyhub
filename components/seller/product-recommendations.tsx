@@ -1,10 +1,12 @@
 import { Button } from '@/components/ui/button'
+import { IconSparkles } from '@tabler/icons-react'
+import type { ElementType } from 'react'
 
 export type ProductRecommendation = {
   name: string
   description: string
   margin: string
-  icon: string
+  icon: ElementType
 }
 
 function RecItem({ rec }: { rec: ProductRecommendation }) {
@@ -12,7 +14,7 @@ function RecItem({ rec }: { rec: ProductRecommendation }) {
     <div className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-surface-container-low transition-colors">
       <div className="flex items-start gap-4">
         <div className="w-14 h-14 rounded-lg bg-surface-container flex items-center justify-center shrink-0">
-          <span className="material-symbols-outlined text-primary" style={{ fontSize: '28px' }}>{rec.icon}</span>
+          <rec.icon size={28} className="text-primary" />
         </div>
         <div>
           <h3 className="text-sm font-semibold text-on-surface">{rec.name}</h3>
@@ -33,7 +35,7 @@ export function ProductRecommendations({ recommendations }: { recommendations: P
   return (
     <section className="flex flex-col gap-4">
       <div className="flex items-center gap-2">
-        <span className="material-symbols-outlined text-on-tertiary-container" style={{ fontSize: '20px' }}>auto_awesome</span>
+        <IconSparkles size={20} className="text-on-tertiary-container" />
         <h2 className="text-xl font-semibold text-on-surface">Eklemeniz Önerilen Ürünler</h2>
       </div>
       <div className="bg-surface-container-lowest rounded-xl shadow-sm flex flex-col divide-y divide-surface-container overflow-hidden">

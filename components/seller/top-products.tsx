@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
 import type { Product } from '@/types'
+import { IconPackage } from '@tabler/icons-react'
 
 interface TopProductsProps {
   products: Product[]
@@ -31,12 +32,7 @@ export function TopProducts({ products, locale }: TopProductsProps) {
             className="flex items-center gap-3 p-2 hover:bg-surface-container-high rounded-lg transition-colors cursor-pointer"
           >
             <div className="w-11 h-11 rounded-lg bg-surface-container-low flex items-center justify-center shrink-0">
-              <span
-                className="material-symbols-outlined text-primary-container"
-                style={{ fontSize: '22px' }}
-              >
-                inventory_2
-              </span>
+              <IconPackage size={22} className="text-primary-container" />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-on-surface truncate">{product.name}</p>

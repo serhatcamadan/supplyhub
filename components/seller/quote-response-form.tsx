@@ -6,6 +6,7 @@ import { formatCurrency } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { QuoteSentScreen } from '@/components/seller/quote-sent-screen'
 import { createClient } from '@/lib/supabase/client'
+import { IconCalendarEvent, IconChevronDown, IconDeviceFloppy, IconSend } from '@tabler/icons-react'
 
 interface QuoteResponseFormProps {
   quoteId: string
@@ -156,12 +157,7 @@ export function QuoteResponseForm({
                 {t('quotes.response.leadTime')}
               </label>
               <div className="relative group">
-                <span
-                  className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors"
-                  style={{ fontSize: '18px' }}
-                >
-                  calendar_today
-                </span>
+                <IconCalendarEvent size={18} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" />
                 <select
                   value={leadTime}
                   onChange={(e) => { setLeadTime(e.target.value); setSavedAt(null) }}
@@ -171,12 +167,7 @@ export function QuoteResponseForm({
                     <option key={opt.value} value={opt.value}>{opt.label}</option>
                   ))}
                 </select>
-                <span
-                  className="material-symbols-outlined absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none"
-                  style={{ fontSize: '18px' }}
-                >
-                  expand_more
-                </span>
+                <IconChevronDown size={18} className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" />
               </div>
             </div>
 
@@ -208,12 +199,12 @@ export function QuoteResponseForm({
       {/* Footer */}
       <div className="p-6 bg-surface-container-low border-t border-outline-variant/20 flex justify-between items-center z-10 shrink-0">
         <Button variant="outline" onClick={handleSaveDraft} disabled={isSaving}>
-          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>save</span>
+          <IconDeviceFloppy size={20} />
           {isSaving ? t('quotes.response.saving') : t('quotes.response.saveDraft')}
         </Button>
         <Button variant="secondary" size="lg" onClick={handleSend} className="hover:-translate-y-0.5 shadow-md" data-testid="send-quote">
           {t('quotes.response.sendQuote')}
-          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>send</span>
+          <IconSend size={20} />
         </Button>
       </div>
     </div>

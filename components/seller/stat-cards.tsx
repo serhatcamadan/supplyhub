@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
+import { IconAlertTriangle, IconArrowRight, IconArrowUp, IconCreditCard, IconFileInvoice, IconPackage, IconTruck } from '@tabler/icons-react'
 
 interface StatCardsProps {
   totalRevenue: number
@@ -44,12 +45,12 @@ export function StatCards({
             </h2>
           </div>
           <div className="p-2 bg-secondary-container/20 rounded-lg text-secondary shrink-0">
-            <span className="material-symbols-outlined">payments</span>
+            <IconCreditCard />
           </div>
         </div>
         <div className="flex items-center gap-2 relative z-10">
           <span className="px-2 py-1 bg-secondary-container/30 text-secondary text-xs font-semibold rounded flex items-center gap-0.5">
-            <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>arrow_upward</span>
+            <IconArrowUp size={14} />
             12%
           </span>
           <span className="text-xs text-on-surface-variant">{t('dashboard.stats.vsLastMonth')}</span>
@@ -85,7 +86,7 @@ export function StatCards({
             </h2>
           </div>
           <div className="p-2 bg-tertiary-container/20 rounded-lg text-on-tertiary-container shrink-0">
-            <span className="material-symbols-outlined">request_quote</span>
+            <IconFileInvoice />
           </div>
         </div>
         <div className="flex items-center justify-between">
@@ -97,7 +98,7 @@ export function StatCards({
             className="text-xs font-semibold text-primary hover:underline flex items-center gap-0.5 shrink-0 ml-2"
           >
             {t('dashboard.stats.viewAll')}
-            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>arrow_forward</span>
+            <IconArrowRight size={16} />
           </Link>
         </div>
       </div>
@@ -114,7 +115,7 @@ export function StatCards({
             </h2>
           </div>
           <div className="p-2 bg-primary-container/20 rounded-lg text-on-primary-container shrink-0">
-            <span className="material-symbols-outlined">local_shipping</span>
+            <IconTruck />
           </div>
         </div>
         <div>
@@ -143,11 +144,11 @@ export function StatCards({
             </h2>
           </div>
           <div className="p-2 bg-surface-variant rounded-lg text-on-surface-variant shrink-0">
-            <span className="material-symbols-outlined">inventory_2</span>
+            <IconPackage />
           </div>
         </div>
         <span className="px-2 py-1 bg-surface-variant text-on-surface-variant text-xs font-semibold rounded flex items-center gap-1 w-fit">
-          <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>warning</span>
+          <IconAlertTriangle size={14} />
           {t('dashboard.stats.inDraft', { count: draftProductsCount })}
         </span>
       </div>

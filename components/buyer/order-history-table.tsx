@@ -9,6 +9,7 @@ import type { OrderWithDetails } from '@/types'
 import { Avatar } from '@/components/ui/avatar'
 import { TablePagination } from '@/components/ui/table-pagination'
 import { TableEmptyRow } from '@/components/ui/table-empty-row'
+import { IconRefresh, IconShoppingBag } from '@tabler/icons-react'
 
 type OrderStatus = 'pending' | 'confirmed' | 'shipped' | 'delivered'
 
@@ -109,7 +110,7 @@ export function OrderHistoryTable({ orders }: { orders: OrderWithDetails[] }) {
           </thead>
           <tbody>
             {orders.length === 0 ? (
-              <TableEmptyRow icon="shopping_bag" message={t('orders.table.empty')} colSpan={6} />
+              <TableEmptyRow icon={IconShoppingBag} message={t('orders.table.empty')} colSpan={6} />
             ) : (
               orders.map((order) => (
                 <tr
@@ -152,7 +153,7 @@ export function OrderHistoryTable({ orders }: { orders: OrderWithDetails[] }) {
                       disabled={reorderingId === order.id}
                       className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-low hover:bg-primary hover:text-on-primary text-primary rounded-lg text-xs font-semibold uppercase tracking-wider transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 disabled:opacity-50"
                     >
-                      <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>refresh</span>
+                      <IconRefresh size={16} />
                       {reorderingId === order.id ? t('orders.table.reordering') : t('orders.table.reorder')}
                     </button>
                   </td>

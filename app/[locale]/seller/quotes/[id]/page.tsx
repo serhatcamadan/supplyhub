@@ -8,6 +8,7 @@ import { QuoteDetailPanel } from '@/components/seller/quote-detail-panel'
 import { QuoteResponseForm } from '@/components/seller/quote-response-form'
 import { PrintButton } from '@/components/seller/print-button'
 import type { Product, Company } from '@/types'
+import { IconArrowLeft, IconBan } from '@tabler/icons-react'
 
 function formatReceived(iso: string, locale: string) {
   return new Intl.DateTimeFormat(locale === 'tr' ? 'tr-TR' : 'en-US', {
@@ -74,7 +75,7 @@ export default async function QuoteDetailPage({
               href={`/${locale}/seller/quotes`}
               className="text-xs font-semibold text-on-surface-variant hover:text-on-surface flex items-center gap-1 transition-colors"
             >
-              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>arrow_back</span>
+              <IconArrowLeft size={16} />
               {t('quotes.detail.back')}
             </Link>
             <span className="text-outline-variant">/</span>
@@ -92,7 +93,7 @@ export default async function QuoteDetailPage({
           <PrintButton />
           <form action={decline}>
             <Button type="submit" variant="outline" className="text-error hover:bg-error-container/50">
-              <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>block</span>
+              <IconBan size={20} />
               {t('quotes.detail.decline')}
             </Button>
           </form>

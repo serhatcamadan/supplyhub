@@ -4,6 +4,8 @@ import { useTranslations } from 'next-intl'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { Order, QuoteRequest } from '@/types'
 import { buttonVariants } from '@/components/ui/button'
+import { IconCircleCheck, IconDotsVertical, IconMailFast, IconShoppingBag, IconTruck } from '@tabler/icons-react'
+import type { ElementType } from 'react'
 
 interface ActivityFeedProps {
   orders: Order[]
@@ -39,7 +41,7 @@ export function ActivityFeed({ orders, quote, buyerNames, locale }: ActivityFeed
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-semibold text-on-surface">{t('dashboard.activity.heading')}</h3>
         <button className="w-8 h-8 rounded-full hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors">
-          <span className="material-symbols-outlined">more_vert</span>
+          <IconDotsVertical />
         </button>
       </div>
 
@@ -48,11 +50,11 @@ export function ActivityFeed({ orders, quote, buyerNames, locale }: ActivityFeed
 
         {orders.map((order) => {
           const isDelivered = order.status === 'delivered'
-          const icon = isDelivered
-            ? 'check_circle'
+          const OrderIcon: ElementType = isDelivered
+            ? IconCircleCheck
             : order.status === 'shipped'
-              ? 'local_shipping'
-              : 'shopping_bag'
+              ? IconTruck
+              : IconShoppingBag
           const iconStyle = isDelivered
             ? 'bg-secondary-container text-secondary'
             : 'bg-primary-container text-on-primary-container'
@@ -68,9 +70,7 @@ export function ActivityFeed({ orders, quote, buyerNames, locale }: ActivityFeed
               <div
                 className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 shadow-[0_0_0_4px_white] group-hover:shadow-[0_0_0_4px_#e5eeff] transition-shadow ${iconStyle}`}
               >
-                <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
-                  {icon}
-                </span>
+                <OrderIcon size={20} />
               </div>
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-on-surface">
@@ -98,9 +98,7 @@ export function ActivityFeed({ orders, quote, buyerNames, locale }: ActivityFeed
         {quote && (
           <div className="flex gap-4 p-4 hover:bg-surface-container-high/50 rounded-xl transition-colors relative z-10 group">
             <div className="w-10 h-10 rounded-full bg-tertiary-container text-on-tertiary-container flex items-center justify-center shrink-0 shadow-[0_0_0_4px_white] group-hover:shadow-[0_0_0_4px_#e5eeff] transition-shadow">
-              <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>
-                mark_email_unread
-              </span>
+              <IconMailFast size={20} />
             </div>
             <div className="flex-1 min-w-0">
               <p className="text-sm text-on-surface">

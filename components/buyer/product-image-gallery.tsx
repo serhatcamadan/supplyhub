@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import { IconPhoto, IconZoomIn } from '@tabler/icons-react'
 
 interface ProductImageGalleryProps {
   imageUrl: string | null
@@ -24,22 +25,12 @@ export function ProductImageGallery({ imageUrl, productName }: ProductImageGalle
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute inset-0 bg-on-surface/5 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center pointer-events-none">
-              <span
-                className="material-symbols-outlined text-on-surface/50 bg-surface/80 p-3 rounded-full backdrop-blur-sm shadow-md"
-                style={{ fontSize: '32px' }}
-              >
-                zoom_in
-              </span>
+              <IconZoomIn size={32} className="text-on-surface/50 bg-surface/80 p-3 rounded-full backdrop-blur-sm shadow-md" />
             </div>
           </>
         ) : (
           <div className="flex flex-col items-center justify-center gap-3">
-            <span
-              className="material-symbols-outlined text-on-surface-variant/20"
-              style={{ fontSize: '80px' }}
-            >
-              image
-            </span>
+            <IconPhoto size={80} className="text-on-surface-variant/20" />
             <span className="text-xs text-on-surface-variant/40">Görsel yok</span>
           </div>
         )}
@@ -65,12 +56,7 @@ export function ProductImageGallery({ imageUrl, productName }: ProductImageGalle
               />
             ) : (
               <div className="w-full h-full flex items-center justify-center">
-                <span
-                  className="material-symbols-outlined text-on-surface-variant/30"
-                  style={{ fontSize: '24px' }}
-                >
-                  image
-                </span>
+                <IconPhoto className="text-on-surface-variant/30" />
               </div>
             )}
           </button>

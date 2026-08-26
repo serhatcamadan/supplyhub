@@ -8,11 +8,13 @@ import { Button } from '@/components/ui/button'
 import { RfqProductCard } from '@/components/buyer/rfq-product-card'
 import { RfqSupplierSidebar } from '@/components/buyer/rfq-supplier-sidebar'
 import type { Product, Company } from '@/types'
+import { IconCalendar, IconCurrencyLira, IconMessage, IconPackage, IconPaperclip, IconScale, IconSend, IconTag } from '@tabler/icons-react'
+import type { ElementType } from 'react'
 
-function FormSectionHeader({ icon, label }: { icon: string; label: string }) {
+function FormSectionHeader({ icon: Icon, label }: { icon: ElementType; label: string }) {
   return (
     <div className="flex items-center gap-2 mb-6 border-b border-outline-variant/20 pb-4">
-      <span className="material-symbols-outlined text-primary bg-primary/10 p-2 rounded-lg">{icon}</span>
+      <Icon size={20} className="text-primary bg-primary/10 p-2 rounded-lg box-content" />
       <h2 className="text-xl font-semibold text-on-surface">{label}</h2>
     </div>
   )
@@ -24,7 +26,7 @@ const FIELD_CLASS =
 function IconInput({
   id,
   label,
-  icon,
+  icon: Icon,
   required,
   hint,
   labelSuffix,
@@ -32,7 +34,7 @@ function IconInput({
 }: {
   id: string
   label: string
-  icon: string
+  icon: ElementType
   required?: boolean
   hint?: string
   labelSuffix?: string
@@ -46,9 +48,7 @@ function IconInput({
       </label>
       <div className="relative">
         <input id={id} className={FIELD_CLASS} {...inputProps} />
-        <span className="material-symbols-outlined absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within/input:text-primary transition-colors">
-          {icon}
-        </span>
+        <Icon size={20} className="absolute left-4 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within/input:text-primary transition-colors" />
       </div>
       {hint && <p className="text-xs text-on-surface-variant">{hint}</p>}
     </div>
@@ -149,17 +149,17 @@ export default function BuyerQuoteNewPage() {
               <div className="p-8 space-y-10">
 
                 <section>
-                  <FormSectionHeader icon="inventory_2" label={t('quotes.sections.productSelection')} />
+                  <FormSectionHeader icon={IconPackage} label={t('quotes.sections.productSelection')} />
                   {product && seller && <RfqProductCard product={product} seller={seller} />}
                 </section>
 
                 <section>
-                  <FormSectionHeader icon="scale" label={t('quotes.sections.requirements')} />
+                  <FormSectionHeader icon={IconScale} label={t('quotes.sections.requirements')} />
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <IconInput
                       id="quantity"
                       label={t('quotes.fields.quantity')}
-                      icon="tag"
+                      icon={IconTag}
                       type="number"
                       required
                       min={product?.min_order_qty ?? 1}
@@ -171,7 +171,7 @@ export default function BuyerQuoteNewPage() {
                     <IconInput
                       id="deadline"
                       label={t('quotes.fields.deliveryDate')}
-                      icon="calendar_month"
+                      icon={IconCalendar}
                       type="date"
                       required
                       value={deliveryDate}
@@ -182,7 +182,7 @@ export default function BuyerQuoteNewPage() {
                     <IconInput
                       id="target_price"
                       label={t('quotes.fields.targetPrice')}
-                      icon="currency_lira"
+                      icon={IconCurrencyLira}
                       type="number"
                       step={0.01}
                       labelSuffix={t('quotes.fields.optional')}
@@ -194,7 +194,7 @@ export default function BuyerQuoteNewPage() {
                 </section>
 
                 <section>
-                  <FormSectionHeader icon="chat" label={t('quotes.sections.message')} />
+                  <FormSectionHeader icon={IconMessage} label={t('quotes.sections.message')} />
                   <div className="space-y-2">
                     <label className="text-sm font-semibold text-on-surface block" htmlFor="message">
                       {t('quotes.fields.messageLabel')}
@@ -210,7 +210,7 @@ export default function BuyerQuoteNewPage() {
                     />
                     <div className="flex justify-between items-center mt-2">
                       <Button type="button" variant="ghost" size="sm" className="text-primary hover:bg-primary/5">
-                        <span className="material-symbols-outlined text-[18px]">attachment</span>
+                        <IconPaperclip className="text-[18px]" />
                         {t('quotes.actions.attachFiles')}
                       </Button>
                       <span className={`text-xs ${message.length >= 900 ? 'text-error' : 'text-on-surface-variant'}`}>
@@ -231,7 +231,7 @@ export default function BuyerQuoteNewPage() {
                   <span className="relative z-10">
                     {isSubmitting ? t('quotes.actions.submitting') : t('quotes.actions.submit')}
                   </span>
-                  <span className="material-symbols-outlined relative z-10 group-hover/btn:translate-x-1 transition-transform">send</span>
+                  <IconSend className="relative z-10 group-hover/btn:translate-x-1 transition-transform" />
                   <div className="absolute inset-0 bg-white/10 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-300 z-0" />
                 </Button>
               </div>
