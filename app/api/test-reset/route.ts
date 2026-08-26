@@ -11,14 +11,15 @@ const daysAgo = (n: number) => new Date(Date.now() - n * 86_400_000).toISOString
 
 // Resets mutable test data (quotes + orders) to seed state by looking up real IDs from DB.
 export async function POST() {
-  const { data: companies } = await admin.from('companies').select('id, name, type')
+  const { data: companies } = await admin.from('companies').select('id, name, type').order('name')
   if (!companies?.length) return Response.json({ error: 'DB not seeded — call /api/seed first' }, { status: 400 })
 
   const seller  = companies.find((c) => c.type === 'seller')
-  const buyers  = companies.filter((c) => c.type === 'buyer')
+  const buyers  = companies.filter((c) => c.type === 'buyer').sort((a, b) => a.name.localeCompare(b.name))
   if (!seller || buyers.length < 2) return Response.json({ error: 'Expected 1 seller + 2 buyers' }, { status: 400 })
 
   const cSeller = seller.id
+  // buyers sorted alphabetically: Güneş Pazarı (buyer1/ayse), Lezzet Restoranları (buyer2/kemal)
   const cBuyer1 = buyers[0].id
   const cBuyer2 = buyers[1].id
 
