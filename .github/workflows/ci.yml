@@ -1,14 +1,12 @@
 name: CI
 
 on:
-  push:
-    branches: [dev]
   pull_request:
     branches: [main]
     types: [opened, synchronize, reopened]
 
 concurrency:
-  group: ci-${{ github.head_ref || github.ref_name }}
+  group: ci-${{ github.head_ref }}
   cancel-in-progress: true
 
 jobs:
