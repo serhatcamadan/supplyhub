@@ -2,11 +2,6 @@ import { createClient } from '@supabase/supabase-js'
 import type { Database } from '@/lib/supabase/types'
 
 // Sadece sunucu tarafında — service_role key istemciye hiç gönderilmez
-const admin = createClient<Database>(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  { auth: { autoRefreshToken: false, persistSession: false } }
-)
 
 // Sabit UUID'ler — tekrar çalıştırıldığında aynı kayıtları üretir
 const C_SELLER = 'c0000001-0000-0000-0000-000000000001'
@@ -33,6 +28,12 @@ const DEMO_USERS = [
 ]
 
 export async function POST() {
+  const admin = createClient<Database>(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    { auth: { autoRefreshToken: false, persistSession: false } }
+  )
+
   // Zaten seed yapılmış mı?
   const { count } = await admin.from('companies').select('*', { count: 'exact', head: true })
   if (count && count > 0) {
