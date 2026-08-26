@@ -6,6 +6,7 @@ import { OrderStatCards } from '@/components/buyer/order-stat-cards'
 import { OrderHistoryTable } from '@/components/buyer/order-history-table'
 import { OrdersCsvButton } from '@/components/buyer/orders-csv-button'
 import type { OrderWithDetails } from '@/types'
+import { IconFilter } from '@tabler/icons-react'
 
 export default async function BuyerOrdersPage() {
   const [supabase, t, locale] = await Promise.all([createClient(), getTranslations('buyer'), getLocale()])
@@ -40,7 +41,7 @@ export default async function BuyerOrdersPage() {
         <div className="flex gap-3">
           <OrdersCsvButton orders={orders} />
           <Button variant="primary" size="md">
-            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>filter_list</span>
+            <IconFilter size={18} />
             {t('orders.filter')}
           </Button>
         </div>

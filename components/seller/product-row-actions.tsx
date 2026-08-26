@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { IconDotsVertical, IconEye, IconPencil } from '@tabler/icons-react'
 
 export function ProductRowActions({ productId }: { productId: string }) {
   return (
@@ -8,19 +9,19 @@ export function ProductRowActions({ productId }: { productId: string }) {
         className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-md transition-colors"
         title="Edit"
       >
-        <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>edit</span>
+        <IconPencil size={20} />
       </Link>
       <button
         className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-md transition-colors"
         title="View Details"
       >
-        <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>visibility</span>
+        <IconEye size={20} />
       </button>
       <button
         className="p-1.5 text-on-surface-variant hover:text-error hover:bg-error-container/20 rounded-md transition-colors"
         title="More actions"
       >
-        <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>more_vert</span>
+        <IconDotsVertical size={20} />
       </button>
     </div>
   )

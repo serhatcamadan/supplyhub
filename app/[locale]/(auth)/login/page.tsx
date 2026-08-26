@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
 import { Button } from '@/components/ui/button'
+import { IconCircleCheck, IconDatabase } from '@tabler/icons-react'
 
 const DEMO_ACCOUNTS = [
   { email: 'ali@freshfarm.com',    name: 'Ali Yılmaz',   sub: 'FreshFarm Gıda A.Ş.',  badge: 'bg-primary/10 text-primary',     labelKey: 'login.demoLabels.sellerAdmin' },
@@ -162,9 +163,7 @@ export default function LoginPage() {
               disabled={seedState === 'loading' || seedState === 'ok'}
               className="w-full flex items-center justify-center gap-2 px-4 py-2 border border-dashed border-outline-variant rounded-lg text-xs text-on-surface-variant hover:border-primary/40 hover:text-primary transition-colors disabled:opacity-50"
             >
-              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>
-                {seedState === 'ok' ? 'check_circle' : 'database'}
-              </span>
+              {seedState === 'ok' ? <IconCircleCheck size={16} /> : <IconDatabase size={16} />}
               {seedState === 'loading'
                 ? t('login.seedLoading')
                 : seedState === 'ok'

@@ -3,6 +3,8 @@
 import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
+import { IconCircleCheck, IconDownload, IconFileDescription, IconRosetteDiscountCheck, IconLeaf, IconFlask } from '@tabler/icons-react'
+import type { ElementType } from 'react'
 
 type Tab = 'overview' | 'specs' | 'docs'
 
@@ -12,11 +14,11 @@ interface ProductTabsProps {
   specs?: { label: string; value: string }[]
 }
 
-const MOCK_DOCS_DEFS = [
-  { icon: 'description', key: 'sds',     ext: 'PDF', size: '2.1 MB' },
-  { icon: 'verified',    key: 'quality', ext: 'PDF', size: '0.8 MB' },
-  { icon: 'eco',         key: 'organic', ext: 'PDF', size: '1.2 MB' },
-  { icon: 'science',     key: 'lab',     ext: 'PDF', size: '3.4 MB' },
+const MOCK_DOCS_DEFS: { icon: ElementType; key: string; ext: string; size: string }[] = [
+  { icon: IconFileDescription,      key: 'sds',     ext: 'PDF', size: '2.1 MB' },
+  { icon: IconRosetteDiscountCheck, key: 'quality', ext: 'PDF', size: '0.8 MB' },
+  { icon: IconLeaf,                 key: 'organic', ext: 'PDF', size: '1.2 MB' },
+  { icon: IconFlask,                key: 'lab',     ext: 'PDF', size: '3.4 MB' },
 ]
 
 export function ProductTabs({ description, features, specs = [] }: ProductTabsProps) {
@@ -58,12 +60,7 @@ export function ProductTabs({ description, features, specs = [] }: ProductTabsPr
                 <ul className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {features.map((feature) => (
                     <li key={feature} className="flex items-start gap-3">
-                      <span
-                        className="material-symbols-outlined text-secondary mt-0.5"
-                        style={{ fontSize: '20px', fontVariationSettings: "'FILL' 1" }}
-                      >
-                        check_circle
-                      </span>
+                      <IconCircleCheck size={20} className="text-secondary mt-0.5" />
                       <span className="text-sm text-on-surface-variant">{feature}</span>
                     </li>
                   ))}
@@ -101,15 +98,13 @@ export function ProductTabs({ description, features, specs = [] }: ProductTabsPr
                 className="flex items-center gap-4 p-4 rounded-xl border border-outline-variant/30 hover:bg-surface-container-low transition-colors group cursor-pointer"
               >
                 <div className="w-10 h-10 rounded-lg bg-primary/10 flex items-center justify-center shrink-0">
-                  <span className="material-symbols-outlined text-primary" style={{ fontSize: '22px' }}>{doc.icon}</span>
+                  <doc.icon size={22} className="text-primary" />
                 </div>
                 <div className="flex-1 min-w-0">
                   <p className="text-sm font-semibold text-on-surface truncate">{t(`productTabs.documents.${doc.key}`)}</p>
                   <p className="text-xs text-on-surface-variant mt-0.5">{doc.ext} · {doc.size}</p>
                 </div>
-                <span className="material-symbols-outlined text-on-surface-variant group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" style={{ fontSize: '20px' }}>
-                  download
-                </span>
+                <IconDownload size={20} className="text-on-surface-variant group-hover:text-primary transition-colors opacity-0 group-hover:opacity-100" />
               </div>
             ))}
           </div>

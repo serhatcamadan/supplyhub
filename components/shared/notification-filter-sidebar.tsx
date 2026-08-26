@@ -1,13 +1,15 @@
 import { cn } from '@/lib/utils'
+import { IconBell, IconSearch, IconInbox, IconMailFast, IconShoppingBag, IconFileInvoice, IconSpeakerphone } from '@tabler/icons-react'
+import type { ElementType } from 'react'
 
 export type FilterType = 'all' | 'unread' | 'orders' | 'quotes' | 'system'
 
-export const FILTERS: { value: FilterType; label: string; icon: string }[] = [
-  { value: 'all',    label: 'All Notifications', icon: 'inbox' },
-  { value: 'unread', label: 'Unread',             icon: 'mark_email_unread' },
-  { value: 'orders', label: 'Orders',             icon: 'shopping_bag' },
-  { value: 'quotes', label: 'Quotes',             icon: 'request_quote' },
-  { value: 'system', label: 'System',             icon: 'campaign' },
+export const FILTERS: { value: FilterType; label: string; icon: ElementType }[] = [
+  { value: 'all',    label: 'All Notifications', icon: IconInbox },
+  { value: 'unread', label: 'Unread',             icon: IconMailFast },
+  { value: 'orders', label: 'Orders',             icon: IconShoppingBag },
+  { value: 'quotes', label: 'Quotes',             icon: IconFileInvoice },
+  { value: 'system', label: 'System',             icon: IconSpeakerphone },
 ]
 
 interface NotificationFilterSidebarProps {
@@ -35,7 +37,7 @@ export function NotificationFilterSidebar({
         </h3>
 
         <div className="relative mb-4 z-10">
-          <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant text-[20px]">search</span>
+          <IconSearch size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant" />
           <input
             type="text"
             value={search}
@@ -49,6 +51,7 @@ export function NotificationFilterSidebar({
           {FILTERS.map((f) => {
             const count = countByFilter[f.value]
             const active = activeFilter === f.value
+            const FIcon = f.icon
             return (
               <button
                 key={f.value}
@@ -61,7 +64,7 @@ export function NotificationFilterSidebar({
                 )}
               >
                 <div className="flex items-center gap-3">
-                  <span className="material-symbols-outlined text-[20px]">{f.icon}</span>
+                  <FIcon size={20} />
                   {f.label}
                 </div>
                 {count > 0 && (
@@ -86,9 +89,7 @@ export function NotificationFilterSidebar({
 
       <div className="bg-secondary-container text-on-secondary-container rounded-xl p-6 shadow-sm relative overflow-hidden">
         <div className="absolute -right-4 -bottom-4 w-32 h-32 text-on-secondary-container/10">
-          <span className="material-symbols-outlined text-[120px]" style={{ fontVariationSettings: "'FILL' 1" }}>
-            notifications
-          </span>
+          <IconBell size={120} />
         </div>
         <h4 className="text-sm font-semibold mb-2 relative z-10">Notification Settings</h4>
         <p className="text-xs mb-4 relative z-10 opacity-90 leading-relaxed">

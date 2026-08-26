@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
 import type { Product } from '@/types'
+import { IconBuildingStore, IconPhoto, IconHeart, IconHeartFilled, IconStarFilled } from '@tabler/icons-react'
 
 export type ProductBadge = {
   label: string
@@ -54,12 +55,7 @@ export function ProductCard({
         }`}
         aria-label={t('productCard.favoriteLabel')}
       >
-        <span
-          className="material-symbols-outlined"
-          style={{ fontSize: '18px', fontVariationSettings: favorited ? "'FILL' 1" : "'FILL' 0" }}
-        >
-          favorite
-        </span>
+        {favorited ? <IconHeartFilled size={18} /> : <IconHeart size={18} />}
       </button>
 
       <Link href={`/${locale}/buyer/discover/${product.id}`} className="flex flex-col flex-1">
@@ -73,12 +69,7 @@ export function ProductCard({
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <span
-                className="material-symbols-outlined text-on-surface-variant/20"
-                style={{ fontSize: '52px' }}
-              >
-                image
-              </span>
+              <IconPhoto size={52} className="text-on-surface-variant/20" />
             </div>
           )}
         </div>
@@ -86,7 +77,7 @@ export function ProductCard({
         <div className="p-5 flex flex-col flex-1 gap-4">
           <div>
             <div className="flex items-center gap-1.5 mb-1.5">
-              <span className="material-symbols-outlined text-primary" style={{ fontSize: '14px' }}>storefront</span>
+              <IconBuildingStore size={14} className="text-primary" />
               <span className="text-xs text-on-surface-variant line-clamp-1">{sellerName}</span>
             </div>
             <h3 className="text-sm font-semibold text-on-surface line-clamp-2 leading-5">{product.name}</h3>
@@ -103,12 +94,7 @@ export function ProductCard({
                 {t('productCard.min')} {product.min_order_qty} {t('productCard.pieces')}
               </span>
               <div className="flex items-center gap-1">
-                <span
-                  className="material-symbols-outlined text-tertiary-container"
-                  style={{ fontSize: '16px', fontVariationSettings: "'FILL' 1" }}
-                >
-                  star
-                </span>
+                <IconStarFilled size={16} className="text-tertiary-container" />
                 <span className="text-xs font-semibold text-on-surface">{rating.toFixed(1)}</span>
               </div>
             </div>

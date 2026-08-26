@@ -1,11 +1,12 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
+import { IconPrinter } from '@tabler/icons-react'
 
 export function PrintButton() {
   return (
     <Button variant="outline" className="text-primary" onClick={() => window.print()}>
-      <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>print</span>
+      <IconPrinter size={20} />
       Print
     </Button>
   )

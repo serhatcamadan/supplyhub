@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { OrderWithDetails } from '@/types'
+import { IconDownload } from '@tabler/icons-react'
 
 export function OrdersCsvButton({ orders }: { orders: OrderWithDetails[] }) {
   const t = useTranslations('buyer')
@@ -41,7 +42,7 @@ export function OrdersCsvButton({ orders }: { orders: OrderWithDetails[] }) {
 
   return (
     <Button variant="ghost" size="md" onClick={handleDownload}>
-      <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>download</span>
+      <IconDownload size={18} />
       {t('orders.csvDownload')}
     </Button>
   )

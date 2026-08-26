@@ -27,9 +27,10 @@ test('"Onayla" tıkla → kart listeden kalkar', async ({ page }) => {
   await loginAs(page, 'buyerAdmin2')
   await page.goto('/tr/buyer/approvals')
   await expect(page.getByTestId('approve-btn').first()).toBeVisible({ timeout: 15000 })
+  const before = await page.getByTestId('approve-btn').count()
   await page.getByTestId('approve-btn').first().click()
-  // Onay butonunun kaybolması = kartın kaldırıldığını gösterir
-  await expect(page.getByTestId('approve-btn')).toHaveCount(0, { timeout: 10000 })
+  // Onaylanan kartın listeden kalktığını doğrula
+  await expect(page.getByTestId('approve-btn')).toHaveCount(before - 1, { timeout: 10000 })
 })
 
 test('ayse (buyer1) /approvals → empty state (bekleyen onay yok)', async ({ page }) => {

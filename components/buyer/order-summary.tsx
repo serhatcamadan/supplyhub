@@ -4,6 +4,8 @@ import { useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { formatCurrency } from '@/lib/utils'
+import { IconCircleCheck, IconFileInvoice, IconHeadset, IconLock, IconRosetteDiscountCheck, IconShoppingBag } from '@tabler/icons-react'
+import type { ElementType } from 'react'
 
 interface OrderSummaryProps {
   subtotal: number
@@ -67,10 +69,10 @@ export function OrderSummary({
     if (promo.trim()) setApplied(true)
   }
 
-  const TRUST_ITEMS = [
-    { icon: 'lock',           label: t('cart.summary.trust.ssl') },
-    { icon: 'verified_user',  label: t('cart.summary.trust.verified') },
-    { icon: 'support_agent',  label: t('cart.summary.trust.support') },
+  const TRUST_ITEMS: { icon: ElementType; label: string }[] = [
+    { icon: IconLock,                  label: t('cart.summary.trust.ssl') },
+    { icon: IconRosetteDiscountCheck,  label: t('cart.summary.trust.verified') },
+    { icon: IconHeadset,               label: t('cart.summary.trust.support') },
   ]
 
   return (
@@ -141,7 +143,7 @@ export function OrderSummary({
           </div>
           {applied && (
             <p className="text-xs text-secondary font-semibold flex items-center gap-1">
-              <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>check_circle</span>
+              <IconCircleCheck size={14} />
               {t('cart.summary.promoAppliedMsg')}
             </p>
           )}
@@ -156,7 +158,7 @@ export function OrderSummary({
             className="w-full"
             data-testid="checkout"
           >
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>shopping_bag</span>
+            <IconShoppingBag size={20} />
             {isCheckingOut ? t('cart.summary.checkoutLoading') : t('cart.summary.checkout')}
           </Button>
           <Button
@@ -165,15 +167,15 @@ export function OrderSummary({
             onClick={onRequestQuote}
             className="w-full"
           >
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>request_quote</span>
+            <IconFileInvoice size={20} />
             {t('cart.summary.requestQuote')}
           </Button>
         </div>
 
         <div className="pt-2 border-t border-outline-variant/30 space-y-2">
-          {TRUST_ITEMS.map(({ icon, label }) => (
-            <div key={icon} className="flex items-center gap-2 text-on-surface-variant">
-              <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>{icon}</span>
+          {TRUST_ITEMS.map(({ icon: TIcon, label }) => (
+            <div key={label} className="flex items-center gap-2 text-on-surface-variant">
+              <TIcon size={16} />
               <span className="text-xs">{label}</span>
             </div>
           ))}

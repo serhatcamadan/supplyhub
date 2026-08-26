@@ -6,6 +6,7 @@ import { StatusBadge } from '@/components/seller/status-badge'
 import { StockBar } from '@/components/seller/stock-bar'
 import { ProductRowActions } from '@/components/seller/product-row-actions'
 import type { Product, PriceTier } from '@/types'
+import { IconChevronLeft, IconChevronRight, IconPackage, IconPhoto } from '@tabler/icons-react'
 
 interface ProductTableProps {
   products: Product[]
@@ -52,12 +53,7 @@ export function ProductTable({ products }: ProductTableProps) {
             {products.length === 0 ? (
               <tr>
                 <td colSpan={8} className="p-12 text-center">
-                  <span
-                    className="material-symbols-outlined block mx-auto mb-3 text-outline-variant"
-                    style={{ fontSize: '40px' }}
-                  >
-                    inventory_2
-                  </span>
+                  <IconPackage size={40} className="block mx-auto mb-3 text-outline-variant" />
                   <span className="text-sm text-on-surface-variant">{t('products.table.noResults')}</span>
                 </td>
               </tr>
@@ -86,9 +82,7 @@ export function ProductTable({ products }: ProductTableProps) {
                           // eslint-disable-next-line @next/next/no-img-element
                           <img src={product.image_url} alt={product.name} className="w-full h-full object-cover" />
                         ) : (
-                          <span className="material-symbols-outlined text-outline-variant" style={{ fontSize: '24px' }}>
-                            image
-                          </span>
+                          <IconPhoto className="text-outline-variant" />
                         )}
                       </div>
                     </td>
@@ -134,7 +128,7 @@ export function ProductTable({ products }: ProductTableProps) {
         </span>
         <div className="flex items-center gap-1">
           <button className="w-8 h-8 flex items-center justify-center rounded-md text-on-surface-variant hover:bg-surface-container transition-colors">
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chevron_left</span>
+            <IconChevronLeft size={20} />
           </button>
           {[1, 2, 3].map((n) => (
             <button
@@ -152,7 +146,7 @@ export function ProductTable({ products }: ProductTableProps) {
             15
           </button>
           <button className="w-8 h-8 flex items-center justify-center rounded-md text-on-surface-variant hover:bg-surface-container transition-colors">
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>chevron_right</span>
+            <IconChevronRight size={20} />
           </button>
         </div>
       </div>

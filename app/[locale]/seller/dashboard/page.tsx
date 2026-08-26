@@ -5,6 +5,7 @@ import { RevenueChart } from '@/components/seller/revenue-chart'
 import { StatCards } from '@/components/seller/stat-cards'
 import { TopProducts } from '@/components/seller/top-products'
 import { ActivityFeed } from '@/components/seller/activity-feed'
+import { IconCalendar, IconChevronDown, IconDownload } from '@tabler/icons-react'
 
 function buildMonthlyRevenue(
   orders: { status: string; total: number; created_at: string }[],
@@ -80,12 +81,12 @@ export default async function SellerDashboardPage() {
         </div>
         <div className="flex gap-3">
           <Button variant="ghost">
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>calendar_month</span>
+            <IconCalendar size={20} />
             {t('dashboard.last30Days')}
-            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>expand_more</span>
+            <IconChevronDown size={16} />
           </Button>
           <Button variant="primary">
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>download</span>
+            <IconDownload size={20} />
             {t('dashboard.exportReport')}
           </Button>
         </div>

@@ -5,10 +5,12 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTranslations } from 'next-intl'
 import { Button } from '@/components/ui/button'
+import { IconArrowRight, IconBell, IconFileInvoice, IconTruck, IconCircleCheck, IconAlertTriangle } from '@tabler/icons-react'
+import type { ElementType } from 'react'
 
 type Notification = {
   id: string
-  icon: string
+  icon: ElementType
   iconBg: string
   iconColor: string
   title: string
@@ -21,7 +23,7 @@ type Notification = {
 const MOCK_NOTIFICATIONS: Notification[] = [
   {
     id: '1',
-    icon: 'request_quote',
+    icon: IconFileInvoice,
     iconBg: 'bg-primary-container',
     iconColor: 'text-on-primary-container',
     title: 'New Quote Response',
@@ -32,7 +34,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
   },
   {
     id: '2',
-    icon: 'local_shipping',
+    icon: IconTruck,
     iconBg: 'bg-secondary-container',
     iconColor: 'text-on-secondary-container',
     title: 'Order #552 Shipped',
@@ -42,7 +44,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
   },
   {
     id: '3',
-    icon: 'check_circle',
+    icon: IconCircleCheck,
     iconBg: 'bg-surface-container-high',
     iconColor: 'text-on-surface-variant',
     title: 'Payment Confirmed',
@@ -52,7 +54,7 @@ const MOCK_NOTIFICATIONS: Notification[] = [
   },
   {
     id: '4',
-    icon: 'warning',
+    icon: IconAlertTriangle,
     iconBg: 'bg-tertiary-container',
     iconColor: 'text-on-tertiary-container',
     title: 'Action Required: Compliance',
@@ -94,7 +96,7 @@ export function NotificationBell() {
         className="relative p-2 text-on-surface-variant hover:bg-surface-container-high rounded-full transition-colors"
         aria-label="Notifications"
       >
-        <span className="material-symbols-outlined">notifications</span>
+        <IconBell />
         {unreadCount > 0 && (
           <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-error rounded-full border-2 border-surface" />
         )}
@@ -137,9 +139,7 @@ export function NotificationBell() {
 
               {/* Icon */}
               <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${n.iconBg}`}>
-                <span className={`material-symbols-outlined ${n.iconColor}`} style={{ fontSize: '20px' }}>
-                  {n.icon}
-                </span>
+                <n.icon className={n.iconColor} size={20} />
               </div>
 
               {/* Content */}
@@ -176,9 +176,7 @@ export function NotificationBell() {
             className="text-xs font-semibold text-on-surface-variant hover:text-primary transition-colors flex items-center gap-1 group/link"
           >
             {t('notifications.viewAll')}
-            <span className="material-symbols-outlined text-[15px] group-hover/link:translate-x-1 transition-transform">
-              arrow_forward
-            </span>
+            <IconArrowRight className="text-[15px] group-hover/link:translate-x-1 transition-transform" />
           </Link>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 import { SectionHeading } from '@/components/ui/section-heading'
 import type { PriceTier } from '@/types'
+import { IconCreditCard, IconPlus, IconTrash } from '@tabler/icons-react'
 
 interface ProductPricingTiersProps {
   tiers: PriceTier[]
@@ -26,9 +27,9 @@ export function ProductPricingTiers({ tiers, onAdd, onRemove, onUpdateMax, onUpd
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-sm p-8 border border-outline-variant/20">
       <div className="flex items-center justify-between mb-4">
-        <SectionHeading icon="payments" label={t('products.pricing.heading')} className="mb-0" />
+        <SectionHeading icon={IconCreditCard} label={t('products.pricing.heading')} className="mb-0" />
         <button type="button" onClick={onAdd} className="flex items-center gap-1 text-sm font-semibold text-primary hover:text-primary/80 transition-colors">
-          <span className="material-symbols-outlined text-[16px]">add</span>
+          <IconPlus className="text-[16px]" />
           {t('products.pricing.addTier')}
         </button>
       </div>
@@ -91,7 +92,7 @@ export function ProductPricingTiers({ tiers, onAdd, onRemove, onUpdateMax, onUpd
                   disabled={isFirst}
                   className="p-1.5 text-outline hover:text-error hover:bg-error-container rounded transition-colors disabled:opacity-30 disabled:cursor-not-allowed"
                 >
-                  <span className="material-symbols-outlined text-[18px]">delete</span>
+                  <IconTrash className="text-[18px]" />
                 </button>
               </div>
             </div>

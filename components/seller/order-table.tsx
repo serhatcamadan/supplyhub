@@ -7,15 +7,17 @@ import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
 import { TablePagination } from '@/components/ui/table-pagination'
 import { TableEmptyRow } from '@/components/ui/table-empty-row'
+import { IconCircleCheck, IconChecks, IconDotsVertical, IconShoppingBag, IconTruck } from '@tabler/icons-react'
+import type { ElementType } from 'react'
 
 const STATUS_STYLE: Record<
   OrderStatus,
-  { className: string; dot?: boolean; icon?: string }
+  { className: string; dot?: boolean; icon?: ElementType }
 > = {
   pending:   { className: 'bg-tertiary-container/20 text-on-tertiary-container', dot: true },
-  confirmed: { className: 'bg-primary-fixed-dim/20 text-on-primary-fixed-variant', icon: 'check_circle' },
-  shipped:   { className: 'bg-primary/10 text-primary', icon: 'local_shipping' },
-  delivered: { className: 'bg-secondary/10 text-secondary', icon: 'done_all' },
+  confirmed: { className: 'bg-primary-fixed-dim/20 text-on-primary-fixed-variant', icon: IconCircleCheck },
+  shipped:   { className: 'bg-primary/10 text-primary', icon: IconTruck },
+  delivered: { className: 'bg-secondary/10 text-secondary', icon: IconChecks },
 }
 
 const AVATAR_COLOR_SCHEMES = [
@@ -35,7 +37,7 @@ function OrderStatusBadge({ status, label }: { status: OrderStatus; label: strin
   return (
     <span className={cn('inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold', cfg.className)}>
       {cfg.dot && <span className="w-1.5 h-1.5 rounded-full bg-current" />}
-      {cfg.icon && <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>{cfg.icon}</span>}
+      {cfg.icon && <cfg.icon size={14} />}
       {label}
     </span>
   )
@@ -64,7 +66,7 @@ function RowActions({
         <Button variant="secondary" size="sm" onClick={() => onStatusChange(orderId, 'delivered')}>{labels.deliver}</Button>
       )}
       <button className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors">
-        <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>more_vert</span>
+        <IconDotsVertical size={20} />
       </button>
     </div>
   )
@@ -127,7 +129,7 @@ export function OrderTable({
 
           <tbody className="divide-y divide-outline-variant/20">
             {orders.length === 0 ? (
-              <TableEmptyRow icon="shopping_bag" message={t('orders.table.noResults')} colSpan={7} />
+              <TableEmptyRow icon={IconShoppingBag} message={t('orders.table.noResults')} colSpan={7} />
             ) : (
               orders.map((order, i) => (
                 <tr

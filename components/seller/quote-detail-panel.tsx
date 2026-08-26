@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
 import { Avatar } from '@/components/ui/avatar'
+import { IconMapPin, IconMessage, IconPackage, IconQuote } from '@tabler/icons-react'
 
 interface QuoteDetailPanelProps {
   buyerName: string
@@ -43,7 +44,7 @@ export function QuoteDetailPanel({
         <div>
           <h2 className="text-2xl font-semibold text-on-surface">{buyerName}</h2>
           <div className="flex items-center gap-2 mt-1 text-on-surface-variant">
-            <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>location_on</span>
+            <IconMapPin size={16} />
             <span className="text-sm">{t('quotes.detail.location')}</span>
             <span className="w-1 h-1 rounded-full bg-outline-variant" />
             <span className="text-sm">{t('quotes.detail.buyerRole')}</span>
@@ -57,9 +58,7 @@ export function QuoteDetailPanel({
         {/* Requested Products */}
         <section>
           <h3 className="text-base font-semibold text-on-surface mb-4 flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary" style={{ fontSize: '20px' }}>
-              inventory_2
-            </span>
+            <IconPackage size={20} className="text-primary" />
             {t('quotes.detail.requestedProducts')}
           </h3>
 
@@ -83,12 +82,7 @@ export function QuoteDetailPanel({
                   <td className="p-4">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-lg bg-surface-container flex items-center justify-center shrink-0">
-                        <span
-                          className="material-symbols-outlined text-outline-variant"
-                          style={{ fontSize: '22px' }}
-                        >
-                          inventory_2
-                        </span>
+                        <IconPackage size={22} className="text-outline-variant" />
                       </div>
                       <div>
                         <p className="text-sm font-semibold text-on-surface">{productName}</p>
@@ -126,19 +120,12 @@ export function QuoteDetailPanel({
         {/* Buyer Message */}
         <section>
           <h3 className="text-base font-semibold text-on-surface mb-3 flex items-center gap-2">
-            <span className="material-symbols-outlined text-primary" style={{ fontSize: '20px' }}>
-              chat
-            </span>
+            <IconMessage size={20} className="text-primary" />
             {t('quotes.detail.buyerMessage')}
           </h3>
           {buyerMessage ? (
             <div className="p-5 bg-surface-container-lowest rounded-xl border border-outline-variant/30 relative overflow-hidden">
-              <span
-                className="material-symbols-outlined absolute top-3 left-3 text-outline-variant/20 select-none pointer-events-none"
-                style={{ fontSize: '48px' }}
-              >
-                format_quote
-              </span>
+              <IconQuote size={48} className="absolute top-3 left-3 text-outline-variant/20 select-none pointer-events-none" />
               <p className="text-sm text-on-surface leading-relaxed relative z-10">
                 {buyerMessage}
               </p>

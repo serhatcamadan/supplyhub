@@ -2,11 +2,13 @@
 
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
+import { IconX } from '@tabler/icons-react'
+import type { ElementType } from 'react'
 
 export type FullNotification = {
   id: string
   category: 'order' | 'quote' | 'system'
-  icon: string
+  icon: ElementType
   iconBg: string
   iconColor: string
   title: string
@@ -23,6 +25,7 @@ export function NotificationItem({
   n: FullNotification
   onDismiss: (id: string) => void
 }) {
+  const Icon = n.icon
   return (
     <div
       className={cn(
@@ -35,9 +38,7 @@ export function NotificationItem({
       )}
 
       <div className={cn('w-12 h-12 rounded-full flex items-center justify-center shrink-0 mt-0.5 shadow-inner', n.iconBg)}>
-        <span className={cn('material-symbols-outlined', n.iconColor)} style={{ fontSize: '24px' }}>
-          {n.icon}
-        </span>
+        <Icon className={n.iconColor} size={24} />
       </div>
 
       <div className="flex-1 min-w-0">
@@ -65,7 +66,7 @@ export function NotificationItem({
         className="absolute top-4 right-4 text-on-surface-variant hover:text-error opacity-0 group-hover:opacity-100 transition-opacity"
         aria-label="Dismiss"
       >
-        <span className="material-symbols-outlined text-[20px]">close</span>
+        <IconX size={20} />
       </button>
     </div>
   )

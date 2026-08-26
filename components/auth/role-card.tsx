@@ -1,15 +1,16 @@
 import { cn } from '@/lib/utils'
+import type { ElementType } from 'react'
 
 interface RoleCardProps {
   selected: boolean
   onSelect: () => void
-  icon: string
+  icon: ElementType
   iconBg: string
   title: string
   description: string
 }
 
-export function RoleCard({ selected, onSelect, icon, iconBg, title, description }: RoleCardProps) {
+export function RoleCard({ selected, onSelect, icon: Icon, iconBg, title, description }: RoleCardProps) {
   return (
     <button
       type="button"
@@ -28,9 +29,7 @@ export function RoleCard({ selected, onSelect, icon, iconBg, title, description 
           selected && 'scale-110'
         )}
       >
-        <span className="material-symbols-outlined" style={{ fontSize: '40px' }}>
-          {icon}
-        </span>
+        <Icon size={40} />
       </div>
       <div>
         <h3 className="text-base font-semibold text-on-surface mb-2">{title}</h3>

@@ -3,6 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
 import type { Company, Product } from '@/types'
+import { IconPackage } from '@tabler/icons-react'
 
 interface RfqProductCardProps {
   product: Product
@@ -17,7 +18,7 @@ export function RfqProductCard({ product, seller }: RfqProductCardProps) {
   return (
     <div className="bg-surface-container-low rounded-xl p-4 flex gap-6 items-center shadow-sm">
       <div className="w-24 h-24 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0 shadow-sm">
-        <span className="material-symbols-outlined text-primary text-[40px]">inventory_2</span>
+        <IconPackage className="text-primary text-[40px]" />
       </div>
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-start mb-1">

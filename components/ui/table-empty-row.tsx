@@ -1,19 +1,16 @@
+import type { ElementType } from 'react'
+
 interface TableEmptyRowProps {
-  icon: string
+  icon: ElementType
   message: string
   colSpan: number
 }
 
-export function TableEmptyRow({ icon, message, colSpan }: TableEmptyRowProps) {
+export function TableEmptyRow({ icon: Icon, message, colSpan }: TableEmptyRowProps) {
   return (
     <tr>
       <td colSpan={colSpan} className="py-16 text-center">
-        <span
-          className="material-symbols-outlined block mx-auto mb-3 text-outline-variant"
-          style={{ fontSize: '40px' }}
-        >
-          {icon}
-        </span>
+        <Icon className="block mx-auto mb-3 text-outline-variant" size={40} />
         <span className="text-sm text-on-surface-variant">{message}</span>
       </td>
     </tr>

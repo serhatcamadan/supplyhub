@@ -11,6 +11,7 @@ import { ProductBasicInfo } from '@/components/seller/product-basic-info'
 import { ProductPricingTiers } from '@/components/seller/product-pricing-tiers'
 import { ProductMedia } from '@/components/seller/product-media'
 import { ProductLogistics } from '@/components/seller/product-logistics'
+import { IconChevronRight, IconDeviceFloppy } from '@tabler/icons-react'
 
 export default function NewProductPage() {
   const router = useRouter()
@@ -85,7 +86,7 @@ export default function NewProductPage() {
             <Link href={`/${locale}/seller/products`} className="hover:text-primary transition-colors">
               {t('products.form.breadcrumbProducts')}
             </Link>
-            <span className="material-symbols-outlined text-[16px]">chevron_right</span>
+            <IconChevronRight className="text-[16px]" />
             <span className="text-on-surface">{t('products.form.breadcrumbNew')}</span>
           </div>
           <h1 className="text-2xl font-semibold text-on-surface tracking-tight">{t('products.form.heading')}</h1>
@@ -96,7 +97,7 @@ export default function NewProductPage() {
             {t('products.form.cancel')}
           </Link>
           <Button type="button" variant="secondary" onClick={handleSave} disabled={isSubmitting} className="active:scale-[0.98]" data-testid="save-product">
-            <span className="material-symbols-outlined text-[18px]">save</span>
+            <IconDeviceFloppy className="text-[18px]" />
             {isSubmitting ? t('products.form.saving') : t('products.form.save')}
           </Button>
         </div>

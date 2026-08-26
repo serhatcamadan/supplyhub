@@ -5,12 +5,13 @@ import { MarketTrends, type MarketTrend } from '@/components/seller/market-trend
 import { BuyerSearches, type SearchKeyword } from '@/components/seller/buyer-searches'
 import { PriceIndex, type PriceComparison } from '@/components/seller/price-index'
 import { ProductRecommendations, type ProductRecommendation } from '@/components/seller/product-recommendations'
+import { IconDownload, IconFlask, IconLeaf, IconPackage, IconPlus, IconRadar, IconTag } from '@tabler/icons-react'
 
 const TRENDS: MarketTrend[] = [
   {
     category: 'Eko-Ambalaj',
     subcategory: 'Endüstriyel Malzemeler',
-    icon: 'eco',
+    icon: IconLeaf,
     growth: '+24%',
     demand: 'Yüksek',
     demandPct: 75,
@@ -19,7 +20,7 @@ const TRENDS: MarketTrend[] = [
   {
     category: 'Endüstriyel Sensörler',
     subcategory: 'Elektronik & IoT',
-    icon: 'sensors',
+    icon: IconRadar,
     growth: '+18%',
     demand: 'Orta-Yüksek',
     demandPct: 65,
@@ -45,19 +46,19 @@ const RECOMMENDATIONS: ProductRecommendation[] = [
     name: 'Su Aktivasyonlu Kraft Bant',
     description: 'Eko-Ambalaj segmentinde yüksek talep. Düşük satıcı rekabeti.',
     margin: '%35–40',
-    icon: 'package_2',
+    icon: IconPackage,
   },
   {
     name: 'Termal Transfer Etiket (4×6)',
     description: 'Bölgenizde yüksek hacimli sürekli aramalar. Hızlı tüketim ürünü.',
     margin: '%20–25',
-    icon: 'label',
+    icon: IconTag,
   },
   {
     name: 'Dolum Gazı (N₂ — 10L)',
     description: 'Gıda sektöründe artan MAP ambalaj talebi.',
     margin: '%28–33',
-    icon: 'science',
+    icon: IconFlask,
   },
 ]
 
@@ -75,11 +76,11 @@ export default function SellerDiscoverPage() {
         </div>
         <div className="flex items-center gap-3">
           <Button variant="ghost">
-            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>download</span>
+            <IconDownload size={18} />
             Rapor İndir
           </Button>
           <Link href="/seller/products/new" className={buttonVariants({ variant: 'primary' })}>
-            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>add</span>
+            <IconPlus size={18} />
             Ürün Ekle
           </Link>
         </div>

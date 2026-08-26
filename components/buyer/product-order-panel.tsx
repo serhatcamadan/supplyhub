@@ -7,6 +7,7 @@ import { getUnitPrice, getTotalPrice, getNextTier } from '@/lib/pricing'
 import { Button } from '@/components/ui/button'
 import { TierRow } from '@/components/buyer/tier-row'
 import type { Product } from '@/types'
+import { IconFileInvoice, IconMinus, IconPackage, IconPlus, IconShoppingCartPlus, IconStarFilled, IconTag, IconTrendingDown, IconTruck } from '@tabler/icons-react'
 
 interface ProductOrderPanelProps {
   product: Product
@@ -52,12 +53,7 @@ export function ProductOrderPanel({
           {product.category}
         </span>
         <div className="flex items-center gap-1">
-          <span
-            className="material-symbols-outlined text-tertiary-container"
-            style={{ fontSize: '16px', fontVariationSettings: "'FILL' 1" }}
-          >
-            star
-          </span>
+          <IconStarFilled size={16} className="text-tertiary-container" />
           <span className="text-sm font-semibold text-on-surface">{rating.toFixed(1)}</span>
           <span className="text-xs text-on-surface-variant ml-0.5">(24)</span>
         </div>
@@ -85,14 +81,14 @@ export function ProductOrderPanel({
           </p>
         )}
         <p className="text-xs text-secondary mt-2 flex items-center gap-1">
-          <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>inventory_2</span>
+          <IconPackage size={14} />
           {t('orderPanel.inStock')}
         </p>
       </div>
 
       <div className="bg-surface-container-lowest rounded-lg overflow-hidden shadow-sm border border-outline-variant/20">
         <div className="bg-primary-container/10 px-4 py-2 flex items-center gap-2">
-          <span className="material-symbols-outlined text-primary" style={{ fontSize: '18px' }}>sell</span>
+          <IconTag size={18} className="text-primary" />
           <span className="text-sm font-semibold text-primary">{t('orderPanel.bulkDiscount')}</span>
         </div>
         <div className="divide-y divide-outline-variant/20">
@@ -109,7 +105,7 @@ export function ProductOrderPanel({
 
       {nextTier && (
         <div className="flex items-center gap-2 px-3 py-2 bg-secondary/5 rounded-lg border border-secondary/20 text-xs text-secondary">
-          <span className="material-symbols-outlined" style={{ fontSize: '16px' }}>trending_down</span>
+          <IconTrendingDown size={16} />
           <span>
             {t('orderPanel.nextTierHint', {
               count: nextTier.min_qty - qty,
@@ -128,7 +124,7 @@ export function ProductOrderPanel({
               aria-label={t('orderPanel.decrement')}
               className="px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors border-r border-outline-variant/30"
             >
-              <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>remove</span>
+              <IconMinus size={20} />
             </button>
             <input
               type="number"
@@ -142,7 +138,7 @@ export function ProductOrderPanel({
               aria-label={t('orderPanel.increment')}
               className="px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors border-l border-outline-variant/30"
             >
-              <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>add</span>
+              <IconPlus size={20} />
             </button>
           </div>
           <p className="text-xs text-on-surface-variant mt-1">
@@ -152,17 +148,17 @@ export function ProductOrderPanel({
 
         <div className="flex flex-col gap-3">
           <Button variant="primary" size="lg" className="w-full justify-center">
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>add_shopping_cart</span>
+            <IconShoppingCartPlus size={20} />
             {t('orderPanel.addToCart')}
           </Button>
           <Button variant="outline" size="lg" className="w-full justify-center text-primary">
-            <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>request_quote</span>
+            <IconFileInvoice size={20} />
             {t('orderPanel.requestQuote')}
           </Button>
         </div>
 
         <p className="text-xs text-on-surface-variant text-center flex items-center justify-center gap-1">
-          <span className="material-symbols-outlined" style={{ fontSize: '14px' }}>local_shipping</span>
+          <IconTruck size={14} />
           {t('orderPanel.freeShipping')}
         </p>
       </div>

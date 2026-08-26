@@ -1,6 +1,7 @@
 'use client'
 
 import { useTranslations } from 'next-intl'
+import { IconCategory, IconChevronDown, IconFilter, IconLayoutGrid, IconList, IconSearch } from '@tabler/icons-react'
 
 interface ProductControlsProps {
   search: string
@@ -21,12 +22,7 @@ export function ProductControls({
     <div className="bg-surface-container-lowest p-4 rounded-xl shadow-sm flex flex-col md:flex-row gap-4 items-center justify-between">
       <div className="flex flex-1 gap-3 w-full md:w-auto">
         <div className="relative flex-1 max-w-md group">
-          <span
-            className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors"
-            style={{ fontSize: '20px' }}
-          >
-            search
-          </span>
+          <IconSearch size={20} className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant group-focus-within:text-primary transition-colors" />
           <input
             value={search}
             onChange={(e) => onSearch(e.target.value)}
@@ -37,14 +33,14 @@ export function ProductControls({
         </div>
 
         <button className="bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors px-4 py-2.5 rounded-lg text-xs font-semibold flex items-center gap-2 border border-outline-variant shrink-0">
-          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>filter_list</span>
+          <IconFilter size={18} />
           {t('products.controls.filters')}
         </button>
 
         <button className="bg-surface-container text-on-surface hover:bg-surface-container-high transition-colors px-4 py-2.5 rounded-lg text-xs font-semibold flex items-center gap-1.5 border border-outline-variant shrink-0">
-          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>category</span>
+          <IconCategory size={18} />
           {t('products.controls.categoryAll')}
-          <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>arrow_drop_down</span>
+          <IconChevronDown size={18} />
         </button>
       </div>
 
@@ -53,10 +49,10 @@ export function ProductControls({
           {t('products.controls.showing', { filtered: filteredCount, total: totalCount })}
         </span>
         <button className="p-2 hover:bg-surface-container rounded-lg transition-colors text-on-surface-variant">
-          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>view_list</span>
+          <IconList size={20} />
         </button>
         <button className="p-2 hover:bg-surface-container rounded-lg transition-colors text-on-surface-variant">
-          <span className="material-symbols-outlined" style={{ fontSize: '20px' }}>grid_view</span>
+          <IconLayoutGrid size={20} />
         </button>
       </div>
     </div>

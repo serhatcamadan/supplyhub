@@ -6,6 +6,7 @@ import { Avatar } from '@/components/ui/avatar'
 import { buttonVariants } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import type { Company } from '@/types'
+import { IconArrowRight, IconBuildingStore, IconShieldCheckFilled, IconStarFilled, IconStarHalf, IconUser } from '@tabler/icons-react'
 
 interface SupplierStat {
   label: string
@@ -36,7 +37,7 @@ export function RfqSupplierSidebar({
 
       <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/30 p-6">
         <h3 className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-4 flex items-center gap-2">
-          <span className="material-symbols-outlined text-[20px]">storefront</span>
+          <IconBuildingStore className="text-[20px]" />
           {t('quotes.supplier.infoHeading')}
         </h3>
 
@@ -46,18 +47,10 @@ export function RfqSupplierSidebar({
             <h4 className="text-sm font-semibold text-on-surface mb-1">{seller.name}</h4>
             <div className="flex items-center gap-0.5 mb-1">
               {Array.from({ length: fullStars }, (_, i) => (
-                <span
-                  key={i}
-                  className="material-symbols-outlined text-[15px] text-on-tertiary-container"
-                  style={{ fontVariationSettings: "'FILL' 1" }}
-                >
-                  star
-                </span>
+                <IconStarFilled key={i} size={15} className="text-on-tertiary-container" />
               ))}
               {hasHalf && (
-                <span className="material-symbols-outlined text-[15px] text-on-tertiary-container">
-                  star_half
-                </span>
+                <IconStarHalf className="text-[15px] text-on-tertiary-container" />
               )}
               <span className="ml-1 text-xs font-medium text-on-surface-variant">
                 {t('quotes.supplier.reviews', { rating, count: reviewCount })}
@@ -84,19 +77,14 @@ export function RfqSupplierSidebar({
           href={`/${locale}/buyer/discover`}
           className={cn(buttonVariants({ variant: 'outline', size: 'md' }), 'w-full')}
         >
-          <span className="material-symbols-outlined text-[18px]">person</span>
+          <IconUser className="text-[18px]" />
           {t('quotes.supplier.viewProfile')}
         </Link>
       </div>
 
       <div className="bg-primary text-on-primary rounded-2xl shadow-md p-6 relative overflow-hidden">
         <div className="absolute -right-8 -top-8 text-on-primary/10">
-          <span
-            className="material-symbols-outlined text-[120px]"
-            style={{ fontVariationSettings: "'FILL' 1" }}
-          >
-            verified_user
-          </span>
+          <IconShieldCheckFilled size={120} />
         </div>
         <div className="relative z-10">
           <h3 className="text-sm font-semibold mb-2">{t('quotes.buyerProtection.heading')}</h3>
@@ -108,7 +96,7 @@ export function RfqSupplierSidebar({
             className="text-xs font-semibold text-secondary-fixed hover:text-secondary-fixed-dim underline underline-offset-2 transition-colors flex items-center gap-1 w-max"
           >
             {t('quotes.buyerProtection.learnMore')}
-            <span className="material-symbols-outlined text-[15px]">arrow_forward</span>
+            <IconArrowRight className="text-[15px]" />
           </a>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { ApprovalCard } from '@/components/buyer/approval-card'
 import { ApprovalStatCards } from '@/components/buyer/approval-stat-cards'
 import { Button } from '@/components/ui/button'
 import type { OrderWithDetails } from '@/types'
+import { IconCircleCheck, IconFilter } from '@tabler/icons-react'
 
 export default async function BuyerApprovalsPage() {
   const [supabase, t] = await Promise.all([createClient(), getTranslations('buyer')])
@@ -40,7 +41,7 @@ export default async function BuyerApprovalsPage() {
         </div>
         <div className="flex gap-3">
           <Button variant="outline">
-            <span className="material-symbols-outlined" style={{ fontSize: '18px' }}>filter_list</span>
+            <IconFilter size={18} />
             {t('approvals.filter')}
           </Button>
         </div>
@@ -55,7 +56,7 @@ export default async function BuyerApprovalsPage() {
       {pendingApprovals.length === 0 ? (
         <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/20 py-20 flex flex-col items-center gap-4 text-center">
           <div className="w-16 h-16 bg-secondary-fixed/20 rounded-full flex items-center justify-center">
-            <span className="material-symbols-outlined text-secondary text-[32px]">check_circle</span>
+            <IconCircleCheck className="text-secondary text-[32px]" />
           </div>
           <div>
             <p className="font-semibold text-on-surface text-lg">{t('approvals.empty.heading')}</p>
