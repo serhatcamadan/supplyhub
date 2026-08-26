@@ -35,7 +35,7 @@ interface SidebarProps {
 export function Sidebar({ portal }: SidebarProps) {
   const pathname = usePathname()
   const router   = useRouter()
-  const t        = useTranslations('common')
+  const t        = useTranslations('sidebar')
   const locale   = useLocale()
 
   const navItems = portal === 'seller' ? SELLER_NAV : BUYER_NAV
