@@ -273,6 +273,92 @@
       "heading": "Alıcı Koruması",
       "description": "Talebiniz SupplyHub'ın güvenli işlem garantisi kapsamındadır. Teslimat onaylanana kadar ödemeler emanette tutulur.",
       "learnMore": "Daha fazla bilgi"
+    },
+    "list": {
+      "heading": "Teklif Talepleri",
+      "subHeading": "Tedarikçilere gönderdiğiniz teklif taleplerini takip edin ve yönetin.",
+      "newButton": "Yeni Talep Oluştur",
+      "stats": {
+        "total": "Toplam Talep",
+        "pending": "Bekliyor",
+        "responded": "Yanıtlandı"
+      },
+      "table": {
+        "product": "Ürün",
+        "quantity": "Miktar",
+        "date": "Tarih",
+        "status": "Durum",
+        "actions": "İşlemler",
+        "viewResponse": "Teklifi Gör",
+        "empty": "Henüz teklif talebiniz yok.",
+        "pagination": "{shown} / {total} talep",
+        "statusLabel": {
+          "pending": "Bekliyor",
+          "responded": "Yanıtlandı",
+          "accepted": "Kabul Edildi",
+          "declined": "Reddedildi"
+        }
+      }
+    },
+    "form": {
+      "back": "Teklif Taleplerine Dön",
+      "heading": "Yeni Teklif Talebi Oluştur",
+      "subHeading": "Ne kadar spesifik olursanız, o kadar doğru teklifler alırsınız.",
+      "basicDetails": {
+        "heading": "Temel Bilgiler",
+        "product": "Ürün / Hizmet Adı",
+        "productPlaceholder": "Ürün seçin",
+        "deadline": "Teslim Tarihi"
+      },
+      "volume": {
+        "heading": "Miktar ve Fiyat Hedefi",
+        "quantity": "Miktar",
+        "quantityPlaceholder": "ör. 500",
+        "unit": "Birim",
+        "targetPrice": "Hedef Birim Fiyatı",
+        "optional": "(Opsiyonel)",
+        "units": {
+          "pieces": "Adet (adet)",
+          "kg": "Kilogram (kg)",
+          "tons": "Ton (t)",
+          "meters": "Metre (m)",
+          "liters": "Litre (L)"
+        }
+      },
+      "specs": {
+        "heading": "Detaylı Özellikler",
+        "description": "Açıklama ve Gereksinimler",
+        "descriptionPlaceholder": "Malzeme sınıfları, toleranslar, gerekli sertifikalar veya özel üretim süreçlerini belirtin…",
+        "charCount": "{count} / 2000 karakter",
+        "attachments": "Dosya ve Teknik Çizimler",
+        "dropzoneTitle": "Yüklemek için tıklayın veya sürükleyin",
+        "dropzoneHint": "PDF, STEP, IGES, DWG veya ZIP, maks. 50 MB"
+      },
+      "actions": {
+        "cancel": "İptal",
+        "submit": "Talep Gönder",
+        "submitting": "Gönderiliyor…"
+      },
+      "tips": {
+        "heading": "Daha iyi teklifler için",
+        "specific": {
+          "title": "Spesifik Olun",
+          "desc": "Belirsiz talepler farklı fiyatlandırmaya yol açar. Kesin sınıfları ve standartları belirtin."
+        },
+        "drawings": {
+          "title": "Çizim Ekleyin",
+          "desc": "Üretilen parçalar için teknik çizimler doğru fiyatlandırma için gereklidir."
+        },
+        "deadline": {
+          "title": "Gerçekçi Tarihler",
+          "desc": "Çok kısa teslim süreleri teklif verecek tedarikçi sayısını azaltabilir."
+        }
+      },
+      "activity": {
+        "heading": "Teklif Aktivitesi",
+        "active": "Aktif",
+        "received": "Alınan Teklifler"
+      }
     }
   }
 }
