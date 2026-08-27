@@ -273,6 +273,92 @@
       "heading": "Buyer Protection",
       "description": "Your request is covered by SupplyHub's secure transaction guarantee. Payments are held in escrow until delivery is confirmed.",
       "learnMore": "Learn more"
+    },
+    "list": {
+      "heading": "Quote Requests",
+      "subHeading": "Track and manage the quote requests you have sent to suppliers.",
+      "newButton": "New Request",
+      "stats": {
+        "total": "Total Requests",
+        "pending": "Pending",
+        "responded": "Responded"
+      },
+      "table": {
+        "product": "Product",
+        "quantity": "Quantity",
+        "date": "Date",
+        "status": "Status",
+        "actions": "Actions",
+        "viewResponse": "View Quote",
+        "empty": "You have no quote requests yet.",
+        "pagination": "{shown} / {total} requests",
+        "statusLabel": {
+          "pending": "Pending",
+          "responded": "Responded",
+          "accepted": "Accepted",
+          "declined": "Declined"
+        }
+      }
+    },
+    "form": {
+      "back": "Back to Quote Requests",
+      "heading": "Create New Quote Request",
+      "subHeading": "The more specific you are, the more accurate quotes you will receive.",
+      "basicDetails": {
+        "heading": "Basic Details",
+        "product": "Product / Service Name",
+        "productPlaceholder": "Select a product",
+        "deadline": "Delivery Deadline"
+      },
+      "volume": {
+        "heading": "Volume & Target Price",
+        "quantity": "Quantity",
+        "quantityPlaceholder": "e.g. 500",
+        "unit": "Unit",
+        "targetPrice": "Target Unit Price",
+        "optional": "(Optional)",
+        "units": {
+          "pieces": "Pieces (pcs)",
+          "kg": "Kilogram (kg)",
+          "tons": "Tons (t)",
+          "meters": "Meters (m)",
+          "liters": "Liters (L)"
+        }
+      },
+      "specs": {
+        "heading": "Detailed Specifications",
+        "description": "Description & Requirements",
+        "descriptionPlaceholder": "Specify material grades, tolerances, required certifications, or special manufacturing processes…",
+        "charCount": "{count} / 2000 characters",
+        "attachments": "Files & Technical Drawings",
+        "dropzoneTitle": "Click to upload or drag and drop",
+        "dropzoneHint": "PDF, STEP, IGES, DWG or ZIP, max 50 MB"
+      },
+      "actions": {
+        "cancel": "Cancel",
+        "submit": "Submit Request",
+        "submitting": "Submitting…"
+      },
+      "tips": {
+        "heading": "Tips for better quotes",
+        "specific": {
+          "title": "Be Specific",
+          "desc": "Vague requests lead to varying prices. Specify exact grades and standards."
+        },
+        "drawings": {
+          "title": "Add Drawings",
+          "desc": "For manufactured parts, technical drawings are essential for accurate pricing."
+        },
+        "deadline": {
+          "title": "Realistic Dates",
+          "desc": "Very short lead times may reduce the number of suppliers willing to quote."
+        }
+      },
+      "activity": {
+        "heading": "Quote Activity",
+        "active": "Active",
+        "received": "Quotes Received"
+      }
     }
   }
 }
