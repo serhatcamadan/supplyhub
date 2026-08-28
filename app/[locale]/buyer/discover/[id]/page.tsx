@@ -1,13 +1,12 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getTranslations, getLocale } from 'next-intl/server'
-import { createClient } from '@/lib/supabase/server'
+import { getProduct } from '@/lib/api/products'
 import { formatCurrency } from '@/lib/utils'
 import { ProductImageGallery } from '@/components/buyer/product-image-gallery'
 import { ProductTabs } from '@/components/buyer/product-tabs'
 import { ProductOrderPanel } from '@/components/buyer/product-order-panel'
 import { SellerInfoCard } from '@/components/buyer/seller-info-card'
-import type { Product, Company } from '@/types'
 import { IconChevronRight } from '@tabler/icons-react'
 
 const CATEGORY_TO_FEATURES_KEY: Record<string, string> = {
@@ -25,29 +24,12 @@ export default async function BuyerProductDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const [supabase, t, locale] = await Promise.all([
-    createClient(),
-    getTranslations('buyer'),
-    getLocale(),
-  ])
+  const [t, locale] = await Promise.all([getTranslations('buyer'), getLocale()])
 
-  const { data: productData } = await supabase
-    .from('products')
-    .select('*')
-    .eq('id', id)
-    .single()
+  const product = await getProduct(id).catch(() => null)
+  if (!product) notFound()
 
-  if (!productData) notFound()
-
-  const product = productData as Product
-
-  const { data: sellerData } = await supabase
-    .from('companies')
-    .select('*')
-    .eq('id', product.seller_id)
-    .single()
-
-  const seller = sellerData as Company
+  const seller = product.companies
 
   const featuresKey = CATEGORY_TO_FEATURES_KEY[product.category]
   const features: string[] = featuresKey

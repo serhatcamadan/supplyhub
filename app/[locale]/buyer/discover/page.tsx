@@ -2,11 +2,10 @@
 
 import { useState, useEffect } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
-import { createClient } from '@/lib/supabase/client'
+import { getProducts, type ApiProduct } from '@/lib/api/products'
 import { Button } from '@/components/ui/button'
 import { CategoryChips } from '@/components/buyer/category-chips'
 import { ProductCard, type ProductBadge } from '@/components/buyer/product-card'
-import type { Product } from '@/types'
 import { IconAdjustments, IconSearch, IconSearchOff } from '@tabler/icons-react'
 
 // DB category → badge translation key + colorScheme
@@ -32,31 +31,10 @@ export default function BuyerDiscoverPage() {
   const ALL = t('discover.allCategory')
   const [category, setCategory] = useState(ALL)
   const [search, setSearch] = useState('')
-  const [products, setProducts] = useState<Product[]>([])
-  const [sellerNames, setSellerNames] = useState<Record<string, string>>({})
+  const [products, setProducts] = useState<ApiProduct[]>([])
 
   useEffect(() => {
-    async function load() {
-      const supabase = createClient()
-      const { data: productData } = await supabase
-        .from('products')
-        .select('*')
-        .eq('status', 'active')
-
-      const prods = (productData as Product[]) ?? []
-      setProducts(prods)
-
-      const sellerIds = [...new Set(prods.map((p) => p.seller_id))]
-      if (sellerIds.length === 0) return
-
-      const { data: companies } = await supabase
-        .from('companies')
-        .select('id, name')
-        .in('id', sellerIds)
-
-      setSellerNames(Object.fromEntries((companies ?? []).map((c) => [c.id, c.name])))
-    }
-    load()
+    getProducts().then(setProducts).catch(console.error)
   }, [])
 
   const categories = [ALL, ...Array.from(new Set(products.map((p) => p.category)))]
@@ -109,7 +87,7 @@ export default function BuyerDiscoverPage() {
                 key={product.id}
                 product={product}
                 locale={locale}
-                sellerName={sellerNames[product.seller_id] ?? t('discover.unknownSupplier')}
+                sellerName={product.companies?.name ?? t('discover.unknownSupplier')}
                 rating={4.7}
                 unit={t(`discover.units.${unitKey}`)}
                 badge={badgeDef
