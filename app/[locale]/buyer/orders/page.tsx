@@ -1,5 +1,6 @@
 import { getTranslations, getLocale } from 'next-intl/server'
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { getServerUser } from '@/lib/auth/server'
 import { formatCurrency } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { OrderStatCards } from '@/components/buyer/order-stat-cards'
@@ -9,9 +10,9 @@ import type { OrderWithDetails } from '@/types'
 import { IconFilter } from '@tabler/icons-react'
 
 export default async function BuyerOrdersPage() {
-  const [supabase, t, locale] = await Promise.all([createClient(), getTranslations('buyer'), getLocale()])
-  const { data: { user } } = await supabase.auth.getUser()
-  const companyId = user?.user_metadata?.company_id as string
+  const [user, t, locale] = await Promise.all([getServerUser(), getTranslations('buyer'), getLocale()])
+  const supabase = createServiceClient()
+  const companyId = user?.companyId ?? ''
 
   const { data } = await supabase
     .from('orders')

@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
+import { getCurrentUserFromCookie } from '@/lib/auth/client'
 import { formatCurrency, getInitials } from '@/lib/utils'
 import type { Product } from '@/types'
 import { TableControls } from '@/components/seller/table-controls'
@@ -29,10 +30,10 @@ export default function SellerQuotesPage() {
 
   useEffect(() => {
     async function load() {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      const companyId = user?.user_metadata?.company_id
+      const authUser = getCurrentUserFromCookie()
+      const companyId = authUser?.companyId
       if (!companyId) return
+      const supabase = createClient()
 
       const { data: sellerProducts } = await supabase
         .from('products')

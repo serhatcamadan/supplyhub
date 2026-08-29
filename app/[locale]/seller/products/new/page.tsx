@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useLocale, useTranslations } from 'next-intl'
-import { createClient } from '@/lib/supabase/client'
+import { getCurrentUserFromCookie } from '@/lib/auth/client'
+import { createProduct } from '@/lib/api/products'
 import type { PriceTier } from '@/types'
 import { Button } from '@/components/ui/button'
 import { ProductBasicInfo } from '@/components/seller/product-basic-info'
@@ -57,24 +58,25 @@ export default function NewProductPage() {
       return
     }
     setIsSubmitting(true)
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    const companyId = user?.user_metadata?.company_id
+    const authUser = getCurrentUserFromCookie()
+    const companyId = authUser?.companyId
     if (!companyId) { setError(t('products.form.errorNoSession')); setIsSubmitting(false); return }
 
-    const { error: dbError } = await supabase.from('products').insert({
-      seller_id:     companyId,
-      name:          name.trim(),
-      description:   description.trim(),
-      category,
-      min_order_qty: parseInt(minOrderQty, 10),
-      price_tiers:   tiers,
-      status:        'active',
-      image_url:     null,
-    })
-
-    if (dbError) { setError(dbError.message); setIsSubmitting(false); return }
-    router.push(`/${locale}/seller/products`)
+    try {
+      await createProduct(companyId, {
+        name:          name.trim(),
+        description:   description.trim(),
+        category,
+        min_order_qty: parseInt(minOrderQty, 10),
+        price_tiers:   tiers,
+        status:        'active',
+        image_url:     null,
+      })
+      router.push(`/${locale}/seller/products`)
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t('products.form.errorRequired'))
+      setIsSubmitting(false)
+    }
   }
 
   return (

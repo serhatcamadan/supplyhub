@@ -3,7 +3,8 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useLocale, useTranslations } from 'next-intl'
-import { createClient } from '@/lib/supabase/client'
+import { getCurrentUserFromCookie } from '@/lib/auth/client'
+import { getSellerProducts } from '@/lib/api/products'
 import type { Product } from '@/types'
 import { buttonVariants } from '@/components/ui/button'
 import { ProductControls } from '@/components/seller/product-controls'
@@ -17,15 +18,11 @@ export default function SellerProductsPage() {
   const locale = useLocale()
 
   useEffect(() => {
-    async function load() {
-      const supabase = createClient()
-      const { data: { user } } = await supabase.auth.getUser()
-      const companyId = user?.user_metadata?.company_id
-      if (!companyId) return
-      const { data } = await supabase.from('products').select('*').eq('seller_id', companyId)
-      setProducts((data as Product[]) ?? [])
-    }
-    load()
+    const user = getCurrentUserFromCookie()
+    if (!user?.companyId) return
+    getSellerProducts(user.companyId)
+      .then((data) => setProducts(data as unknown as Product[]))
+      .catch(() => {})
   }, [])
 
   const filtered = search

@@ -1,5 +1,6 @@
 import { getTranslations } from 'next-intl/server'
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { getServerUser } from '@/lib/auth/server'
 import { ApprovalCard } from '@/components/buyer/approval-card'
 import { ApprovalStatCards } from '@/components/buyer/approval-stat-cards'
 import { Button } from '@/components/ui/button'
@@ -7,9 +8,9 @@ import type { OrderWithDetails } from '@/types'
 import { IconCircleCheck, IconFilter } from '@tabler/icons-react'
 
 export default async function BuyerApprovalsPage() {
-  const [supabase, t] = await Promise.all([createClient(), getTranslations('buyer')])
-  const { data: { user } } = await supabase.auth.getUser()
-  const companyId = user?.user_metadata?.company_id as string
+  const [user, t] = await Promise.all([getServerUser(), getTranslations('buyer')])
+  const supabase = createServiceClient()
+  const companyId = user?.companyId ?? ''
 
   const { data } = await supabase
     .from('orders')
