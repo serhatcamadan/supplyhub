@@ -14,10 +14,18 @@ export default defineConfig({
   projects: [
     { name: 'chromium', use: { ...devices['Desktop Chrome'] } },
   ],
-  webServer: {
-    command: 'npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: true,
-    timeout: 120_000,
-  },
+  webServer: [
+    {
+      command: 'npm run dev',
+      url: 'http://localhost:3000',
+      reuseExistingServer: true,
+      timeout: 120_000,
+    },
+    {
+      command: 'node e2e/mock-api-server.mjs',
+      url: 'http://localhost:3001/health',
+      reuseExistingServer: true,
+      timeout: 10_000,
+    },
+  ],
 })

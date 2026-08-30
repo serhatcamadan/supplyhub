@@ -39,6 +39,7 @@ jobs:
       NEXT_PUBLIC_SUPABASE_URL:      ${{ secrets.TEST_SUPABASE_URL }}
       NEXT_PUBLIC_SUPABASE_ANON_KEY: ${{ secrets.TEST_SUPABASE_ANON_KEY }}
       SUPABASE_SERVICE_ROLE_KEY:     ${{ secrets.TEST_SUPABASE_SERVICE_ROLE_KEY }}
+      JWT_ACCESS_SECRET:             ${{ secrets.JWT_ACCESS_SECRET }}
       SELLER_EMAIL:       ali@freshfarm.com
       BUYER_ADMIN_EMAIL:  ayse@gunespazar.com
       BUYER_STAFF_EMAIL:  fatma@gunespazar.com
