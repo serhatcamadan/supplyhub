@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
-import { createClient } from '@/lib/supabase/client'
+import { logout } from '@/lib/api/auth'
 import { Button } from '@/components/ui/button'
 import {
   IconLogout, IconUserEdit, IconLock, IconMail, IconBell, IconLanguage,
@@ -45,8 +45,7 @@ export function ProfileButton({ userName, userRole }: ProfileButtonProps) {
   ]
 
   async function handleSignOut() {
-    const supabase = createClient()
-    await supabase.auth.signOut()
+    await logout()
     router.push(`/${locale}/login`)
     router.refresh()
   }

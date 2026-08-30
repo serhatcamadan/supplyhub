@@ -4,7 +4,7 @@ import { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
-import { createClient } from '@/lib/supabase/client'
+import { login } from '@/lib/api/auth'
 import { Button } from '@/components/ui/button'
 import { IconCircleCheck, IconDatabase } from '@tabler/icons-react'
 
@@ -48,43 +48,30 @@ export default function LoginPage() {
     }
   }
 
-  async function handleDemoLogin(email: string) {
+  async function doLogin(email: string, password: string) {
     setLoading(true)
     setError(null)
-    const supabase = createClient()
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password: DEMO_PASSWORD })
-
-    if (error || !data.user) {
-      setError(error?.message ?? t('login.errorFailed'))
+    try {
+      const { user } = await login(email, password)
+      const dest = user.companyType === 'seller'
+        ? `/${locale}/seller/dashboard`
+        : `/${locale}/buyer/discover`
+      router.push(dest)
+      router.refresh()
+    } catch (err) {
+      setError(err instanceof Error ? err.message : t('login.errorGeneric'))
       setLoading(false)
-      return
     }
+  }
 
-    const companyType = data.user.user_metadata?.company_type as string | undefined
-    router.push(companyType === 'seller' ? `/${locale}/seller/dashboard` : `/${locale}/buyer/discover`)
-    router.refresh()
+  async function handleDemoLogin(email: string) {
+    await doLogin(email, DEMO_PASSWORD)
   }
 
   async function handleFormSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
-    setError(null)
-    setLoading(true)
     const form = new FormData(e.currentTarget)
-    const email = form.get('email') as string
-    const password = form.get('password') as string
-
-    const supabase = createClient()
-    const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-
-    if (error || !data.user) {
-      setError(error?.message ?? t('login.errorGeneric'))
-      setLoading(false)
-      return
-    }
-
-    const companyType = data.user.user_metadata?.company_type as string | undefined
-    router.push(companyType === 'seller' ? `/${locale}/seller/dashboard` : `/${locale}/buyer/discover`)
-    router.refresh()
+    await doLogin(form.get('email') as string, form.get('password') as string)
   }
 
   return (

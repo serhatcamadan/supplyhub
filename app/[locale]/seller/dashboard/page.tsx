@@ -1,5 +1,6 @@
 import { getTranslations, getLocale } from 'next-intl/server'
-import { createClient } from '@/lib/supabase/server'
+import { createServiceClient } from '@/lib/supabase/server'
+import { getServerUser } from '@/lib/auth/server'
 import { Button } from '@/components/ui/button'
 import { RevenueChart } from '@/components/seller/revenue-chart'
 import { StatCards } from '@/components/seller/stat-cards'
@@ -25,13 +26,13 @@ function buildMonthlyRevenue(
 }
 
 export default async function SellerDashboardPage() {
-  const [supabase, t, locale] = await Promise.all([
-    createClient(),
+  const [user, supabase, t, locale] = await Promise.all([
+    getServerUser(),
+    Promise.resolve(createServiceClient()),
     getTranslations('seller'),
     getLocale(),
   ])
-  const { data: { user } } = await supabase.auth.getUser()
-  const companyId = user?.user_metadata?.company_id as string
+  const companyId = user?.companyId ?? ''
 
   const [productsRes, ordersRes] = await Promise.all([
     supabase.from('products').select('*').eq('seller_id', companyId),
@@ -46,10 +47,12 @@ export default async function SellerDashboardPage() {
     productIds.length > 0
       ? supabase.from('quote_requests').select('*').in('product_id', productIds)
       : Promise.resolve({ data: [] }),
-    supabase
-      .from('companies')
-      .select('id, name')
-      .in('id', [...new Set(allOrders.map((o) => o.buyer_id))]),
+    allOrders.length > 0
+      ? supabase
+          .from('companies')
+          .select('id, name')
+          .in('id', [...new Set(allOrders.map((o) => o.buyer_id))])
+      : Promise.resolve({ data: [] as { id: string; name: string }[] }),
   ])
 
   const allQuotes = quotesRes.data ?? []

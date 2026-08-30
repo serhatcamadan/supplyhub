@@ -1,19 +1,18 @@
 import { Sidebar } from '@/components/shared/sidebar'
 import { Topbar } from '@/components/shared/topbar'
-import { createClient } from '@/lib/supabase/server'
+import { getServerUser } from '@/lib/auth/server'
 import { getLocale } from 'next-intl/server'
 import { redirect } from 'next/navigation'
 
 export default async function SellerLayout({ children }: { children: React.ReactNode }) {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
+  const user = await getServerUser()
 
   if (!user) {
     const locale = await getLocale()
     redirect(`/${locale}/login`)
   }
 
-  const name = user.user_metadata?.name ?? user.email ?? 'Seller'
+  const name = user.name ?? user.email ?? 'Seller'
   const role = 'Wholesale Seller'
 
   return (

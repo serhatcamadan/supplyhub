@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { formatCurrency, formatDate, cn } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
+import { getCurrentUserFromCookie } from '@/lib/auth/client'
 import type { OrderWithDetails } from '@/types'
 import { Avatar } from '@/components/ui/avatar'
 import { TablePagination } from '@/components/ui/table-pagination'
@@ -55,21 +56,19 @@ export function OrderHistoryTable({ orders }: { orders: OrderWithDetails[] }) {
 
   async function handleReorder(order: OrderWithDetails) {
     setReorderingId(order.id)
+    const authUser = getCurrentUserFromCookie()
+    if (!authUser) { setReorderingId(null); return }
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { setReorderingId(null); return }
-
-    const companyId = user.user_metadata?.company_id as string
 
     const { data: newOrder, error } = await supabase
       .from('orders')
       .insert({
-        buyer_id: companyId,
+        buyer_id: authUser.companyId,
         seller_id: order.seller.id,
         status: 'pending',
         total: order.total,
         needs_approval: false,
-        created_by: user.id,
+        created_by: authUser.sub,
       })
       .select('id')
       .single()
