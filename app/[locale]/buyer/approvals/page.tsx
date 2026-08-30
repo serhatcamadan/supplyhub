@@ -1,6 +1,5 @@
 import { getTranslations } from 'next-intl/server'
-import { createServiceClient } from '@/lib/supabase/server'
-import { getServerUser } from '@/lib/auth/server'
+import { serverApiFetch } from '@/lib/api/server-client'
 import { ApprovalCard } from '@/components/buyer/approval-card'
 import { ApprovalStatCards } from '@/components/buyer/approval-stat-cards'
 import { Button } from '@/components/ui/button'
@@ -8,27 +7,16 @@ import type { OrderWithDetails } from '@/types'
 import { IconCircleCheck, IconFilter } from '@tabler/icons-react'
 
 export default async function BuyerApprovalsPage() {
-  const [user, t] = await Promise.all([getServerUser(), getTranslations('buyer')])
-  const supabase = createServiceClient()
-  const companyId = user?.companyId ?? ''
+  const t = await getTranslations('buyer')
 
-  const { data } = await supabase
-    .from('orders')
-    .select(`
-      *,
-      buyer:companies!orders_buyer_id_fkey(*),
-      seller:companies!orders_seller_id_fkey(*),
-      created_by_user:users!orders_created_by_fkey(*),
-      approved_by_user:users!orders_approved_by_fkey(*),
-      items:order_items(*, product:products(*))
-    `)
-    .eq('buyer_id', companyId)
-    .eq('needs_approval', true)
-    .is('approved_by', null)
-    .order('created_at', { ascending: false })
+  let allOrders: OrderWithDetails[] = []
+  try {
+    allOrders = await serverApiFetch<OrderWithDetails[]>('/orders')
+  } catch {
+    allOrders = []
+  }
 
-  const pendingApprovals = (data as unknown as OrderWithDetails[]) ?? []
-
+  const pendingApprovals = allOrders.filter((o) => o.needs_approval && !o.approved_by)
   const totalValue = pendingApprovals.reduce((sum, o) => sum + o.total, 0)
   const totalItems = pendingApprovals.reduce((sum, o) => sum + o.items.length, 0)
 

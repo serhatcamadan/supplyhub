@@ -14,14 +14,13 @@ export function getProduct(id: string): Promise<ApiProduct> {
   return apiFetch<ApiProduct>(`/products/${id}`)
 }
 
-export function getSellerProducts(sellerId: string): Promise<ApiProduct[]> {
-  return apiFetch<ApiProduct[]>(`/seller/products?sellerId=${sellerId}`)
+export function getSellerProducts(): Promise<ApiProduct[]> {
+  return apiFetch<ApiProduct[]>('/seller/products')
 }
 
-export function createProduct(sellerId: string, payload: Omit<Product, 'id' | 'seller_id'>): Promise<ApiProduct> {
-  return apiFetch<ApiProduct>(`/seller/products?sellerId=${sellerId}`, {
+export function createProduct(payload: Omit<Product, 'id' | 'seller_id'>): Promise<ApiProduct> {
+  return apiFetch<ApiProduct>('/seller/products', {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(payload),
   })
 }

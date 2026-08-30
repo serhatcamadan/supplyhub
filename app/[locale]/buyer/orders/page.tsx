@@ -1,6 +1,5 @@
 import { getTranslations, getLocale } from 'next-intl/server'
-import { createServiceClient } from '@/lib/supabase/server'
-import { getServerUser } from '@/lib/auth/server'
+import { serverApiFetch } from '@/lib/api/server-client'
 import { formatCurrency } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { OrderStatCards } from '@/components/buyer/order-stat-cards'
@@ -10,24 +9,14 @@ import type { OrderWithDetails } from '@/types'
 import { IconFilter } from '@tabler/icons-react'
 
 export default async function BuyerOrdersPage() {
-  const [user, t, locale] = await Promise.all([getServerUser(), getTranslations('buyer'), getLocale()])
-  const supabase = createServiceClient()
-  const companyId = user?.companyId ?? ''
+  const [t, locale] = await Promise.all([getTranslations('buyer'), getLocale()])
 
-  const { data } = await supabase
-    .from('orders')
-    .select(`
-      *,
-      buyer:companies!orders_buyer_id_fkey(*),
-      seller:companies!orders_seller_id_fkey(*),
-      created_by_user:users!orders_created_by_fkey(*),
-      approved_by_user:users!orders_approved_by_fkey(*),
-      items:order_items(*, product:products(*))
-    `)
-    .eq('buyer_id', companyId)
-    .order('created_at', { ascending: false })
-
-  const orders = (data as unknown as OrderWithDetails[]) ?? []
+  let orders: OrderWithDetails[] = []
+  try {
+    orders = await serverApiFetch<OrderWithDetails[]>('/orders')
+  } catch {
+    orders = []
+  }
 
   const totalSpend = orders.reduce((sum, o) => sum + o.total, 0)
   const inTransit  = orders.filter((o) => o.status === 'shipped').length

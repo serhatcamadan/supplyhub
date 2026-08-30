@@ -97,6 +97,18 @@ function readBody(req) {
   })
 }
 
+// Decode JWT payload without verification (mock server only)
+function parseJwtPayload(authHeader) {
+  const token = (authHeader ?? '').replace(/^Bearer\s+/, '')
+  if (!token) return null
+  try {
+    const payloadB64 = token.split('.')[1]
+    return JSON.parse(Buffer.from(payloadB64, 'base64url').toString('utf-8'))
+  } catch {
+    return null
+  }
+}
+
 // Seed-matching mock products returned by /seller/products
 const MOCK_SELLER_PRODUCTS = [
   {
@@ -241,6 +253,79 @@ const server = http.createServer(async (req, res) => {
       }))
       res.writeHead(200)
       res.end(JSON.stringify(result))
+      return
+    }
+
+    // ── GET /orders ───────────────────────────────────────────────────────────
+    if (req.method === 'GET' && path === '/orders') {
+      const payload = parseJwtPayload(req.headers['authorization'])
+      if (!payload) {
+        res.writeHead(401)
+        res.end(JSON.stringify({ statusCode: 401, message: 'Unauthorized' }))
+        return
+      }
+      const { companyId, companyType } = payload
+      let orders = null
+      if (SUPABASE_URL && SUPABASE_KEY) {
+        const filterKey = companyType === 'buyer' ? 'buyer_id' : 'seller_id'
+        orders = await sbFetch('orders', {
+          select: '*,buyer:companies!orders_buyer_id_fkey(id,name,type),seller:companies!orders_seller_id_fkey(id,name,type),created_by_user:users!orders_created_by_fkey(id,name,role),approved_by_user:users!orders_approved_by_fkey(id,name),items:order_items(id,order_id,product_id,quantity,unit_price,product:products(id,name,image_url))',
+          [filterKey]: `eq.${companyId}`,
+          order: 'created_at.desc',
+        })
+      }
+      res.writeHead(200)
+      res.end(JSON.stringify(orders ?? []))
+      return
+    }
+
+    // ── GET /quote-requests ───────────────────────────────────────────────────
+    if (req.method === 'GET' && path === '/quote-requests') {
+      const payload = parseJwtPayload(req.headers['authorization'])
+      if (!payload) {
+        res.writeHead(401)
+        res.end(JSON.stringify({ statusCode: 401, message: 'Unauthorized' }))
+        return
+      }
+      const { companyId, companyType } = payload
+      let quotes = null
+      if (SUPABASE_URL && SUPABASE_KEY) {
+        if (companyType === 'buyer') {
+          quotes = await sbFetch('quote_requests', {
+            select: '*,buyer:companies(id,name,type),product:products(id,name,category,min_order_qty,price_tiers,status,image_url,seller_id,companies(id,name,type))',
+            buyer_id: `eq.${companyId}`,
+            order: 'created_at.desc',
+          })
+        } else {
+          // Seller: get products first, then match quote requests
+          const sellerProducts = await sbFetch('products', {
+            seller_id: `eq.${companyId}`,
+            select: 'id,name,category,min_order_qty,price_tiers,status,image_url,seller_id',
+          })
+          if (sellerProducts?.length) {
+            const productIds = sellerProducts.map((p) => p.id)
+            const rawQuotes = await sbFetch('quote_requests', {
+              product_id: `in.(${productIds.join(',')})`,
+              select: '*,buyer:companies(id,name,type)',
+              order: 'created_at.desc',
+            })
+            const sellerCompanies = await sbFetch('companies', {
+              id: `eq.${companyId}`,
+              select: 'id,name,type',
+            })
+            const sellerCompany = sellerCompanies?.[0] ?? { id: companyId, name: 'FreshFarm Gıda', type: 'seller' }
+            const productMap = Object.fromEntries(sellerProducts.map((p) => [p.id, p]))
+            quotes = (rawQuotes ?? []).map((q) => ({
+              ...q,
+              product: { ...productMap[q.product_id], companies: sellerCompany },
+            }))
+          } else {
+            quotes = []
+          }
+        }
+      }
+      res.writeHead(200)
+      res.end(JSON.stringify(quotes ?? []))
       return
     }
 

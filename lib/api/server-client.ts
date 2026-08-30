@@ -1,3 +1,5 @@
+import { cookies } from 'next/headers'
+
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? 'http://localhost:3001'
 
 export class ApiError extends Error {
@@ -10,24 +12,15 @@ export class ApiError extends Error {
   }
 }
 
-function getAccessToken(): string | null {
-  if (typeof document === 'undefined') return null
-  const match = document.cookie.match(/(?:^|;\s*)access_token=([^;]*)/)
-  return match?.[1] ?? null
-}
+export async function serverApiFetch<T>(path: string, options?: RequestInit): Promise<T> {
+  const cookieStore = await cookies()
+  const token = cookieStore.get('access_token')?.value
 
-export async function apiFetch<T>(path: string, options?: RequestInit): Promise<T> {
-  const token = getAccessToken()
   const headers: Record<string, string> = { 'Content-Type': 'application/json' }
   if (token) headers['Authorization'] = `Bearer ${token}`
-  if (options?.headers) {
-    Object.assign(headers, options.headers)
-  }
+  if (options?.headers) Object.assign(headers, options.headers)
 
-  const res = await fetch(`${API_URL}${path}`, {
-    headers,
-    ...options,
-  })
+  const res = await fetch(`${API_URL}${path}`, { headers, ...options })
 
   if (!res.ok) {
     const body = await res.text().catch(() => res.statusText)
