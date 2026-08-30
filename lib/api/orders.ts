@@ -19,3 +19,15 @@ export function approveOrder(id: string): Promise<OrderWithDetails> {
 export function rejectOrder(id: string): Promise<void> {
   return apiFetch<void>(`/orders/${id}/reject`, { method: 'POST' })
 }
+
+export interface CreateOrderPayload {
+  sellerId: string
+  items: { productId: string; quantity: number }[]
+}
+
+export function createOrder(payload: CreateOrderPayload): Promise<OrderWithDetails> {
+  return apiFetch<OrderWithDetails>('/orders', {
+    method: 'POST',
+    body: JSON.stringify(payload),
+  })
+}

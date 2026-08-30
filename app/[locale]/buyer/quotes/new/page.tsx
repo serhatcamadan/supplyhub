@@ -4,8 +4,8 @@ import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
-import { createClient } from '@/lib/supabase/client'
-import { getCurrentUserFromCookie } from '@/lib/auth/client'
+import { getProducts } from '@/lib/api/products'
+import { createQuoteRequest } from '@/lib/api/quotes'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import type { Product } from '@/types'
@@ -50,7 +50,6 @@ export default function BuyerQuoteNewPage() {
   const locale = useLocale()
 
   const [products, setProducts]       = useState<Product[]>([])
-  const [companyId, setCompanyId]     = useState<string | null>(null)
   const [productId, setProductId]     = useState('')
   const [deadline, setDeadline]       = useState('')
   const [qty, setQty]                 = useState('')
@@ -64,35 +63,29 @@ export default function BuyerQuoteNewPage() {
   const selectedProduct = products.find((p) => p.id === productId) ?? null
 
   useEffect(() => {
-    async function load() {
-      const authUser = getCurrentUserFromCookie()
-      setCompanyId(authUser?.companyId ?? null)
-      const supabase = createClient()
-      const { data: prods } = await supabase.from('products').select('*').eq('status', 'active').order('name')
-      if (prods?.length) {
-        setProducts(prods as Product[])
-        setProductId(prods[0].id)
-      }
-    }
-    load()
+    getProducts()
+      .then((prods) => {
+        if (prods.length) {
+          setProducts(prods as Product[])
+          setProductId(prods[0].id)
+        }
+      })
+      .catch(() => {})
   }, [])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!productId || !companyId) return
+    if (!productId) return
     setIsSubmitting(true)
     setSubmitError(null)
-    const supabase = createClient()
     const quantity = parseInt(qty, 10) || selectedProduct?.min_order_qty || 1
-    const { error } = await supabase.from('quote_requests').insert({
-      buyer_id: companyId,
-      product_id: productId,
-      quantity,
-      buyer_note: description.trim() || null,
-      status: 'pending',
-    })
-    if (error) { setSubmitError(error.message); setIsSubmitting(false); return }
-    router.push(`/${locale}/buyer/quotes`)
+    try {
+      await createQuoteRequest({ productId, quantity, buyer_note: description.trim() || undefined })
+      router.push(`/${locale}/buyer/quotes`)
+    } catch (err) {
+      setSubmitError(err instanceof Error ? err.message : 'Bir hata oluştu')
+      setIsSubmitting(false)
+    }
   }
 
   const charCount = description.length

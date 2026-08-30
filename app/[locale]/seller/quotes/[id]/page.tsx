@@ -1,13 +1,13 @@
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getTranslations, getLocale } from 'next-intl/server'
-import { createClient } from '@/lib/supabase/server'
+import { serverApiFetch } from '@/lib/api/server-client'
 import { getInitials } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { QuoteDetailPanel } from '@/components/seller/quote-detail-panel'
 import { QuoteResponseForm } from '@/components/seller/quote-response-form'
 import { PrintButton } from '@/components/seller/print-button'
-import type { Product, Company } from '@/types'
+import type { ApiQuoteRequest } from '@/lib/api/quotes'
 import { IconArrowLeft, IconBan } from '@tabler/icons-react'
 
 function formatReceived(iso: string, locale: string) {
@@ -26,44 +26,26 @@ export default async function QuoteDetailPage({
   params: Promise<{ id: string }>
 }) {
   const { id } = await params
-  const [supabase, t, locale] = await Promise.all([
-    createClient(),
-    getTranslations('seller'),
-    getLocale(),
-  ])
+  const [t, locale] = await Promise.all([getTranslations('seller'), getLocale()])
 
-  const { data: quote } = await supabase
-    .from('quote_requests')
-    .select('*')
-    .eq('id', id)
-    .single()
-
+  const quote = await serverApiFetch<ApiQuoteRequest>(`/quote-requests/${id}`).catch(() => null)
   if (!quote) notFound()
 
-  async function decline() {
-    'use server'
-    const loc = await getLocale()
-    const sb = await createClient()
-    await sb.from('quote_requests').update({ status: 'declined' }).eq('id', id)
-    redirect(`/${loc}/seller/quotes`)
-  }
-
-  const [{ data: productData }, { data: buyerData }] = await Promise.all([
-    supabase.from('products').select('*').eq('id', quote.product_id).single(),
-    supabase.from('companies').select('*').eq('id', quote.buyer_id).single(),
-  ])
-
-  const product = productData as Product | null
-  const buyer = buyerData as Company | null
-
   const listPrice =
-    product?.price_tiers.find(
+    quote.product.price_tiers.find(
       (tier) =>
         quote.quantity >= tier.min_qty &&
         (tier.max_qty === null || quote.quantity <= tier.max_qty)
     )?.price ??
-    product?.price_tiers[0]?.price ??
+    quote.product.price_tiers[0]?.price ??
     null
+
+  async function decline() {
+    'use server'
+    const loc = await getLocale()
+    await serverApiFetch(`/quote-requests/${id}/seller-decline`, { method: 'PATCH' })
+    redirect(`/${loc}/seller/quotes`)
+  }
 
   return (
     <div className="h-[calc(100vh-4rem)] p-8 flex flex-col gap-6">
@@ -102,15 +84,15 @@ export default async function QuoteDetailPage({
 
       <div className="flex flex-1 gap-6 min-h-0">
         <QuoteDetailPanel
-          buyerName={buyer?.name ?? t('quotes.detail.unknownBuyer')}
-          buyerInitials={buyer ? getInitials(buyer.name) : '??'}
+          buyerName={quote.buyer.name}
+          buyerInitials={getInitials(quote.buyer.name)}
           buyerMessage={quote.buyer_note}
-          productName={product?.name ?? t('quotes.detail.unknownProduct')}
+          productName={quote.product.name}
           productId={quote.product_id}
-          productCategory={product?.category ?? '—'}
+          productCategory={quote.product.category}
           quantity={quote.quantity}
           listPrice={listPrice}
-          minOrderQty={product?.min_order_qty ?? 1}
+          minOrderQty={quote.product.min_order_qty}
         />
 
         <QuoteResponseForm

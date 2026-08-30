@@ -4,8 +4,7 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { formatCurrency, formatDate, cn } from '@/lib/utils'
-import { createClient } from '@/lib/supabase/client'
-import { getCurrentUserFromCookie } from '@/lib/auth/client'
+import { createOrder } from '@/lib/api/orders'
 import type { OrderWithDetails } from '@/types'
 import { Avatar } from '@/components/ui/avatar'
 import { TablePagination } from '@/components/ui/table-pagination'
@@ -56,36 +55,20 @@ export function OrderHistoryTable({ orders }: { orders: OrderWithDetails[] }) {
 
   async function handleReorder(order: OrderWithDetails) {
     setReorderingId(order.id)
-    const authUser = getCurrentUserFromCookie()
-    if (!authUser) { setReorderingId(null); return }
-    const supabase = createClient()
-
-    const { data: newOrder, error } = await supabase
-      .from('orders')
-      .insert({
-        buyer_id: authUser.companyId,
-        seller_id: order.seller.id,
-        status: 'pending',
-        total: order.total,
-        needs_approval: false,
-        created_by: authUser.sub,
-      })
-      .select('id')
-      .single()
-
-    if (!error && newOrder && order.items.length > 0) {
-      await supabase.from('order_items').insert(
-        order.items.map((item) => ({
-          order_id: newOrder.id,
-          product_id: item.product.id,
+    try {
+      await createOrder({
+        sellerId: order.seller.id,
+        items: order.items.map((item) => ({
+          productId: item.product.id,
           quantity: item.quantity,
-          unit_price: item.unit_price,
-        }))
-      )
+        })),
+      })
+      router.refresh()
+    } catch {
+      // noop
+    } finally {
+      setReorderingId(null)
     }
-
-    setReorderingId(null)
-    router.refresh()
   }
 
   return (

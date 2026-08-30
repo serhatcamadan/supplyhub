@@ -5,8 +5,8 @@ import { useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { createClient } from '@/lib/supabase/client'
-import { getCurrentUserFromCookie } from '@/lib/auth/client'
+import { getProducts } from '@/lib/api/products'
+import { createOrder } from '@/lib/api/orders'
 import { CartItemCard, type CartItem } from '@/components/buyer/cart-item'
 import { OrderSummary } from '@/components/buyer/order-summary'
 import { CartPromoBanner } from '@/components/buyer/cart-promo-banner'
@@ -15,7 +15,7 @@ import { IconBookmarkPlus, IconCompass, IconShoppingCart, IconTrashX } from '@ta
 const TAX_RATE = 0.20
 const SHIPPING_THRESHOLD = 10_000
 const SHIPPING_COST = 450
-const APPROVAL_THRESHOLD = 50_000
+// Approval threshold handled server-side by NestJS
 
 const INITIAL_ITEMS: CartItem[] = [
   {
@@ -57,21 +57,16 @@ export default function BuyerCartPage() {
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
 
   useEffect(() => {
-    async function enrich() {
-      const supabase = createClient()
-      const { data: products } = await supabase
-        .from('products')
-        .select('id, seller_id')
-        .eq('status', 'active')
-        .limit(2)
-      if (!products || products.length === 0) return
-      setItems((prev) =>
-        prev.map((item, i) =>
-          products[i] ? { ...item, productId: products[i].id, sellerId: products[i].seller_id } : item
+    getProducts()
+      .then((products) => {
+        if (!products.length) return
+        setItems((prev) =>
+          prev.map((item, i) =>
+            products[i] ? { ...item, productId: products[i].id, sellerId: products[i].seller_id } : item
+          )
         )
-      )
-    }
-    enrich()
+      })
+      .catch(() => {})
   }, [])
 
   function handleQtyChange(id: string, qty: number) {
@@ -90,59 +85,26 @@ export default function BuyerCartPage() {
     setIsCheckingOut(true)
     setCheckoutError(null)
 
-    const authUser = getCurrentUserFromCookie()
-    if (!authUser) { setIsCheckingOut(false); return }
-
-    const companyId = authUser.companyId
-    const role = authUser.role
-    const sellerId = items.find((i) => i.sellerId)?.sellerId
-    const supabase = createClient()
-
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const sellerId = (items as any[]).find((i) => i.sellerId)?.sellerId
     if (!sellerId) {
       setCheckoutError(t('cart.checkoutError.noSeller'))
       setIsCheckingOut(false)
       return
     }
 
-    const taxable = subtotal - volumeDiscount
-    const shipping = subtotal >= SHIPPING_THRESHOLD ? 0 : SHIPPING_COST
-    const tax = Math.round(taxable * TAX_RATE)
-    const grandTotal = taxable + shipping + tax
-    const needsApproval = role === 'staff' && grandTotal > APPROVAL_THRESHOLD
-
-    const { data: order, error: orderErr } = await supabase
-      .from('orders')
-      .insert({
-        buyer_id: companyId,
-        seller_id: sellerId,
-        status: 'pending',
-        total: grandTotal,
-        needs_approval: needsApproval,
-        created_by: authUser.sub,
-      })
-      .select('id')
-      .single()
-
-    if (orderErr || !order) {
-      setCheckoutError(orderErr?.message ?? t('cart.checkoutError.orderFailed'))
-      setIsCheckingOut(false)
-      return
-    }
-
-    const orderItems = items
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const orderItems = (items as any[])
       .filter((i) => i.productId)
-      .map((i) => ({
-        order_id: order.id,
-        product_id: i.productId!,
-        quantity: i.qty,
-        unit_price: i.unitPrice,
-      }))
+      .map((i) => ({ productId: i.productId as string, quantity: i.qty }))
 
-    if (orderItems.length > 0) {
-      await supabase.from('order_items').insert(orderItems)
+    try {
+      await createOrder({ sellerId, items: orderItems })
+      router.push(`/${locale}/buyer/orders`)
+    } catch (err) {
+      setCheckoutError(err instanceof Error ? err.message : t('cart.checkoutError.orderFailed'))
+      setIsCheckingOut(false)
     }
-
-    router.push(`/${locale}/buyer/orders`)
   }
 
   const subtotal = items.reduce((sum, item) => sum + item.originalUnitPrice * item.qty, 0)

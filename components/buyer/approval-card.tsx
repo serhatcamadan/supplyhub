@@ -5,8 +5,7 @@ import { useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { Avatar } from '@/components/ui/avatar'
 import { formatCurrency, formatDate } from '@/lib/utils'
-import { createClient } from '@/lib/supabase/client'
-import { getCurrentUserFromCookie } from '@/lib/auth/client'
+import { approveOrder, rejectOrder } from '@/lib/api/orders'
 import type { OrderWithDetails } from '@/types'
 import { IconCircleCheck, IconCircleX, IconClipboardList, IconInfoCircle } from '@tabler/icons-react'
 
@@ -22,23 +21,21 @@ export function ApprovalCard({ order }: ApprovalCardProps) {
 
   async function handleApprove() {
     setIsLoading(true)
-    const authUser = getCurrentUserFromCookie()
-    const supabase = createClient()
-    await supabase
-      .from('orders')
-      .update({ approved_by: authUser?.sub ?? null, status: 'confirmed' })
-      .eq('id', order.id)
+    try {
+      await approveOrder(order.id)
+    } catch {
+      // noop
+    }
     router.refresh()
   }
 
   async function handleReject() {
     setIsLoading(true)
-    const supabase = createClient()
-    await supabase
-      .from('orders')
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      .update({ needs_approval: false } as any)
-      .eq('id', order.id)
+    try {
+      await rejectOrder(order.id)
+    } catch {
+      // noop
+    }
     router.refresh()
   }
 

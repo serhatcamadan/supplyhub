@@ -7,8 +7,12 @@ export interface ApiQuoteRequest extends QuoteRequest {
     id: string
     name: string
     category: string
+    min_order_qty: number
     price_tiers: { min_qty: number; max_qty: number | null; price: number }[]
-    companies: { id: string; name: string }
+    status: string
+    image_url: string | null
+    seller_id: string
+    companies: { id: string; name: string; type: string }
   }
 }
 

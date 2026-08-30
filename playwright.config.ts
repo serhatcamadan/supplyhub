@@ -22,7 +22,7 @@ export default defineConfig({
       timeout: 120_000,
     },
     {
-      command: 'node e2e/mock-api-server.mjs',
+      command: 'node --env-file=.env.local e2e/mock-api-server.mjs',
       url: 'http://localhost:3001/health',
       reuseExistingServer: true,
       timeout: 10_000,
