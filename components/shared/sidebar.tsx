@@ -4,7 +4,7 @@ import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { cn } from '@/lib/utils'
-import { createClient } from '@/lib/supabase/client'
+import { logout } from '@/lib/api/auth'
 import {
   IconLogout, IconLayoutGrid, IconPackage, IconFileInvoice, IconShoppingBag,
   IconChartBar, IconSearch, IconShoppingCart, IconHistory, IconMailForward,
@@ -41,8 +41,7 @@ export function Sidebar({ portal }: SidebarProps) {
   const navItems = portal === 'seller' ? SELLER_NAV : BUYER_NAV
 
   async function handleLogout() {
-    const supabase = createClient()
-    await supabase.auth.signOut()
+    await logout()
     router.push(`/${locale}/login`)
   }
 

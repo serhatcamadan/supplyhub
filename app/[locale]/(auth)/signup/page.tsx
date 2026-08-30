@@ -8,7 +8,6 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { z } from 'zod'
 import { useTranslations, useLocale } from 'next-intl'
 import { cn } from '@/lib/utils'
-import { createClient } from '@/lib/supabase/client'
 import { FormInput } from '@/components/ui/form-input'
 import { FormSelect } from '@/components/ui/form-select'
 import { FormError } from '@/components/ui/form-error'
@@ -114,7 +113,7 @@ export default function SignupPage() {
       }),
     })
 
-    const json = await res.json() as { error?: string; session?: { access_token: string; refresh_token: string }; companyType?: string }
+    const json = await res.json() as { error?: string; message?: string; user?: { companyType: string } }
 
     if (!res.ok || json.error) {
       setSubmitError(json.error ?? t('signup.step3.errorGeneric'))
@@ -122,13 +121,8 @@ export default function SignupPage() {
       return
     }
 
-    const supabase = createClient()
-    await supabase.auth.setSession({
-      access_token: json.session!.access_token,
-      refresh_token: json.session!.refresh_token,
-    })
-
-    router.push(json.companyType === 'seller' ? `/${locale}/seller/dashboard` : `/${locale}/buyer/discover`)
+    const companyType = json.user?.companyType ?? role
+    router.push(companyType === 'seller' ? `/${locale}/seller/dashboard` : `/${locale}/buyer/discover`)
     router.refresh()
   }
 

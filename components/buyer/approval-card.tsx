@@ -6,6 +6,7 @@ import { useTranslations, useLocale } from 'next-intl'
 import { Avatar } from '@/components/ui/avatar'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import { createClient } from '@/lib/supabase/client'
+import { getCurrentUserFromCookie } from '@/lib/auth/client'
 import type { OrderWithDetails } from '@/types'
 import { IconCircleCheck, IconCircleX, IconClipboardList, IconInfoCircle } from '@tabler/icons-react'
 
@@ -21,11 +22,11 @@ export function ApprovalCard({ order }: ApprovalCardProps) {
 
   async function handleApprove() {
     setIsLoading(true)
+    const authUser = getCurrentUserFromCookie()
     const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
     await supabase
       .from('orders')
-      .update({ approved_by: user!.id, status: 'confirmed' })
+      .update({ approved_by: authUser?.sub ?? null, status: 'confirmed' })
       .eq('id', order.id)
     router.refresh()
   }

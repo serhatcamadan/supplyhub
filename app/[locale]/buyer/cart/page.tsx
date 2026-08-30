@@ -6,6 +6,7 @@ import { useTranslations, useLocale } from 'next-intl'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { createClient } from '@/lib/supabase/client'
+import { getCurrentUserFromCookie } from '@/lib/auth/client'
 import { CartItemCard, type CartItem } from '@/components/buyer/cart-item'
 import { OrderSummary } from '@/components/buyer/order-summary'
 import { CartPromoBanner } from '@/components/buyer/cart-promo-banner'
@@ -89,13 +90,13 @@ export default function BuyerCartPage() {
     setIsCheckingOut(true)
     setCheckoutError(null)
 
-    const supabase = createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) { setIsCheckingOut(false); return }
+    const authUser = getCurrentUserFromCookie()
+    if (!authUser) { setIsCheckingOut(false); return }
 
-    const companyId = user.user_metadata?.company_id as string
-    const role = user.user_metadata?.role as string
+    const companyId = authUser.companyId
+    const role = authUser.role
     const sellerId = items.find((i) => i.sellerId)?.sellerId
+    const supabase = createClient()
 
     if (!sellerId) {
       setCheckoutError(t('cart.checkoutError.noSeller'))
@@ -117,7 +118,7 @@ export default function BuyerCartPage() {
         status: 'pending',
         total: grandTotal,
         needs_approval: needsApproval,
-        created_by: user.id,
+        created_by: authUser.sub,
       })
       .select('id')
       .single()

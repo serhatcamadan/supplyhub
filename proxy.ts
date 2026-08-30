@@ -1,44 +1,40 @@
 import createIntlMiddleware from 'next-intl/middleware'
-import { createServerClient } from '@supabase/ssr'
+import { jwtVerify } from 'jose'
 import { NextResponse, type NextRequest } from 'next/server'
 import { routing } from './i18n/routing'
 
 const handleI18nRouting = createIntlMiddleware(routing)
 
+const JWT_SECRET = new TextEncoder().encode(process.env.JWT_ACCESS_SECRET ?? '')
+
+interface JwtPayload {
+  sub: string
+  email: string
+  companyId: string
+  role: string
+  companyType: string
+}
+
+async function verifyToken(token: string): Promise<JwtPayload | null> {
+  try {
+    const { payload } = await jwtVerify(token, JWT_SECRET)
+    return payload as unknown as JwtPayload
+  } catch {
+    return null
+  }
+}
+
 export async function proxy(request: NextRequest) {
   const { pathname } = request.nextUrl
 
-  // Extract locale prefix from URL (/tr/... or /en/...)
   const localeMatch = pathname.match(/^\/(tr|en)(\/|$)/)
   const locale = localeMatch?.[1] ?? routing.defaultLocale
   const pathWithoutLocale = localeMatch
     ? pathname.slice(locale.length + 1) || '/'
     : pathname
 
-  // Supabase session refresh — must run on every request
-  let supabaseResponse = NextResponse.next({ request })
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll()
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          )
-          supabaseResponse = NextResponse.next({ request })
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          )
-        },
-      },
-    }
-  )
-
-  const { data: { user } } = await supabase.auth.getUser()
+  const accessToken = request.cookies.get('access_token')?.value
+  const user = accessToken ? await verifyToken(accessToken) : null
 
   const isAuthPage =
     pathWithoutLocale === '/login' ||
@@ -46,53 +42,36 @@ export async function proxy(request: NextRequest) {
     pathWithoutLocale.startsWith('/login/') ||
     pathWithoutLocale.startsWith('/signup/')
 
-  // Carry Supabase auth cookies into any redirect response
-  function redirectWithCookies(url: string) {
-    const res = NextResponse.redirect(new URL(url, request.url))
-    supabaseResponse.cookies.getAll().forEach((c) => res.cookies.set(c.name, c.value))
-    return res
+  function redirect(url: string) {
+    return NextResponse.redirect(new URL(url, request.url))
   }
 
-  // Unauthenticated → login
+  // Giriş yapılmamış → login
   if (!user && !isAuthPage) {
-    return redirectWithCookies(`/${locale}/login`)
+    return redirect(`/${locale}/login`)
   }
 
-  // Authenticated on auth page → portal home
+  // Giriş yapılmış → portal anasayfasına yönlendir
   if (user && isAuthPage) {
-    const companyType = user.user_metadata?.company_type as string | undefined
-    const dest = companyType === 'seller'
+    const dest = user.companyType === 'seller'
       ? `/${locale}/seller/dashboard`
       : `/${locale}/buyer/discover`
-    return redirectWithCookies(dest)
+    return redirect(dest)
   }
 
   if (user) {
-    const companyType = user.user_metadata?.company_type as string | undefined
-    const role = user.user_metadata?.role as string | undefined
-
-    if (pathWithoutLocale.startsWith('/seller') && companyType !== 'seller') {
-      return redirectWithCookies(`/${locale}/buyer/discover`)
+    if (pathWithoutLocale.startsWith('/seller') && user.companyType !== 'seller') {
+      return redirect(`/${locale}/buyer/discover`)
     }
-
-    if (pathWithoutLocale.startsWith('/buyer') && companyType !== 'buyer') {
-      return redirectWithCookies(`/${locale}/seller/dashboard`)
+    if (pathWithoutLocale.startsWith('/buyer') && user.companyType !== 'buyer') {
+      return redirect(`/${locale}/seller/dashboard`)
     }
-
-    if (pathWithoutLocale.startsWith('/buyer/approvals') && role !== 'admin') {
-      return redirectWithCookies(`/${locale}/buyer/orders`)
+    if (pathWithoutLocale.startsWith('/buyer/approvals') && user.role !== 'admin') {
+      return redirect(`/${locale}/buyer/orders`)
     }
   }
 
-  // Locale routing: adds prefix if missing, normalises
-  const i18nResponse = handleI18nRouting(request)
-
-  // Merge Supabase auth cookies into the locale response
-  supabaseResponse.cookies.getAll().forEach((c) =>
-    i18nResponse.cookies.set(c.name, c.value)
-  )
-
-  return i18nResponse
+  return handleI18nRouting(request)
 }
 
 export const config = {

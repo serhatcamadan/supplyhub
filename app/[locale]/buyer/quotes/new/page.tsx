@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { createClient } from '@/lib/supabase/client'
+import { getCurrentUserFromCookie } from '@/lib/auth/client'
 import { Button } from '@/components/ui/button'
 import { cn } from '@/lib/utils'
 import type { Product } from '@/types'
@@ -64,12 +65,10 @@ export default function BuyerQuoteNewPage() {
 
   useEffect(() => {
     async function load() {
+      const authUser = getCurrentUserFromCookie()
+      setCompanyId(authUser?.companyId ?? null)
       const supabase = createClient()
-      const [{ data: { user } }, { data: prods }] = await Promise.all([
-        supabase.auth.getUser(),
-        supabase.from('products').select('*').eq('status', 'active').order('name'),
-      ])
-      setCompanyId(user?.user_metadata?.company_id ?? null)
+      const { data: prods } = await supabase.from('products').select('*').eq('status', 'active').order('name')
       if (prods?.length) {
         setProducts(prods as Product[])
         setProductId(prods[0].id)
