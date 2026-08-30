@@ -2,8 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
-import { createClient } from '@/lib/supabase/client'
-import { getCurrentUserFromCookie } from '@/lib/auth/client'
+import { getOrders, updateOrderStatus } from '@/lib/api/orders'
 import { formatCurrency } from '@/lib/utils'
 import type { OrderStatus, OrderWithDetails } from '@/types'
 import { TableControls } from '@/components/seller/table-controls'
@@ -28,28 +27,9 @@ export default function SellerOrdersPage() {
   ]
 
   useEffect(() => {
-    async function load() {
-      const authUser = getCurrentUserFromCookie()
-      const companyId = authUser?.companyId
-      if (!companyId) return
-      const supabase = createClient()
-
-      const { data } = await supabase
-        .from('orders')
-        .select(`
-          *,
-          buyer:companies!orders_buyer_id_fkey(*),
-          seller:companies!orders_seller_id_fkey(*),
-          created_by_user:users!orders_created_by_fkey(*),
-          approved_by_user:users!orders_approved_by_fkey(*),
-          items:order_items(*, product:products(*))
-        `)
-        .eq('seller_id', companyId)
-        .order('created_at', { ascending: false })
-
-      setAllOrders((data as unknown as OrderWithDetails[]) ?? [])
-    }
-    load()
+    getOrders()
+      .then(setAllOrders)
+      .catch(() => {})
   }, [])
 
   const pendingCount = allOrders.filter((o) => o.status === 'pending').length
@@ -57,9 +37,12 @@ export default function SellerOrdersPage() {
   const totalRevenue = allOrders.reduce((sum, o) => sum + o.total, 0)
 
   async function handleStatusChange(orderId: string, newStatus: OrderStatus) {
-    const supabase = createClient()
-    await supabase.from('orders').update({ status: newStatus }).eq('id', orderId)
-    setAllOrders((prev) => prev.map((o) => (o.id === orderId ? { ...o, status: newStatus } : o)))
+    try {
+      const updated = await updateOrderStatus(orderId, newStatus)
+      setAllOrders((prev) => prev.map((o) => (o.id === orderId ? updated : o)))
+    } catch {
+      // noop
+    }
   }
 
   const byTab    = allOrders.filter((o) => tab === 'all' || o.status === tab)
