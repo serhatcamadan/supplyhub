@@ -2,10 +2,8 @@
 
 import { useState, useEffect } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
-import { createClient } from '@/lib/supabase/client'
-import { getCurrentUserFromCookie } from '@/lib/auth/client'
+import { getQuoteRequests } from '@/lib/api/quotes'
 import { formatCurrency, getInitials } from '@/lib/utils'
-import type { Product } from '@/types'
 import { TableControls } from '@/components/seller/table-controls'
 import { QuoteTable, type EnrichedQuote } from '@/components/seller/quote-table'
 import { IconClock, IconDownload, IconTrendingUp } from '@tabler/icons-react'
@@ -29,60 +27,30 @@ export default function SellerQuotesPage() {
   ]
 
   useEffect(() => {
-    async function load() {
-      const authUser = getCurrentUserFromCookie()
-      const companyId = authUser?.companyId
-      if (!companyId) return
-      const supabase = createClient()
-
-      const { data: sellerProducts } = await supabase
-        .from('products')
-        .select('*')
-        .eq('seller_id', companyId)
-
-      const productIds = (sellerProducts ?? []).map((p) => p.id)
-      if (productIds.length === 0) { setEnriched([]); return }
-
-      const productMap: Record<string, Product> = Object.fromEntries(
-        (sellerProducts ?? []).map((p) => [p.id, p as Product])
-      )
-
-      const { data: quotes } = await supabase
-        .from('quote_requests')
-        .select('*')
-        .in('product_id', productIds)
-
-      const buyerIds = [...new Set((quotes ?? []).map((q) => q.buyer_id))]
-      const { data: buyers } = await supabase
-        .from('companies')
-        .select('id, name')
-        .in('id', buyerIds)
-
-      const buyerMap: Record<string, string> = Object.fromEntries(
-        (buyers ?? []).map((c) => [c.id, c.name])
-      )
-
-      const result: EnrichedQuote[] = (quotes ?? []).map((q) => {
-        const product = productMap[q.product_id]
-        const buyerName = buyerMap[q.buyer_id] ?? q.buyer_id
-        const listPrice =
-          product?.price_tiers.find(
-            (tier) => q.quantity >= tier.min_qty && (tier.max_qty === null || q.quantity <= tier.max_qty)
-          )?.price ?? null
-        const ageMs = Date.now() - new Date(q.created_at).getTime()
-        return {
-          ...q,
-          buyerName,
-          buyerInitials: getInitials(buyerName),
-          productName: product?.name ?? q.product_id,
-          productCategory: product?.category ?? '—',
-          listPrice,
-          isExpiring: ageMs > SEVEN_DAYS_MS,
-        }
+    getQuoteRequests()
+      .then((quotes) => {
+        const result: EnrichedQuote[] = quotes.map((q) => {
+          const buyerName = q.buyer.name
+          const listPrice =
+            q.product.price_tiers.find(
+              (tier) =>
+                q.quantity >= tier.min_qty &&
+                (tier.max_qty === null || q.quantity <= tier.max_qty)
+            )?.price ?? null
+          const ageMs = Date.now() - new Date(q.created_at).getTime()
+          return {
+            ...q,
+            buyerName,
+            buyerInitials: getInitials(buyerName),
+            productName: q.product.name,
+            productCategory: q.product.category,
+            listPrice,
+            isExpiring: ageMs > SEVEN_DAYS_MS,
+          }
+        })
+        setEnriched(result)
       })
-      setEnriched(result)
-    }
-    load()
+      .catch(() => {})
   }, [])
 
   const pendingCount   = enriched.filter((q) => q.status === 'pending').length

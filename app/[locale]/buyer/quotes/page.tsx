@@ -1,25 +1,21 @@
 import Link from 'next/link'
 import { getTranslations, getLocale } from 'next-intl/server'
-import { createServiceClient } from '@/lib/supabase/server'
-import { getServerUser } from '@/lib/auth/server'
+import { serverApiFetch } from '@/lib/api/server-client'
 import { Button } from '@/components/ui/button'
 import { BuyerQuoteTable } from '@/components/buyer/buyer-quote-table'
 import type { BuyerEnrichedQuote } from '@/components/buyer/buyer-quote-table'
-import type { QuoteRequestWithDetails } from '@/types'
+import type { ApiQuoteRequest } from '@/lib/api/quotes'
 import { IconPlus } from '@tabler/icons-react'
 
 export default async function BuyerQuotesPage() {
-  const [user, t, locale] = await Promise.all([getServerUser(), getTranslations('buyer'), getLocale()])
-  const supabase = createServiceClient()
-  const companyId = user?.companyId ?? ''
+  const [t, locale] = await Promise.all([getTranslations('buyer'), getLocale()])
 
-  const { data } = await supabase
-    .from('quote_requests')
-    .select(`*, product:products(*), buyer:companies!quote_requests_buyer_id_fkey(*)`)
-    .eq('buyer_id', companyId)
-    .order('created_at', { ascending: false })
-
-  const rawQuotes = (data as unknown as QuoteRequestWithDetails[]) ?? []
+  let rawQuotes: ApiQuoteRequest[] = []
+  try {
+    rawQuotes = await serverApiFetch<ApiQuoteRequest[]>('/quote-requests')
+  } catch {
+    rawQuotes = []
+  }
 
   const quotes: BuyerEnrichedQuote[] = rawQuotes.map((q) => ({
     ...q,

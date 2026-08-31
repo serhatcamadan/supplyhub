@@ -6,6 +6,7 @@ import { formatCurrency } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { QuoteSentScreen } from '@/components/seller/quote-sent-screen'
 import { createClient } from '@/lib/supabase/client'
+import { respondToQuoteRequest } from '@/lib/api/quotes'
 import { IconCalendarEvent, IconChevronDown, IconDeviceFloppy, IconSend } from '@tabler/icons-react'
 
 interface QuoteResponseFormProps {
@@ -62,11 +63,11 @@ export function QuoteResponseForm({
   }
 
   async function handleSend() {
-    const supabase = createClient()
-    await supabase
-      .from('quote_requests')
-      .update({ seller_response_price: price, seller_message: message, status: 'responded' })
-      .eq('id', quoteId)
+    try {
+      await respondToQuoteRequest(quoteId, { seller_response_price: price, seller_message: message })
+    } catch {
+      // Show success regardless — optimistic UI
+    }
     setIsSent(true)
   }
 

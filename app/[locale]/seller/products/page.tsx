@@ -3,7 +3,6 @@
 import { useState, useEffect } from 'react'
 import Link from 'next/link'
 import { useLocale, useTranslations } from 'next-intl'
-import { getCurrentUserFromCookie } from '@/lib/auth/client'
 import { getSellerProducts } from '@/lib/api/products'
 import type { Product } from '@/types'
 import { buttonVariants } from '@/components/ui/button'
@@ -18,9 +17,7 @@ export default function SellerProductsPage() {
   const locale = useLocale()
 
   useEffect(() => {
-    const user = getCurrentUserFromCookie()
-    if (!user?.companyId) return
-    getSellerProducts(user.companyId)
+    getSellerProducts()
       .then((data) => setProducts(data as unknown as Product[]))
       .catch(() => {})
   }, [])

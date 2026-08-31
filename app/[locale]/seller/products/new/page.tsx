@@ -4,7 +4,6 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useLocale, useTranslations } from 'next-intl'
-import { getCurrentUserFromCookie } from '@/lib/auth/client'
 import { createProduct } from '@/lib/api/products'
 import type { PriceTier } from '@/types'
 import { Button } from '@/components/ui/button'
@@ -58,12 +57,8 @@ export default function NewProductPage() {
       return
     }
     setIsSubmitting(true)
-    const authUser = getCurrentUserFromCookie()
-    const companyId = authUser?.companyId
-    if (!companyId) { setError(t('products.form.errorNoSession')); setIsSubmitting(false); return }
-
     try {
-      await createProduct(companyId, {
+      await createProduct({
         name:          name.trim(),
         description:   description.trim(),
         category,
