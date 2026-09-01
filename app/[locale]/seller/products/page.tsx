@@ -8,11 +8,15 @@ import type { Product } from '@/types'
 import { buttonVariants } from '@/components/ui/button'
 import { ProductControls } from '@/components/seller/product-controls'
 import { ProductTable } from '@/components/seller/product-table'
+import { PageHeaderSkeleton } from '@/components/skeletons/page-header-skeleton'
+import { TableSkeleton } from '@/components/skeletons/table-skeleton'
+import { Skeleton } from '@/components/ui/skeleton'
 import { IconPlus } from '@tabler/icons-react'
 
 export default function SellerProductsPage() {
   const [search, setSearch] = useState('')
   const [products, setProducts] = useState<Product[]>([])
+  const [isLoading, setIsLoading] = useState(true)
   const t = useTranslations('seller')
   const locale = useLocale()
 
@@ -20,6 +24,7 @@ export default function SellerProductsPage() {
     getSellerProducts()
       .then((data) => setProducts(data as unknown as Product[]))
       .catch(() => {})
+      .finally(() => setIsLoading(false))
   }, [])
 
   const filtered = search
@@ -29,6 +34,22 @@ export default function SellerProductsPage() {
           p.category.toLowerCase().includes(search.toLowerCase())
       )
     : products
+
+  if (isLoading) {
+    return (
+      <div className="p-8 flex flex-col gap-6">
+        <PageHeaderSkeleton actionCount={1} />
+        <div className="flex items-center gap-4">
+          <Skeleton className="h-10 w-64 rounded-lg" />
+          <Skeleton className="h-10 w-32 rounded-lg" />
+          <Skeleton className="h-4 w-32 ml-auto" />
+        </div>
+        <div className="bg-surface-container-lowest rounded-xl shadow-md overflow-hidden">
+          <TableSkeleton rows={8} cols={6} />
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="p-8 flex flex-col gap-6">

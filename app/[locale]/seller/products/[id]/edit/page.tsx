@@ -10,7 +10,8 @@ import { ProductBasicInfo } from '@/components/seller/product-basic-info'
 import { ProductPricingTiers } from '@/components/seller/product-pricing-tiers'
 import { ProductMedia } from '@/components/seller/product-media'
 import { ProductLogistics } from '@/components/seller/product-logistics'
-import { IconChevronRight, IconDeviceFloppy, IconLoader2 } from '@tabler/icons-react'
+import { Skeleton } from '@/components/ui/skeleton'
+import { IconChevronRight, IconDeviceFloppy } from '@tabler/icons-react'
 
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
@@ -88,9 +89,35 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
 
   if (isLoading) {
     return (
-      <div className="flex items-center justify-center h-96 text-on-surface-variant">
-        <IconLoader2 className="animate-spin mr-2" />
-        Yükleniyor…
+      <div className="flex flex-col w-full min-h-full">
+        <div className="flex items-center justify-between px-8 py-8 border-b border-outline-variant/20 bg-surface">
+          <div className="space-y-2">
+            <Skeleton className="h-4 w-32" />
+            <Skeleton className="h-8 w-56" />
+          </div>
+          <div className="flex gap-3">
+            <Skeleton className="h-10 w-28 rounded-lg" />
+            <Skeleton className="h-10 w-36 rounded-lg" />
+          </div>
+        </div>
+        <div className="flex gap-8 px-8 py-8 max-w-5xl mx-auto w-full">
+          <div className="flex-1 space-y-6">
+            {Array.from({ length: 3 }).map((_, i) => (
+              <div key={i} className="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 shadow-sm p-6 space-y-4">
+                <Skeleton className="h-6 w-40" />
+                <Skeleton className="h-10 w-full rounded-lg" />
+                <Skeleton className="h-10 w-full rounded-lg" />
+                <Skeleton className="h-24 w-full rounded-lg" />
+              </div>
+            ))}
+          </div>
+          <div className="w-72 space-y-4">
+            <div className="bg-surface-container-lowest rounded-2xl border border-outline-variant/20 shadow-sm p-6 space-y-3">
+              <Skeleton className="h-6 w-32" />
+              <Skeleton className="h-32 w-full rounded-lg" />
+            </div>
+          </div>
+        </div>
       </div>
     )
   }

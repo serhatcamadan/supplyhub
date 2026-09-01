@@ -6,6 +6,7 @@ import { getProducts, type ApiProduct } from '@/lib/api/products'
 import { Button } from '@/components/ui/button'
 import { CategoryChips } from '@/components/buyer/category-chips'
 import { ProductCard, type ProductBadge } from '@/components/buyer/product-card'
+import { ProductGridSkeleton } from '@/components/skeletons/product-grid-skeleton'
 import { IconAdjustments, IconSearch, IconSearchOff } from '@tabler/icons-react'
 
 // DB category → badge translation key + colorScheme
@@ -32,9 +33,13 @@ export default function BuyerDiscoverPage() {
   const [category, setCategory] = useState(ALL)
   const [search, setSearch] = useState('')
   const [products, setProducts] = useState<ApiProduct[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
-    getProducts().then(setProducts).catch(console.error)
+    getProducts()
+      .then(setProducts)
+      .catch(console.error)
+      .finally(() => setIsLoading(false))
   }, [])
 
   const categories = [ALL, ...Array.from(new Set(products.map((p) => p.category)))]
@@ -77,7 +82,9 @@ export default function BuyerDiscoverPage() {
         <CategoryChips categories={categories} selected={category} onSelect={setCategory} />
       </div>
 
-      {filtered.length > 0 ? (
+      {isLoading ? (
+        <ProductGridSkeleton count={8} />
+      ) : filtered.length > 0 ? (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filtered.map((product) => {
             const badgeDef = BADGE_BY_CATEGORY[product.category]

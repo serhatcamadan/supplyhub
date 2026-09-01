@@ -7,6 +7,9 @@ import { formatCurrency } from '@/lib/utils'
 import type { OrderStatus, OrderWithDetails } from '@/types'
 import { TableControls } from '@/components/seller/table-controls'
 import { OrderTable } from '@/components/seller/order-table'
+import { PageHeaderSkeleton } from '@/components/skeletons/page-header-skeleton'
+import { StatCardsSkeleton } from '@/components/skeletons/stat-cards-skeleton'
+import { TableSkeleton } from '@/components/skeletons/table-skeleton'
 import { IconClock, IconDownload, IconFilter, IconTruck } from '@tabler/icons-react'
 
 type OrderTab = 'all' | 'pending' | 'confirmed' | 'shipped' | 'delivered'
@@ -17,6 +20,7 @@ export default function SellerOrdersPage() {
   const [tab, setTab]             = useState<OrderTab>('all')
   const [search, setSearch]       = useState('')
   const [allOrders, setAllOrders] = useState<OrderWithDetails[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const TABS = [
     { value: 'all',       label: t('orders.tabs.all') },
@@ -30,6 +34,7 @@ export default function SellerOrdersPage() {
     getOrders()
       .then(setAllOrders)
       .catch(() => {})
+      .finally(() => setIsLoading(false))
   }, [])
 
   const pendingCount = allOrders.filter((o) => o.status === 'pending').length
@@ -43,6 +48,18 @@ export default function SellerOrdersPage() {
     } catch {
       // noop
     }
+  }
+
+  if (isLoading) {
+    return (
+      <div className="p-8 flex flex-col gap-8">
+        <PageHeaderSkeleton actionCount={2} />
+        <StatCardsSkeleton count={4} />
+        <div className="bg-surface-container-lowest rounded-xl shadow-md flex flex-col overflow-hidden">
+          <TableSkeleton rows={7} cols={5} />
+        </div>
+      </div>
+    )
   }
 
   const byTab    = allOrders.filter((o) => tab === 'all' || o.status === tab)
