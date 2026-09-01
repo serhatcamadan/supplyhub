@@ -109,14 +109,18 @@ export default function SignupPage() {
         password: step1Data.password,
         companyName: data.company,
         companyType: role,
-        role: 'admin',
       }),
     })
 
-    const json = await res.json() as { error?: string; message?: string; user?: { companyType: string } }
+    const json = await res.json() as { error?: string; message?: string | string[]; user?: { companyType: string } }
 
-    if (!res.ok || json.error) {
-      setSubmitError(json.error ?? t('signup.step3.errorGeneric'))
+    if (!res.ok) {
+      const msg = typeof json.message === 'string'
+        ? json.message
+        : Array.isArray(json.message)
+          ? json.message[0]
+          : t('signup.step3.errorGeneric')
+      setSubmitError(msg)
       setLoading(false)
       return
     }
