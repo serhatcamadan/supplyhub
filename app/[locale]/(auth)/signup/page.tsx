@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
@@ -14,12 +14,17 @@ import { FormError } from '@/components/ui/form-error'
 import { StepIndicator } from '@/components/ui/step-indicator'
 import { RoleCard } from '@/components/auth/role-card'
 import { Button } from '@/components/ui/button'
-import { IconArrowLeft, IconArrowRight, IconBuilding, IconCategory, IconCircleCheck, IconLock, IconMail, IconPackage, IconShoppingBag, IconUser } from '@tabler/icons-react'
+import {
+  IconArrowLeft, IconArrowRight, IconBuilding, IconCategory,
+  IconCircleCheck, IconLock, IconMail, IconPackage, IconRefresh,
+  IconShoppingBag, IconUser,
+} from '@tabler/icons-react'
 
-type Step = 1 | 2 | 3
+type Step = 1 | 2 | 3 | 4
 type Role = 'seller' | 'buyer' | null
 
-// Module-level schemas for type inference only (no translated messages needed here)
+const RESEND_COOLDOWN = 60 // saniye
+
 const _step1Schema = z.object({
   name: z.string().min(2),
   email: z.email(),
@@ -45,6 +50,64 @@ function StepPanel({ stepNum, currentStep, children }: { stepNum: number; curren
   )
 }
 
+// 6 ayrı kutucuklu OTP girişi
+function OtpInput({ value, onChange, disabled, autoFocus }: { value: string; onChange: (v: string) => void; disabled?: boolean; autoFocus?: boolean }) {
+  const refs = useRef<(HTMLInputElement | null)[]>(Array(6).fill(null))
+
+  useEffect(() => {
+    if (autoFocus) refs.current[0]?.focus()
+  }, [autoFocus])
+
+  function focus(idx: number) { refs.current[idx]?.focus() }
+
+  function handleChange(idx: number, char: string) {
+    if (!/^\d*$/.test(char)) return
+    const digits = value.split('')
+    digits[idx] = char.slice(-1)
+    const next = digits.join('').slice(0, 6)
+    onChange(next)
+    if (char && idx < 5) focus(idx + 1)
+  }
+
+  function handleKeyDown(idx: number, e: React.KeyboardEvent) {
+    if (e.key === 'Backspace' && !value[idx] && idx > 0) focus(idx - 1)
+  }
+
+  function handlePaste(e: React.ClipboardEvent) {
+    e.preventDefault()
+    const pasted = e.clipboardData.getData('text').replace(/\D/g, '').slice(0, 6)
+    onChange(pasted)
+    focus(Math.min(pasted.length, 5))
+  }
+
+  return (
+    <div className="flex gap-3 justify-center">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <input
+          key={i}
+          ref={(el) => { refs.current[i] = el }}
+          type="text"
+          inputMode="numeric"
+          maxLength={1}
+          value={value[i] ?? ''}
+          disabled={disabled}
+          onChange={(e) => handleChange(i, e.target.value)}
+          onKeyDown={(e) => handleKeyDown(i, e)}
+          onPaste={handlePaste}
+          className={cn(
+            'w-12 h-14 text-center text-xl font-bold rounded-xl border-2 transition-all outline-none',
+            'bg-surface text-on-surface',
+            value[i]
+              ? 'border-primary bg-primary/5'
+              : 'border-outline-variant focus:border-primary',
+            disabled && 'opacity-50 cursor-not-allowed',
+          )}
+        />
+      ))}
+    </div>
+  )
+}
+
 export default function SignupPage() {
   const router = useRouter()
   const t = useTranslations('auth')
@@ -57,7 +120,25 @@ export default function SignupPage() {
   const [loading, setLoading] = useState(false)
   const [step1Data, setStep1Data] = useState<Step1Values | null>(null)
 
-  // Translated zod schemas — built with t() so error messages follow the active locale
+  // OTP state
+  const [otp, setOtp] = useState('')
+  const [otpError, setOtpError] = useState<string | null>(null)
+  const [otpLoading, setOtpLoading] = useState(false)
+  const [resendCooldown, setResendCooldown] = useState(0)
+  const cooldownRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  const startCooldown = useCallback(() => {
+    setResendCooldown(RESEND_COOLDOWN)
+    cooldownRef.current = setInterval(() => {
+      setResendCooldown((prev) => {
+        if (prev <= 1) { clearInterval(cooldownRef.current!); return 0 }
+        return prev - 1
+      })
+    }, 1000)
+  }, [])
+
+  useEffect(() => () => { if (cooldownRef.current) clearInterval(cooldownRef.current) }, [])
+
   const form1 = useForm<Step1Values>({
     resolver: zodResolver(z.object({
       name: z.string().min(2, t('validation.nameMin')),
@@ -95,10 +176,59 @@ export default function SignupPage() {
     setStep(3)
   }
 
+  async function sendVerificationCode(): Promise<{ ok: boolean; error?: string }> {
+    if (!step1Data) return { ok: false }
+    setLoading(true)
+
+    const res = await fetch('/api/auth/send-verification', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email: step1Data.email }),
+    })
+
+    const json = await res.json() as { message?: string | string[] }
+    setLoading(false)
+
+    if (!res.ok) {
+      const msg = typeof json.message === 'string'
+        ? json.message
+        : Array.isArray(json.message) ? json.message[0] : t('signup.step3.errorGeneric')
+      return { ok: false, error: msg }
+    }
+
+    return { ok: true }
+  }
+
   async function handleStep3Submit(data: Step3Values) {
     if (!step1Data || !role) return
-    setLoading(true)
     setSubmitError(null)
+
+    const { ok, error } = await sendVerificationCode()
+    if (!ok) { setSubmitError(error ?? t('signup.step3.errorGeneric')); return }
+
+    setOtp('')
+    setOtpError(null)
+    startCooldown()
+    setStep(4)
+  }
+
+  async function handleResend() {
+    if (resendCooldown > 0 || !step1Data) return
+    setOtpError(null)
+    const { ok, error } = await sendVerificationCode()
+    if (ok) {
+      startCooldown()
+    } else {
+      setOtpError(error ?? t('signup.step4.errorGeneric'))
+    }
+  }
+
+  async function handleOtpSubmit() {
+    if (otp.length !== 6 || !step1Data || !role) return
+    setOtpLoading(true)
+    setOtpError(null)
+
+    const form3Values = form3.getValues()
 
     const res = await fetch('/api/auth/signup', {
       method: 'POST',
@@ -107,21 +237,20 @@ export default function SignupPage() {
         name: step1Data.name,
         email: step1Data.email,
         password: step1Data.password,
-        companyName: data.company,
+        companyName: form3Values.company,
         companyType: role,
+        verificationCode: otp,
       }),
     })
 
-    const json = await res.json() as { error?: string; message?: string | string[]; user?: { companyType: string } }
+    const json = await res.json() as { message?: string | string[]; user?: { companyType: string } }
 
     if (!res.ok) {
       const msg = typeof json.message === 'string'
         ? json.message
-        : Array.isArray(json.message)
-          ? json.message[0]
-          : t('signup.step3.errorGeneric')
-      setSubmitError(msg)
-      setLoading(false)
+        : Array.isArray(json.message) ? json.message[0] : t('signup.step3.errorGeneric')
+      setOtpError(msg)
+      setOtpLoading(false)
       return
     }
 
@@ -140,13 +269,13 @@ export default function SignupPage() {
             <p className="text-base text-on-surface-variant mt-1 max-w-md">{t('signup.subHeading')}</p>
           </div>
           <div className="hidden md:block mt-2">
-            <StepIndicator totalSteps={3} currentStep={step} />
+            <StepIndicator totalSteps={4} currentStep={step} />
           </div>
         </div>
 
-        <div className="flex-1 relative overflow-hidden" style={{ minHeight: '480px' }}>
+        <div className="flex-1 relative overflow-hidden" style={{ minHeight: '520px' }}>
 
-          {/* Step 1 */}
+          {/* Step 1 — Hesap Bilgileri */}
           <StepPanel stepNum={1} currentStep={step}>
             <div className="bg-surface-container-lowest p-8 rounded-xl shadow-lg w-full max-w-120">
               <form onSubmit={form1.handleSubmit(handleStep1Submit)} className="flex flex-col gap-6">
@@ -174,7 +303,7 @@ export default function SignupPage() {
             </div>
           </StepPanel>
 
-          {/* Step 2 */}
+          {/* Step 2 — Rol Seçimi */}
           <StepPanel stepNum={2} currentStep={step}>
             <div className="w-full flex flex-col gap-8">
               <div className="text-center">
@@ -207,7 +336,7 @@ export default function SignupPage() {
             </div>
           </StepPanel>
 
-          {/* Step 3 */}
+          {/* Step 3 — Şirket Bilgileri */}
           <StepPanel stepNum={3} currentStep={step}>
             <div className="bg-surface-container-lowest p-8 rounded-xl shadow-lg w-full max-w-120">
               <form onSubmit={form3.handleSubmit(handleStep3Submit)} className="flex flex-col gap-6">
@@ -226,10 +355,81 @@ export default function SignupPage() {
                   </Button>
                   <Button type="submit" disabled={loading} className="flex-1 ml-4 py-3 text-base">
                     {loading ? t('signup.step3.submitting') : t('signup.step3.submit')}
-                    <IconCircleCheck size={18} />
+                    <IconArrowRight size={18} />
                   </Button>
                 </div>
               </form>
+            </div>
+          </StepPanel>
+
+          {/* Step 4 — E-posta Doğrulama */}
+          <StepPanel stepNum={4} currentStep={step}>
+            <div className="bg-surface-container-lowest p-8 rounded-xl shadow-lg w-full max-w-120 flex flex-col gap-6">
+
+              {/* Başlık */}
+              <div className="text-center space-y-2">
+                <div className="w-14 h-14 rounded-full bg-primary/10 flex items-center justify-center mx-auto mb-1">
+                  <IconMail className="text-primary" size={28} />
+                </div>
+                <h2 className="text-[20px] leading-7 font-semibold text-on-surface">
+                  {t('signup.step4.heading')}
+                </h2>
+                <p className="text-sm text-on-surface-variant">
+                  {t.rich('signup.step4.description', {
+                    email: step1Data?.email ?? '',
+                    strong: (chunks) => <span className="font-medium text-on-surface">{chunks}</span>,
+                  })}
+                </p>
+              </div>
+
+              {/* OTP Kutucukları */}
+              <OtpInput value={otp} onChange={setOtp} disabled={otpLoading} autoFocus={step === 4} />
+
+              {/* Hata */}
+              {otpError && <FormError message={otpError} />}
+
+              {/* Gönder butonu */}
+              <Button
+                onClick={handleOtpSubmit}
+                disabled={otp.length !== 6 || otpLoading}
+                className="w-full py-3 text-base"
+              >
+                {otpLoading ? t('signup.step4.verifying') : t('signup.step4.submit')}
+                <IconCircleCheck size={18} />
+              </Button>
+
+              {/* Tekrar gönder */}
+              <div className="text-center">
+                {resendCooldown > 0 ? (
+                  <p className="text-sm text-on-surface-variant">
+                    {t('signup.step4.resendWait', { seconds: resendCooldown })}
+                  </p>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={handleResend}
+                    disabled={loading}
+                    className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline disabled:opacity-50"
+                  >
+                    <IconRefresh size={15} />
+                    {t('signup.step4.resend')}
+                  </button>
+                )}
+              </div>
+
+              {/* Geri */}
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                onClick={() => { setStep(3); setOtp(''); setOtpError(null) }}
+                disabled={otpLoading}
+                className="self-start -mt-2"
+              >
+                <IconArrowLeft size={16} />
+                {t('signup.step4.back')}
+              </Button>
+
             </div>
           </StepPanel>
 
