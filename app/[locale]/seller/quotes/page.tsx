@@ -6,6 +6,9 @@ import { getQuoteRequests } from '@/lib/api/quotes'
 import { formatCurrency, getInitials } from '@/lib/utils'
 import { TableControls } from '@/components/seller/table-controls'
 import { QuoteTable, type EnrichedQuote } from '@/components/seller/quote-table'
+import { PageHeaderSkeleton } from '@/components/skeletons/page-header-skeleton'
+import { StatCardsSkeleton } from '@/components/skeletons/stat-cards-skeleton'
+import { TableSkeleton } from '@/components/skeletons/table-skeleton'
 import { IconClock, IconDownload, IconTrendingUp } from '@tabler/icons-react'
 
 type QuoteTab = 'all' | 'pending' | 'responded' | 'archived'
@@ -18,6 +21,7 @@ export default function SellerQuotesPage() {
   const [tab, setTab]           = useState<QuoteTab>('all')
   const [search, setSearch]     = useState('')
   const [enriched, setEnriched] = useState<EnrichedQuote[]>([])
+  const [isLoading, setIsLoading] = useState(true)
 
   const TABS = [
     { value: 'all',       label: t('quotes.tabs.all') },
@@ -51,7 +55,20 @@ export default function SellerQuotesPage() {
         setEnriched(result)
       })
       .catch(() => {})
+      .finally(() => setIsLoading(false))
   }, [])
+
+  if (isLoading) {
+    return (
+      <div className="p-8 flex flex-col gap-8">
+        <PageHeaderSkeleton actionCount={1} />
+        <StatCardsSkeleton count={4} />
+        <div className="bg-surface-container-lowest rounded-xl shadow-md flex flex-col overflow-hidden">
+          <TableSkeleton rows={6} cols={5} />
+        </div>
+      </div>
+    )
+  }
 
   const pendingCount   = enriched.filter((q) => q.status === 'pending').length
   const closedCount    = enriched.filter((q) => q.status === 'accepted' || q.status === 'declined').length
