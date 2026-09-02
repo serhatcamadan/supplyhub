@@ -15,6 +15,44 @@
     },
     "signOut": "Sign Out"
   },
+  "profileEdit": {
+    "breadcrumbSettings": "Settings",
+    "heading": "Edit Profile",
+    "cancel": "Cancel",
+    "saveChanges": "Save Changes",
+    "saving": "Saving…",
+    "saveSuccess": "Profile updated.",
+    "sections": {
+      "personal": "Personal Information",
+      "contact": "Contact Details",
+      "account": "Account Security",
+      "company": "Company Information"
+    },
+    "fields": {
+      "name": "Full Name",
+      "email": "Email Address",
+      "emailReadOnly": "Primary email cannot be changed.",
+      "emailVerified": "Verified",
+      "phone": "Phone Number",
+      "phonePlaceholder": "e.g. +1 555 123 4567",
+      "company": "Company",
+      "role": "Role",
+      "currentPassword": "Current Password",
+      "newPassword": "New Password",
+      "newPasswordHint": "At least 8 characters",
+      "confirmPassword": "Confirm New Password"
+    },
+    "password": {
+      "toggle": "Change password",
+      "mismatch": "Passwords do not match.",
+      "tooShort": "Must be at least 8 characters.",
+      "success": "Password changed successfully."
+    },
+    "errors": {
+      "nameRequired": "Full name is required.",
+      "saveFailed": "Could not save, please try again."
+    }
+  },
   "status": {
     "pending": "Pending",
     "confirmed": "Confirmed",
