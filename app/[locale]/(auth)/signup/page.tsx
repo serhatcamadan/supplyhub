@@ -235,33 +235,38 @@ export default function SignupPage() {
 
     const form3Values = form3.getValues()
 
-    const res = await fetch('/api/auth/signup', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: step1Data.name,
-        email: step1Data.email,
-        password: step1Data.password,
-        companyName: form3Values.company,
-        companyType: role,
-        verificationCode: otp,
-      }),
-    })
+    try {
+      const res = await fetch('/api/auth/signup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          name: step1Data.name,
+          email: step1Data.email,
+          password: step1Data.password,
+          companyName: form3Values.company,
+          companyType: role,
+          verificationCode: otp,
+        }),
+      })
 
-    const json = await res.json() as { message?: string | string[]; user?: { companyType: string } }
+      const json = await res.json() as { message?: string | string[]; user?: { companyType: string } }
 
-    if (!res.ok) {
-      const msg = typeof json.message === 'string'
-        ? json.message
-        : Array.isArray(json.message) ? json.message[0] : t('signup.step3.errorGeneric')
-      setOtpError(msg)
+      if (!res.ok) {
+        const msg = typeof json.message === 'string'
+          ? json.message
+          : Array.isArray(json.message) ? json.message[0] : t('signup.step4.errorGeneric')
+        setOtpError(msg)
+        return
+      }
+
+      const companyType = json.user?.companyType ?? role
+      router.push(companyType === 'seller' ? `/${locale}/seller/dashboard` : `/${locale}/buyer/discover`)
+      router.refresh()
+    } catch {
+      setOtpError(t('signup.step4.errorGeneric'))
+    } finally {
       setOtpLoading(false)
-      return
     }
-
-    const companyType = json.user?.companyType ?? role
-    router.push(companyType === 'seller' ? `/${locale}/seller/dashboard` : `/${locale}/buyer/discover`)
-    router.refresh()
   }
 
   return (
