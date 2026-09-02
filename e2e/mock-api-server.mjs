@@ -484,14 +484,22 @@ const server = http.createServer(async (req, res) => {
     if (req.method === 'POST' && path === '/test/reset') {
       if (SUPABASE_URL && SUPABASE_KEY) {
         const companies = await sbFetch('companies', { select: 'id,name,type' }) ?? []
-        const seller = companies.find((c) => c.type === 'seller')
-        const buyers = companies.filter((c) => c.type === 'buyer').sort((a, b) => a.name.localeCompare(b.name))
-        if (!seller || buyers.length < 2) {
-          res.writeHead(400); res.end(JSON.stringify({ error: 'Expected 1 seller + 2 buyers' })); return
+        const seller = companies.find((c) => c.name === 'FreshFarm Gıda')
+
+        // Demo users'dan company_id türet — sıra bağımsız, yeni kayıtlı şirketlerden etkilenmez
+        const users = await sbFetch('users', { email: `in.(ayse@gunespazar.com,kemal@lezzet.com,ali@freshfarm.com)`, select: 'id,email,company_id' }) ?? []
+        const uBuyer1Admin = users.find((u) => u.email === 'ayse@gunespazar.com')?.id
+        const uBuyer2Admin = users.find((u) => u.email === 'kemal@lezzet.com')?.id
+        const cBuyer1 = users.find((u) => u.email === 'ayse@gunespazar.com')?.company_id
+        const cBuyer2 = users.find((u) => u.email === 'kemal@lezzet.com')?.company_id
+        const cSeller = users.find((u) => u.email === 'ali@freshfarm.com')?.company_id ?? seller?.id
+
+        if (!cSeller || !cBuyer1 || !cBuyer2) {
+          res.writeHead(400); res.end(JSON.stringify({ error: 'Demo company IDs not found' })); return
         }
-        const cSeller = seller.id
-        const cBuyer1 = buyers[0].id
-        const cBuyer2 = buyers[1].id
+        if (!uBuyer1Admin || !uBuyer2Admin) {
+          res.writeHead(400); res.end(JSON.stringify({ error: 'Demo users not found' })); return
+        }
 
         const products = await sbFetch('products', { seller_id: `eq.${cSeller}`, select: 'id,name' }) ?? []
         const p1 = products.find((p) => p.name.includes('Zeytinyağı'))?.id
@@ -499,13 +507,6 @@ const server = http.createServer(async (req, res) => {
         const p3 = products.find((p) => p.name.includes('Bal'))?.id
         if (!p1 || !p2 || !p3) {
           res.writeHead(400); res.end(JSON.stringify({ error: 'Products not found' })); return
-        }
-
-        const users = await sbFetch('users', { email: `in.(ayse@gunespazar.com,kemal@lezzet.com)`, select: 'id,email' }) ?? []
-        const uBuyer1Admin = users.find((u) => u.email === 'ayse@gunespazar.com')?.id
-        const uBuyer2Admin = users.find((u) => u.email === 'kemal@lezzet.com')?.id
-        if (!uBuyer1Admin || !uBuyer2Admin) {
-          res.writeHead(400); res.end(JSON.stringify({ error: 'Demo users not found' })); return
         }
 
         const daysAgo = (n) => new Date(Date.now() - n * 86_400_000).toISOString()
