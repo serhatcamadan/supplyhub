@@ -21,18 +21,21 @@ export function ProfileButton({ userName, userRole }: ProfileButtonProps) {
   const t = useTranslations('common')
   const locale = useLocale()
 
-  const sections: { title: string; items: { icon: ElementType; label: string }[] }[] = [
+  const portal = typeof window !== 'undefined' && window.location.pathname.includes('/buyer/') ? 'buyer' : 'seller'
+  const profileHref = `/${locale}/${portal}/profile`
+
+  const sections: { title: string; items: { icon: ElementType; label: string; href?: string }[] }[] = [
     {
       title: t('profile.sections.account'),
       items: [
-        { icon: IconUserEdit, label: t('profile.items.editProfile') },
-        { icon: IconLock,     label: t('profile.items.changePassword') },
+        { icon: IconUserEdit, label: t('profile.items.editProfile'), href: profileHref },
+        { icon: IconLock,     label: t('profile.items.changePassword'), href: profileHref },
       ],
     },
     {
       title: t('profile.sections.personal'),
       items: [
-        { icon: IconMail, label: t('profile.items.contactInfo') },
+        { icon: IconMail, label: t('profile.items.contactInfo'), href: profileHref },
       ],
     },
     {
@@ -100,7 +103,10 @@ export function ProfileButton({ userName, userRole }: ProfileButtonProps) {
                 return (
                   <button
                     key={item.label}
-                    onClick={() => setOpen(false)}
+                    onClick={() => {
+                      setOpen(false)
+                      if (item.href) router.push(item.href)
+                    }}
                     className="w-full flex items-center py-2.5 text-sm text-on-surface hover:text-primary transition-colors group"
                   >
                     <ItemIcon size={20} className="mr-3 text-on-surface-variant group-hover:text-primary transition-colors" />

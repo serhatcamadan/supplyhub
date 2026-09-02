@@ -15,6 +15,44 @@
     },
     "signOut": "Çıkış Yap"
   },
+  "profileEdit": {
+    "breadcrumbSettings": "Ayarlar",
+    "heading": "Profili Düzenle",
+    "cancel": "İptal",
+    "saveChanges": "Değişiklikleri Kaydet",
+    "saving": "Kaydediliyor…",
+    "saveSuccess": "Profil güncellendi.",
+    "sections": {
+      "personal": "Kişisel Bilgiler",
+      "contact": "İletişim Bilgileri",
+      "account": "Hesap Güvenliği",
+      "company": "Şirket Bilgileri"
+    },
+    "fields": {
+      "name": "Ad Soyad",
+      "email": "E-posta",
+      "emailReadOnly": "Birincil e-posta değiştirilemez.",
+      "emailVerified": "Doğrulandı",
+      "phone": "Telefon Numarası",
+      "phonePlaceholder": "Örn. +90 555 123 4567",
+      "company": "Şirket",
+      "role": "Rol",
+      "currentPassword": "Mevcut Şifre",
+      "newPassword": "Yeni Şifre",
+      "newPasswordHint": "En az 8 karakter",
+      "confirmPassword": "Yeni Şifre (Tekrar)"
+    },
+    "password": {
+      "toggle": "Şifre değiştir",
+      "mismatch": "Şifreler eşleşmiyor.",
+      "tooShort": "En az 8 karakter olmalı.",
+      "success": "Şifre başarıyla değiştirildi."
+    },
+    "errors": {
+      "nameRequired": "Ad Soyad zorunludur.",
+      "saveFailed": "Kaydedilemedi, lütfen tekrar deneyin."
+    }
+  },
   "status": {
     "pending": "Bekliyor",
     "confirmed": "Onaylandı",

@@ -22,3 +22,8 @@ export async function login(email: string, password: string): Promise<{ access_t
 export async function logout(): Promise<void> {
   await fetch('/api/auth/logout', { method: 'POST' })
 }
+
+export async function refreshToken(): Promise<void> {
+  const res = await fetch('/api/auth/refresh', { method: 'POST' })
+  if (!res.ok) throw new Error('Refresh failed')
+}
