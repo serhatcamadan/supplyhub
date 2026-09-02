@@ -11,25 +11,32 @@ function getSetCookies(headers: Headers): string[] {
 }
 
 export async function POST(req: Request) {
-  const body = await req.json()
+  try {
+    const body = await req.json()
 
-  const nestRes = await fetch(`${API_URL}/auth/signup`, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body),
-  })
+    const nestRes = await fetch(`${API_URL}/auth/signup`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body),
+    })
 
-  const data = await nestRes.json()
+    const data = await nestRes.json()
 
-  if (!nestRes.ok) {
-    return NextResponse.json(data, { status: nestRes.status })
+    if (!nestRes.ok) {
+      return NextResponse.json(data, { status: nestRes.status })
+    }
+
+    const response = NextResponse.json(data)
+
+    for (const cookie of getSetCookies(nestRes.headers)) {
+      response.headers.append('Set-Cookie', cookie)
+    }
+
+    return response
+  } catch {
+    return NextResponse.json(
+      { message: 'Sunucuya bağlanılamadı. Lütfen tekrar deneyin.' },
+      { status: 503 }
+    )
   }
-
-  const response = NextResponse.json(data)
-
-  for (const cookie of getSetCookies(nestRes.headers)) {
-    response.headers.append('Set-Cookie', cookie)
-  }
-
-  return response
 }

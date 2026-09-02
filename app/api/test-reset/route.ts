@@ -10,17 +10,21 @@ export async function POST() {
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     { auth: { autoRefreshToken: false, persistSession: false } }
   )
-  const { data: companies } = await admin.from('companies').select('id, name, type').order('name')
+  const { data: companies } = await admin.from('companies').select('id, name, type')
   if (!companies?.length) return Response.json({ error: 'DB not seeded — call /api/seed first' }, { status: 400 })
 
-  const seller  = companies.find((c) => c.type === 'seller')
-  const buyers  = companies.filter((c) => c.type === 'buyer').sort((a, b) => a.name.localeCompare(b.name))
-  if (!seller || buyers.length < 2) return Response.json({ error: 'Expected 1 seller + 2 buyers' }, { status: 400 })
-
+  const seller = companies.find((c) => c.type === 'seller')
+  if (!seller) return Response.json({ error: 'Seller company not found' }, { status: 400 })
   const cSeller = seller.id
-  // buyers sorted alphabetically: Güneş Pazarı (buyer1/ayse), Lezzet Restoranları (buyer2/kemal)
-  const cBuyer1 = buyers[0].id
-  const cBuyer2 = buyers[1].id
+
+  // Look up company IDs from demo user emails — order-independent, unaffected by signup test data
+  const { data: demoUsers } = await admin
+    .from('users')
+    .select('email, company_id')
+    .in('email', ['ayse@gunespazar.com', 'kemal@lezzet.com'])
+  const cBuyer1 = demoUsers?.find((u) => u.email === 'ayse@gunespazar.com')?.company_id
+  const cBuyer2 = demoUsers?.find((u) => u.email === 'kemal@lezzet.com')?.company_id
+  if (!cBuyer1 || !cBuyer2) return Response.json({ error: 'Demo buyer company IDs not found' }, { status: 400 })
 
   const { data: products } = await admin.from('products').select('id, name').eq('seller_id', cSeller)
   if (!products?.length) return Response.json({ error: 'No products found for seller' }, { status: 400 })
