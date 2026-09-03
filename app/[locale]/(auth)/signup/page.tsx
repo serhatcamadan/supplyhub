@@ -245,6 +245,7 @@ export default function SignupPage() {
           password: step1Data.password,
           companyName: form3Values.company,
           companyType: role,
+          industry: form3Values.industry || undefined,
           verificationCode: otp,
         }),
       })

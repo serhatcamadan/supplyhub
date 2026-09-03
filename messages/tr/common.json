@@ -35,12 +35,23 @@
       "emailVerified": "Doğrulandı",
       "phone": "Telefon Numarası",
       "phonePlaceholder": "Örn. +90 555 123 4567",
-      "company": "Şirket",
+      "companyName": "Şirket Adı",
+      "companyNamePlaceholder": "Şirket adınızı girin",
+      "industry": "Sektör",
+      "industryPlaceholder": "Sektör seçin",
       "role": "Rol",
       "currentPassword": "Mevcut Şifre",
       "newPassword": "Yeni Şifre",
       "newPasswordHint": "En az 8 karakter",
       "confirmPassword": "Yeni Şifre (Tekrar)"
+    },
+    "industries": {
+      "manufacturing": "Üretim & İmalat",
+      "retail": "Perakende",
+      "food": "Gıda & İçecek",
+      "electronics": "Elektronik",
+      "apparel": "Tekstil & Giyim",
+      "other": "Diğer"
     },
     "password": {
       "toggle": "Şifre değiştir",
@@ -50,6 +61,7 @@
     },
     "errors": {
       "nameRequired": "Ad Soyad zorunludur.",
+      "companyNameRequired": "Şirket adı zorunludur.",
       "saveFailed": "Kaydedilemedi, lütfen tekrar deneyin."
     }
   },
