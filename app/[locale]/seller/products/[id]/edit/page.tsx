@@ -3,7 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
-import { createClient } from '@/lib/supabase/client'
+import { getProduct, updateProduct } from '@/lib/api/products'
 import type { PriceTier } from '@/types'
 import { Button } from '@/components/ui/button'
 import { ProductBasicInfo } from '@/components/seller/product-basic-info'
@@ -30,16 +30,18 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     async function load() {
       const { id } = await params
       setProductId(id)
-      const supabase = createClient()
-      const { data } = await supabase.from('products').select('*').eq('id', id).single()
-      if (data) {
+      try {
+        const data = await getProduct(id)
         setName(data.name)
         setCategory(data.category)
         setMinOrderQty(String(data.min_order_qty))
         setDescription(data.description ?? '')
         setTiers((data.price_tiers as PriceTier[]) ?? [])
+      } catch {
+        setError('Ürün yüklenemedi.')
+      } finally {
+        setIsLoading(false)
       }
-      setIsLoading(false)
     }
     load()
   }, [params])
@@ -71,20 +73,19 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
       return
     }
     setIsSubmitting(true)
-    const supabase = createClient()
-    const { error: dbError } = await supabase
-      .from('products')
-      .update({
+    try {
+      await updateProduct(productId, {
         name:          name.trim(),
         description:   description.trim(),
         category,
         min_order_qty: parseInt(minOrderQty, 10),
         price_tiers:   tiers,
       })
-      .eq('id', productId)
-
-    if (dbError) { setError(dbError.message); setIsSubmitting(false); return }
-    router.push('/seller/products')
+      router.push('/seller/products')
+    } catch {
+      setError('Kaydedilemedi, lütfen tekrar deneyin.')
+      setIsSubmitting(false)
+    }
   }
 
   if (isLoading) {

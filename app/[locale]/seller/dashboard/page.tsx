@@ -1,11 +1,11 @@
 import { getTranslations, getLocale } from 'next-intl/server'
-import { createServiceClient } from '@/lib/supabase/server'
-import { getServerUser } from '@/lib/auth/server'
+import { serverApiFetch } from '@/lib/api/server-client'
 import { Button } from '@/components/ui/button'
 import { RevenueChart } from '@/components/seller/revenue-chart'
 import { StatCards } from '@/components/seller/stat-cards'
 import { TopProducts } from '@/components/seller/top-products'
 import { ActivityFeed } from '@/components/seller/activity-feed'
+import type { Product, OrderWithDetails, QuoteRequestWithDetails } from '@/types'
 import { IconCalendar, IconChevronDown, IconDownload } from '@tabler/icons-react'
 
 function buildMonthlyRevenue(
@@ -26,37 +26,20 @@ function buildMonthlyRevenue(
 }
 
 export default async function SellerDashboardPage() {
-  const [user, supabase, t, locale] = await Promise.all([
-    getServerUser(),
-    Promise.resolve(createServiceClient()),
+  const [t, locale] = await Promise.all([
     getTranslations('seller'),
     getLocale(),
   ])
-  const companyId = user?.companyId ?? ''
 
-  const [productsRes, ordersRes] = await Promise.all([
-    supabase.from('products').select('*').eq('seller_id', companyId),
-    supabase.from('orders').select('*').eq('seller_id', companyId),
+  const [allProducts, allOrders, allQuotes] = await Promise.all([
+    serverApiFetch<Product[]>('/seller/products').catch(() => [] as Product[]),
+    serverApiFetch<OrderWithDetails[]>('/orders').catch(() => [] as OrderWithDetails[]),
+    serverApiFetch<QuoteRequestWithDetails[]>('/quote-requests').catch(() => [] as QuoteRequestWithDetails[]),
   ])
 
-  const allProducts = productsRes.data ?? []
-  const allOrders = ordersRes.data ?? []
-
-  const productIds = allProducts.map((p) => p.id)
-  const [quotesRes, buyerCompaniesRes] = await Promise.all([
-    productIds.length > 0
-      ? supabase.from('quote_requests').select('*').in('product_id', productIds)
-      : Promise.resolve({ data: [] }),
-    allOrders.length > 0
-      ? supabase
-          .from('companies')
-          .select('id, name')
-          .in('id', [...new Set(allOrders.map((o) => o.buyer_id))])
-      : Promise.resolve({ data: [] as { id: string; name: string }[] }),
-  ])
-
-  const allQuotes = quotesRes.data ?? []
-  const buyerNames = Object.fromEntries((buyerCompaniesRes.data ?? []).map((c) => [c.id, c.name]))
+  const buyerNames = Object.fromEntries(
+    allOrders.map((o) => [o.buyer_id, o.buyer.name])
+  )
 
   const activeProducts = allProducts.filter((p) => p.status === 'active')
   const draftProducts = allProducts.filter((p) => p.status === 'draft')

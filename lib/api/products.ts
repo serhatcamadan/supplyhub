@@ -24,3 +24,12 @@ export function createProduct(payload: Omit<Product, 'id' | 'seller_id'>): Promi
     body: JSON.stringify(payload),
   })
 }
+
+export type UpdateProductPayload = Partial<Omit<Product, 'id' | 'seller_id'>>
+
+export function updateProduct(id: string, payload: UpdateProductPayload): Promise<ApiProduct> {
+  return apiFetch<ApiProduct>(`/seller/products/${id}`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  })
+}
