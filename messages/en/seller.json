@@ -204,6 +204,8 @@
     "weekly": "Weekly",
     "monthly": "Monthly",
     "months": ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+    "exportPeriodLabel": "Period",
+    "exportRevenueLabel": "Revenue (TRY)",
     "stats": {
       "totalRevenue": "Total Revenue",
       "vsLastMonth": "vs last month",

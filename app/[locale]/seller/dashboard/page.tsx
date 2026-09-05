@@ -1,17 +1,16 @@
 import { getTranslations, getLocale } from 'next-intl/server'
 import { serverApiFetch } from '@/lib/api/server-client'
 import { Button } from '@/components/ui/button'
-import { RevenueChart } from '@/components/seller/revenue-chart'
+import { RevenueChartCard } from '@/components/seller/revenue-chart-card'
 import { StatCards } from '@/components/seller/stat-cards'
 import { TopProducts } from '@/components/seller/top-products'
 import { ActivityFeed } from '@/components/seller/activity-feed'
 import type { Product, OrderWithDetails, QuoteRequestWithDetails } from '@/types'
-import { IconCalendar, IconChevronDown, IconDownload } from '@tabler/icons-react'
+import { IconCalendar, IconChevronDown } from '@tabler/icons-react'
 
-function buildMonthlyRevenue(
-  orders: { status: string; total: number; created_at: string }[],
-  monthNames: string[]
-) {
+type OrderForChart = { status: string; total: number; created_at: string }
+
+function buildMonthlyRevenue(orders: OrderForChart[], monthNames: string[]) {
   const map: Record<number, number> = {}
   for (const order of orders) {
     if (order.status !== 'delivered') continue
@@ -22,6 +21,33 @@ function buildMonthlyRevenue(
   return Array.from({ length: 7 }, (_, i) => {
     const month = (now.getMonth() - 6 + i + 12) % 12
     return { month: monthNames[month], revenue: map[month] ?? 0 }
+  })
+}
+
+function buildWeeklyRevenue(orders: OrderForChart[], locale: string) {
+  const now = new Date()
+  const dayOfWeek = now.getDay() === 0 ? 6 : now.getDay() - 1 // Mon=0
+  const currentMonday = new Date(now)
+  currentMonday.setDate(now.getDate() - dayOfWeek)
+  currentMonday.setHours(0, 0, 0, 0)
+
+  const fmt = new Intl.DateTimeFormat(locale, { day: 'numeric', month: 'short' })
+
+  return Array.from({ length: 7 }, (_, i) => {
+    const weekStart = new Date(currentMonday)
+    weekStart.setDate(currentMonday.getDate() - (6 - i) * 7)
+    const weekEnd = new Date(weekStart)
+    weekEnd.setDate(weekStart.getDate() + 7)
+
+    const revenue = orders
+      .filter((o) => {
+        if (o.status !== 'delivered') return false
+        const d = new Date(o.created_at)
+        return d >= weekStart && d < weekEnd
+      })
+      .reduce((sum, o) => sum + o.total, 0)
+
+    return { month: fmt.format(weekStart), revenue }
   })
 }
 
@@ -56,6 +82,7 @@ export default async function SellerDashboardPage() {
 
   const monthNames = t.raw('dashboard.months') as string[]
   const monthlyRevenue = buildMonthlyRevenue(allOrders, monthNames)
+  const weeklyRevenue = buildWeeklyRevenue(allOrders, locale)
 
   return (
     <div className="p-8 flex flex-col gap-8">
@@ -70,10 +97,6 @@ export default async function SellerDashboardPage() {
             <IconCalendar size={20} />
             {t('dashboard.last30Days')}
             <IconChevronDown size={16} />
-          </Button>
-          <Button variant="primary">
-            <IconDownload size={20} />
-            {t('dashboard.exportReport')}
           </Button>
         </div>
       </div>
@@ -90,17 +113,7 @@ export default async function SellerDashboardPage() {
       />
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <div className="lg:col-span-2 bg-surface-container-lowest rounded-xl shadow-sm p-6">
-          <div className="flex justify-between items-center mb-6">
-            <h3 className="text-xl font-semibold text-on-surface">{t('dashboard.monthlyRevenue')}</h3>
-            <div className="flex gap-2">
-              <Button variant="ghost" size="sm">{t('dashboard.weekly')}</Button>
-              <Button variant="primary" size="sm">{t('dashboard.monthly')}</Button>
-            </div>
-          </div>
-          <RevenueChart data={monthlyRevenue} />
-        </div>
-
+        <RevenueChartCard weeklyData={weeklyRevenue} monthlyData={monthlyRevenue} />
         <TopProducts products={topProducts} locale={locale} />
       </div>
 
