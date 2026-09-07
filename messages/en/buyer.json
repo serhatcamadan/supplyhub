@@ -102,6 +102,7 @@
     "decrement": "Decrease",
     "increment": "Increase",
     "addToCart": "Add to Cart",
+    "addedToCart": "Added to Cart",
     "requestQuote": "Request Custom Quote",
     "freeShipping": "Free shipping on orders over ₺500 · Dispatched within 24 hours"
   },

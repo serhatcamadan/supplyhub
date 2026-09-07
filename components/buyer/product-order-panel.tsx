@@ -1,13 +1,15 @@
 'use client'
 
 import { useState } from 'react'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
+import { useRouter } from 'next/navigation'
 import { formatCurrency } from '@/lib/utils'
 import { getUnitPrice, getTotalPrice, getNextTier } from '@/lib/pricing'
 import { Button } from '@/components/ui/button'
 import { TierRow } from '@/components/buyer/tier-row'
+import { useCart } from '@/lib/hooks/use-cart'
 import type { Product } from '@/types'
-import { IconFileInvoice, IconMinus, IconPackage, IconPlus, IconShoppingCartPlus, IconStarFilled, IconTag, IconTrendingDown, IconTruck } from '@tabler/icons-react'
+import { IconCheck, IconFileInvoice, IconMinus, IconPackage, IconPlus, IconShoppingCartPlus, IconStarFilled, IconTag, IconTrendingDown, IconTruck } from '@tabler/icons-react'
 
 interface ProductOrderPanelProps {
   product: Product
@@ -21,7 +23,21 @@ export function ProductOrderPanel({
   rating = 4.8,
 }: ProductOrderPanelProps) {
   const t = useTranslations('buyer')
+  const locale = useLocale()
+  const router = useRouter()
+  const { addItem } = useCart()
   const [qty, setQty] = useState(product.min_order_qty)
+  const [added, setAdded] = useState(false)
+
+  function handleAddToCart() {
+    addItem(product, qty, sellerName)
+    setAdded(true)
+    setTimeout(() => setAdded(false), 2000)
+  }
+
+  function handleRequestQuote() {
+    router.push(`/${locale}/buyer/quotes/new?productId=${product.id}`)
+  }
 
   const sortedTiers = [...product.price_tiers].sort((a, b) => a.min_qty - b.min_qty)
   const baseTierPrice = sortedTiers[0]?.price ?? 0
@@ -147,11 +163,21 @@ export function ProductOrderPanel({
         </div>
 
         <div className="flex flex-col gap-3">
-          <Button variant="primary" size="lg" className="w-full justify-center">
-            <IconShoppingCartPlus size={20} />
-            {t('orderPanel.addToCart')}
+          <Button
+            variant={added ? 'secondary' : 'primary'}
+            size="lg"
+            className="w-full justify-center transition-colors"
+            onClick={handleAddToCart}
+          >
+            {added ? <IconCheck size={20} /> : <IconShoppingCartPlus size={20} />}
+            {added ? t('orderPanel.addedToCart') : t('orderPanel.addToCart')}
           </Button>
-          <Button variant="outline" size="lg" className="w-full justify-center text-primary">
+          <Button
+            variant="outline"
+            size="lg"
+            className="w-full justify-center text-primary"
+            onClick={handleRequestQuote}
+          >
             <IconFileInvoice size={20} />
             {t('orderPanel.requestQuote')}
           </Button>
