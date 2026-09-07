@@ -15,6 +15,56 @@
     },
     "signOut": "Çıkış Yap"
   },
+  "profileEdit": {
+    "breadcrumbSettings": "Ayarlar",
+    "heading": "Profili Düzenle",
+    "cancel": "İptal",
+    "saveChanges": "Değişiklikleri Kaydet",
+    "saving": "Kaydediliyor…",
+    "saveSuccess": "Profil güncellendi.",
+    "sections": {
+      "personal": "Kişisel Bilgiler",
+      "contact": "İletişim Bilgileri",
+      "account": "Hesap Güvenliği",
+      "company": "Şirket Bilgileri"
+    },
+    "fields": {
+      "name": "Ad Soyad",
+      "email": "E-posta",
+      "emailReadOnly": "Birincil e-posta değiştirilemez.",
+      "emailVerified": "Doğrulandı",
+      "phone": "Telefon Numarası",
+      "phonePlaceholder": "Örn. +90 555 123 4567",
+      "companyName": "Şirket Adı",
+      "companyNamePlaceholder": "Şirket adınızı girin",
+      "industry": "Sektör",
+      "industryPlaceholder": "Sektör seçin",
+      "role": "Rol",
+      "currentPassword": "Mevcut Şifre",
+      "newPassword": "Yeni Şifre",
+      "newPasswordHint": "En az 8 karakter",
+      "confirmPassword": "Yeni Şifre (Tekrar)"
+    },
+    "industries": {
+      "manufacturing": "Üretim & İmalat",
+      "retail": "Perakende",
+      "food": "Gıda & İçecek",
+      "electronics": "Elektronik",
+      "apparel": "Tekstil & Giyim",
+      "other": "Diğer"
+    },
+    "password": {
+      "toggle": "Şifre değiştir",
+      "mismatch": "Şifreler eşleşmiyor.",
+      "tooShort": "En az 8 karakter olmalı.",
+      "success": "Şifre başarıyla değiştirildi."
+    },
+    "errors": {
+      "nameRequired": "Ad Soyad zorunludur.",
+      "companyNameRequired": "Şirket adı zorunludur.",
+      "saveFailed": "Kaydedilemedi, lütfen tekrar deneyin."
+    }
+  },
   "status": {
     "pending": "Bekliyor",
     "confirmed": "Onaylandı",
