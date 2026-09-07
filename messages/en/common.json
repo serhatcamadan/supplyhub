@@ -35,12 +35,23 @@
       "emailVerified": "Verified",
       "phone": "Phone Number",
       "phonePlaceholder": "e.g. +1 555 123 4567",
-      "company": "Company",
+      "companyName": "Company Name",
+      "companyNamePlaceholder": "Enter company name",
+      "industry": "Industry",
+      "industryPlaceholder": "Select industry",
       "role": "Role",
       "currentPassword": "Current Password",
       "newPassword": "New Password",
       "newPasswordHint": "At least 8 characters",
       "confirmPassword": "Confirm New Password"
+    },
+    "industries": {
+      "manufacturing": "Manufacturing",
+      "retail": "Retail",
+      "food": "Food & Beverage",
+      "electronics": "Electronics",
+      "apparel": "Apparel & Textiles",
+      "other": "Other"
     },
     "password": {
       "toggle": "Change password",
@@ -50,6 +61,7 @@
     },
     "errors": {
       "nameRequired": "Full name is required.",
+      "companyNameRequired": "Company name is required.",
       "saveFailed": "Could not save, please try again."
     }
   },

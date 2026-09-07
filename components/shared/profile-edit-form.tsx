@@ -7,8 +7,9 @@ import { useTranslations, useLocale } from 'next-intl'
 import { Avatar } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
 import { FormInput } from '@/components/ui/form-input'
+import { FormSelect } from '@/components/ui/form-select'
 import { FormError } from '@/components/ui/form-error'
-import { updateMyProfile } from '@/lib/api/users'
+import { updateMyProfile, updateMyCompany } from '@/lib/api/users'
 import type { UserProfile } from '@/lib/api/users'
 import { refreshToken } from '@/lib/api/auth'
 import {
@@ -41,6 +42,10 @@ export function ProfileEditForm({ profile, portal }: Props) {
   const [name, setName]   = useState(profile.name)
   const [phone, setPhone] = useState(profile.phone ?? '')
 
+  // Company fields
+  const [companyName, setCompanyName] = useState(profile.companies?.name || '')
+  const [industry, setIndustry]       = useState(profile.companies?.industry || '')
+
   // Password section
   const [showPasswordSection, setShowPasswordSection] = useState(false)
   const [currentPassword, setCurrentPassword]         = useState('')
@@ -50,35 +55,50 @@ export function ProfileEditForm({ profile, portal }: Props) {
   const [showConfirmPw, setShowConfirmPw]             = useState(false)
 
   // Status
-  const [saving, setSaving]     = useState(false)
-  const [success, setSuccess]   = useState(false)
-  const [errors, setErrors]     = useState<Record<string, string>>({})
+  const [saving, setSaving]   = useState(false)
+  const [errors, setErrors]   = useState<Record<string, string>>({})
+
+  const industryOptions = [
+    { value: 'manufacturing', label: t('industries.manufacturing') },
+    { value: 'retail',        label: t('industries.retail') },
+    { value: 'food',          label: t('industries.food') },
+    { value: 'electronics',   label: t('industries.electronics') },
+    { value: 'apparel',       label: t('industries.apparel') },
+    { value: 'other',         label: t('industries.other') },
+  ]
 
   function validate() {
     const e: Record<string, string> = {}
-    if (!name.trim()) e.name = t('errors.nameRequired')
+    if (!name.trim())        e.name        = t('errors.nameRequired')
+    if (!companyName.trim()) e.companyName = t('errors.companyNameRequired')
     if (showPasswordSection) {
-      if (newPassword.length > 0 && newPassword.length < 8) e.newPassword = t('password.tooShort')
-      if (newPassword !== confirmPassword) e.confirmPassword = t('password.mismatch')
+      if (newPassword.length > 0 && newPassword.length < 8) e.newPassword     = t('password.tooShort')
+      if (newPassword !== confirmPassword)                   e.confirmPassword = t('password.mismatch')
     }
     return e
   }
 
   async function handleSave() {
-    setSuccess(false)
     const e = validate()
     if (Object.keys(e).length > 0) { setErrors(e); return }
     setErrors({})
     setSaving(true)
     try {
-      const payload: Parameters<typeof updateMyProfile>[0] = { name: name.trim() }
-      // phone only sent when non-empty; backend validates unknown fields strictly
-      if (phone.trim()) payload.phone = phone.trim()
-      if (showPasswordSection && newPassword) payload.password = newPassword
-      await updateMyProfile(payload)
-      // Refresh JWT cookie so server components (Topbar, ProfileButton) pick up new name
+      const userPayload: Parameters<typeof updateMyProfile>[0] = { name: name.trim() }
+      if (phone.trim()) userPayload.phone = phone.trim()
+      if (showPasswordSection && newPassword) userPayload.password = newPassword
+
+      const companyPayload: Parameters<typeof updateMyCompany>[0] = {
+        name: companyName.trim(),
+        industry: industry || undefined,
+      }
+
+      await Promise.all([
+        updateMyProfile(userPayload),
+        updateMyCompany(companyPayload),
+      ])
+
       await refreshToken().catch(() => {})
-      // Hard navigate — guarantees layout re-renders with fresh cookie
       window.location.href = backHref
     } catch {
       setSaving(false)
@@ -86,7 +106,6 @@ export function ProfileEditForm({ profile, portal }: Props) {
     }
   }
 
-  const companyLabel = profile.companies?.name || '—'
   const roleLabel = profile.role === 'admin' ? 'Admin' : 'Staff'
 
   return (
@@ -105,12 +124,6 @@ export function ProfileEditForm({ profile, portal }: Props) {
           <h1 className="text-2xl font-semibold text-on-surface tracking-tight">{t('heading')}</h1>
         </div>
         <div className="flex items-center gap-3">
-          {success && (
-            <span className="flex items-center gap-1.5 text-sm text-secondary font-medium">
-              <IconCircleCheck size={16} />
-              {t('saveSuccess')}
-            </span>
-          )}
           {errors.submit && <FormError message={errors.submit} />}
           <Link
             href={backHref}
@@ -130,47 +143,33 @@ export function ProfileEditForm({ profile, portal }: Props) {
       <div className="flex-1 px-8 py-8">
         <div className="max-w-3xl mx-auto flex flex-col gap-8">
 
-          {/* Avatar + name card */}
+          {/* Avatar + summary card */}
           <section className="bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-8 flex items-center gap-6">
             <Avatar name={profile.name} size="xl" colorScheme="primary" />
             <div>
               <p className="text-lg font-semibold text-on-surface">{profile.name}</p>
               <p className="text-sm text-on-surface-variant mt-0.5">{profile.email}</p>
               <span className="inline-block mt-2 px-2 py-0.5 rounded-full text-xs font-semibold bg-primary-container/20 text-primary">
-                {companyLabel} · {roleLabel}
+                {companyName || '—'} · {roleLabel}
               </span>
             </div>
           </section>
 
           {/* Personal Information */}
           <section className="bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-8 flex flex-col gap-6">
-            <div className="flex items-center gap-3 pb-4 border-b border-outline-variant/20">
-              <span className="w-8 h-8 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary">
-                <IconUser size={18} />
-              </span>
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-on-surface-variant">
-                {t('sections.personal')}
-              </h2>
-            </div>
+            <SectionHeader icon={<IconUser size={18} />} label={t('sections.personal')} />
             <FormInput
               id="name"
               label={t('fields.name')}
               value={name}
-              onChange={(e) => { setName(e.target.value); setErrors((p) => ({ ...p, name: '' })) }}
+              onChange={(e) => { setName(e.target.value); clearError('name') }}
               error={errors.name}
             />
           </section>
 
           {/* Contact Details */}
           <section className="bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-8 flex flex-col gap-6">
-            <div className="flex items-center gap-3 pb-4 border-b border-outline-variant/20">
-              <span className="w-8 h-8 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary">
-                <IconMail size={18} />
-              </span>
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-on-surface-variant">
-                {t('sections.contact')}
-              </h2>
-            </div>
+            <SectionHeader icon={<IconMail size={18} />} label={t('sections.contact')} />
 
             {/* Email — read-only */}
             <div className="flex flex-col gap-2">
@@ -204,27 +203,26 @@ export function ProfileEditForm({ profile, portal }: Props) {
             />
           </section>
 
-          {/* Company Information — read-only */}
+          {/* Company Information — editable */}
           <section className="bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-8 flex flex-col gap-6">
-            <div className="flex items-center gap-3 pb-4 border-b border-outline-variant/20">
-              <span className="w-8 h-8 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary">
-                <IconBuildingSkyscraper size={18} />
-              </span>
-              <h2 className="text-sm font-semibold uppercase tracking-wider text-on-surface-variant">
-                {t('sections.company')}
-              </h2>
-            </div>
-            <div className="grid grid-cols-2 gap-6">
-              <div className="flex flex-col gap-2">
-                <label className="text-xs font-semibold tracking-wider text-on-surface-variant">
-                  {t('fields.company')}
-                </label>
-                <input
-                  readOnly
-                  value={companyLabel}
-                  className="w-full px-4 py-3 rounded-lg bg-surface-container text-on-surface/60 text-sm cursor-not-allowed outline-none"
-                />
-              </div>
+            <SectionHeader icon={<IconBuildingSkyscraper size={18} />} label={t('sections.company')} />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <FormInput
+                id="companyName"
+                label={t('fields.companyName')}
+                value={companyName}
+                onChange={(e) => { setCompanyName(e.target.value); clearError('companyName') }}
+                placeholder={t('fields.companyNamePlaceholder')}
+                error={errors.companyName}
+              />
+              <FormSelect
+                id="industry"
+                label={t('fields.industry')}
+                value={industry}
+                onChange={(e) => setIndustry(e.target.value)}
+                options={industryOptions}
+                placeholder={t('fields.industryPlaceholder')}
+              />
               <div className="flex flex-col gap-2">
                 <label className="text-xs font-semibold tracking-wider text-on-surface-variant">
                   {t('fields.role')}
@@ -241,14 +239,7 @@ export function ProfileEditForm({ profile, portal }: Props) {
           {/* Account Security — password change */}
           <section className="bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-8 flex flex-col gap-6">
             <div className="flex items-center justify-between pb-4 border-b border-outline-variant/20">
-              <div className="flex items-center gap-3">
-                <span className="w-8 h-8 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary">
-                  <IconShieldLock size={18} />
-                </span>
-                <h2 className="text-sm font-semibold uppercase tracking-wider text-on-surface-variant">
-                  {t('sections.account')}
-                </h2>
-              </div>
+              <SectionHeader icon={<IconShieldLock size={18} />} label={t('sections.account')} noBorder />
               <button
                 type="button"
                 onClick={() => { setShowPasswordSection((p) => !p); setErrors({}) }}
@@ -258,7 +249,7 @@ export function ProfileEditForm({ profile, portal }: Props) {
               </button>
             </div>
 
-            {showPasswordSection && (
+            {showPasswordSection ? (
               <div className="flex flex-col gap-5">
                 <FormInput
                   id="currentPassword"
@@ -267,61 +258,79 @@ export function ProfileEditForm({ profile, portal }: Props) {
                   value={currentPassword}
                   onChange={(e) => setCurrentPassword(e.target.value)}
                 />
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="newPassword" className="text-xs font-semibold tracking-wider text-on-surface-variant">
-                    {t('fields.newPassword')}
-                  </label>
-                  <div className="relative">
-                    <input
-                      id="newPassword"
-                      type={showNewPw ? 'text' : 'password'}
-                      value={newPassword}
-                      onChange={(e) => { setNewPassword(e.target.value); setErrors((p) => ({ ...p, newPassword: '' })) }}
-                      className={`w-full pl-4 pr-10 py-3 rounded-lg text-sm text-on-surface outline-none transition-all bg-surface focus:bg-surface-container ${errors.newPassword ? 'ring-2 ring-error/60 border border-error/40' : ''}`}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowNewPw((p) => !p)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary"
-                    >
-                      {showNewPw ? <IconEyeOff size={18} /> : <IconEye size={18} />}
-                    </button>
-                  </div>
-                  {errors.newPassword && <FormError message={errors.newPassword} />}
-                  <p className="text-xs text-on-surface-variant/60">{t('fields.newPasswordHint')}</p>
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label htmlFor="confirmPassword" className="text-xs font-semibold tracking-wider text-on-surface-variant">
-                    {t('fields.confirmPassword')}
-                  </label>
-                  <div className="relative">
-                    <input
-                      id="confirmPassword"
-                      type={showConfirmPw ? 'text' : 'password'}
-                      value={confirmPassword}
-                      onChange={(e) => { setConfirmPassword(e.target.value); setErrors((p) => ({ ...p, confirmPassword: '' })) }}
-                      className={`w-full pl-4 pr-10 py-3 rounded-lg text-sm text-on-surface outline-none transition-all bg-surface focus:bg-surface-container ${errors.confirmPassword ? 'ring-2 ring-error/60 border border-error/40' : ''}`}
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowConfirmPw((p) => !p)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary"
-                    >
-                      {showConfirmPw ? <IconEyeOff size={18} /> : <IconEye size={18} />}
-                    </button>
-                  </div>
-                  {errors.confirmPassword && <FormError message={errors.confirmPassword} />}
-                </div>
+                <PasswordField
+                  id="newPassword"
+                  label={t('fields.newPassword')}
+                  hint={t('fields.newPasswordHint')}
+                  value={newPassword}
+                  show={showNewPw}
+                  onToggle={() => setShowNewPw((p) => !p)}
+                  onChange={(v) => { setNewPassword(v); clearError('newPassword') }}
+                  error={errors.newPassword}
+                />
+                <PasswordField
+                  id="confirmPassword"
+                  label={t('fields.confirmPassword')}
+                  value={confirmPassword}
+                  show={showConfirmPw}
+                  onToggle={() => setShowConfirmPw((p) => !p)}
+                  onChange={(v) => { setConfirmPassword(v); clearError('confirmPassword') }}
+                  error={errors.confirmPassword}
+                />
               </div>
-            )}
-
-            {!showPasswordSection && (
+            ) : (
               <p className="text-sm text-on-surface-variant">••••••••••••</p>
             )}
           </section>
 
         </div>
       </div>
+    </div>
+  )
+
+  function clearError(key: string) {
+    setErrors((p) => ({ ...p, [key]: '' }))
+  }
+}
+
+/* ── Small sub-components ── */
+
+function SectionHeader({ icon, label, noBorder }: { icon: React.ReactNode; label: string; noBorder?: boolean }) {
+  return (
+    <div className={`flex items-center gap-3 ${noBorder ? '' : 'pb-4 border-b border-outline-variant/20'}`}>
+      <span className="w-8 h-8 rounded-lg bg-primary-container/20 flex items-center justify-center text-primary">
+        {icon}
+      </span>
+      <h2 className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">{label}</h2>
+    </div>
+  )
+}
+
+function PasswordField({
+  id, label, hint, value, show, onToggle, onChange, error,
+}: {
+  id: string; label: string; hint?: string; value: string
+  show: boolean; onToggle: () => void; onChange: (v: string) => void; error?: string
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <label htmlFor={id} className="text-xs font-semibold tracking-wider text-on-surface-variant">
+        {label}
+      </label>
+      <div className="relative">
+        <input
+          id={id}
+          type={show ? 'text' : 'password'}
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          className={`w-full pl-4 pr-10 py-3 rounded-lg text-sm text-on-surface outline-none transition-all bg-surface focus:bg-surface-container ${error ? 'ring-2 ring-error/60 border border-error/40' : ''}`}
+        />
+        <button type="button" onClick={onToggle} className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary">
+          {show ? <IconEyeOff size={18} /> : <IconEye size={18} />}
+        </button>
+      </div>
+      {error && <FormError message={error} />}
+      {hint && !error && <p className="text-xs text-on-surface-variant/60">{hint}</p>}
     </div>
   )
 }

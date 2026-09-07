@@ -21,7 +21,7 @@ export default function SellerProfilePage() {
       phone:      null,
       role:       jwt.role,
       company_id: jwt.companyId,
-      companies:  { name: '', type: jwt.companyType },
+      companies:  { name: '', type: jwt.companyType, industry: null },
     }
     setProfile(base)
 

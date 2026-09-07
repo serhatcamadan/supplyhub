@@ -204,6 +204,8 @@
     "weekly": "Haftalık",
     "monthly": "Aylık",
     "months": ["Oca", "Şub", "Mar", "Nis", "May", "Haz", "Tem", "Ağu", "Eyl", "Eki", "Kas", "Ara"],
+    "exportPeriodLabel": "Dönem",
+    "exportRevenueLabel": "Gelir (TRY)",
     "stats": {
       "totalRevenue": "Toplam Gelir",
       "vsLastMonth": "önceki aya kıyasla",
