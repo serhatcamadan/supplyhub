@@ -33,3 +33,14 @@ export function updateProduct(id: string, payload: UpdateProductPayload): Promis
     body: JSON.stringify(payload),
   })
 }
+
+export function deleteProduct(id: string): Promise<void> {
+  return apiFetch<void>(`/seller/products/${id}`, { method: 'DELETE' })
+}
+
+export function updateProductStatus(id: string, status: 'active' | 'draft'): Promise<ApiProduct> {
+  return apiFetch<ApiProduct>(`/seller/products/${id}/status`, {
+    method: 'PATCH',
+    body: JSON.stringify({ status }),
+  })
+}

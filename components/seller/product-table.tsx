@@ -3,13 +3,14 @@
 import { useTranslations } from 'next-intl'
 import { cn, formatCurrency } from '@/lib/utils'
 import { StatusBadge } from '@/components/seller/status-badge'
-import { StockBar } from '@/components/seller/stock-bar'
 import { ProductRowActions } from '@/components/seller/product-row-actions'
 import type { Product, PriceTier } from '@/types'
 import { IconChevronLeft, IconChevronRight, IconPackage, IconPhoto } from '@tabler/icons-react'
 
 interface ProductTableProps {
   products: Product[]
+  onDelete: (id: string) => void
+  onStatusChange: (id: string, status: 'active' | 'draft') => void
 }
 
 function getPriceRange(tiers: PriceTier[]) {
@@ -17,14 +18,7 @@ function getPriceRange(tiers: PriceTier[]) {
   return { min: Math.min(...prices), max: Math.max(...prices) }
 }
 
-const MOCK_STOCK: Record<string, number> = {
-  'product-1': 5240,
-  'product-2': 120,
-  'product-3': 0,
-  'product-4': 1800,
-}
-
-export function ProductTable({ products }: ProductTableProps) {
+export function ProductTable({ products, onDelete, onStatusChange }: ProductTableProps) {
   const t = useTranslations('seller')
 
   return (
@@ -43,7 +37,6 @@ export function ProductTable({ products }: ProductTableProps) {
               <th className="p-4 min-w-60 text-xs font-semibold uppercase tracking-wider text-on-surface">{t('products.table.productInfo')}</th>
               <th className="p-4 text-xs font-semibold uppercase tracking-wider text-on-surface">{t('products.table.category')}</th>
               <th className="p-4 text-right text-xs font-semibold uppercase tracking-wider text-on-surface">{t('products.table.priceRange')}</th>
-              <th className="p-4 text-right text-xs font-semibold uppercase tracking-wider text-on-surface">{t('products.table.stockLevel')}</th>
               <th className="p-4 text-center text-xs font-semibold uppercase tracking-wider text-on-surface">{t('products.table.status')}</th>
               <th className="p-4 text-right text-xs font-semibold uppercase tracking-wider text-on-surface">{t('products.table.actions')}</th>
             </tr>
@@ -52,23 +45,19 @@ export function ProductTable({ products }: ProductTableProps) {
           <tbody className="divide-y divide-outline-variant/30">
             {products.length === 0 ? (
               <tr>
-                <td colSpan={8} className="p-12 text-center">
+                <td colSpan={7} className="p-12 text-center">
                   <IconPackage size={40} className="block mx-auto mb-3 text-outline-variant" />
                   <span className="text-sm text-on-surface-variant">{t('products.table.noResults')}</span>
                 </td>
               </tr>
             ) : (
               products.map((product) => {
-                const stock = MOCK_STOCK[product.id] ?? 500
                 const { min, max } = getPriceRange(product.price_tiers)
 
                 return (
                   <tr
                     key={product.id}
-                    className={cn(
-                      'hover:bg-surface-container/50 transition-colors group',
-                      stock === 0 && 'bg-error-container/5'
-                    )}
+                    className="hover:bg-surface-container/50 transition-colors group"
                   >
                     <td className="p-4 text-center">
                       <input
@@ -105,14 +94,16 @@ export function ProductTable({ products }: ProductTableProps) {
                       </span>
                       <span className="text-xs text-on-surface-variant">{t('products.table.perUnit')}</span>
                     </td>
-                    <td className="p-4 text-right">
-                      <StockBar productId={product.id} />
-                    </td>
                     <td className="p-4 text-center">
                       <StatusBadge status={product.status} />
                     </td>
                     <td className="p-4 text-right">
-                      <ProductRowActions productId={product.id} />
+                      <ProductRowActions
+                        productId={product.id}
+                        status={product.status}
+                        onDelete={() => onDelete(product.id)}
+                        onStatusChange={(s) => onStatusChange(product.id, s)}
+                      />
                     </td>
                   </tr>
                 )
