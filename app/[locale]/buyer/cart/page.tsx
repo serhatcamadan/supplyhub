@@ -1,13 +1,13 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
-import { getProducts } from '@/lib/api/products'
 import { createOrder } from '@/lib/api/orders'
-import { CartItemCard, type CartItem } from '@/components/buyer/cart-item'
+import { useCart } from '@/lib/hooks/use-cart'
+import { CartItemCard } from '@/components/buyer/cart-item'
 import { OrderSummary } from '@/components/buyer/order-summary'
 import { CartPromoBanner } from '@/components/buyer/cart-promo-banner'
 import { IconBookmarkPlus, IconCompass, IconShoppingCart, IconTrashX } from '@tabler/icons-react'
@@ -15,91 +15,33 @@ import { IconBookmarkPlus, IconCompass, IconShoppingCart, IconTrashX } from '@ta
 const TAX_RATE = 0.20
 const SHIPPING_THRESHOLD = 10_000
 const SHIPPING_COST = 450
-// Approval threshold handled server-side by NestJS
-
-const INITIAL_ITEMS: CartItem[] = [
-  {
-    id: 'ci-1',
-    name: 'Organik Zeytinyağı (5L)',
-    sku: 'ZT-001',
-    supplierName: 'FreshFarm Gıda A.Ş.',
-    imageUrl: null,
-    qty: 100,
-    unitPrice: 165,
-    originalUnitPrice: 185,
-    tierLabel: 'Tier 2 (min 50 adet — %11 indirim uygulandı)',
-    stockStatus: 'in_stock',
-    tierPct: 72,
-    minQty: 10,
-  },
-  {
-    id: 'ci-2',
-    name: 'Tam Buğday Unu (25kg)',
-    sku: 'UN-025',
-    supplierName: 'FreshFarm Gıda A.Ş.',
-    imageUrl: null,
-    qty: 20,
-    unitPrice: 42,
-    originalUnitPrice: 42,
-    tierLabel: null,
-    stockStatus: 'low_stock',
-    tierPct: 8,
-    minQty: 20,
-  },
-]
 
 export default function BuyerCartPage() {
   const router = useRouter()
   const t = useTranslations('buyer')
   const locale = useLocale()
-  const [items, setItems] = useState<CartItem[]>(INITIAL_ITEMS)
+  const { items, updateQty, removeItem, clearCart } = useCart()
   const [isCheckingOut, setIsCheckingOut] = useState(false)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
-
-  useEffect(() => {
-    getProducts()
-      .then((products) => {
-        if (!products.length) return
-        setItems((prev) =>
-          prev.map((item, i) =>
-            products[i] ? { ...item, productId: products[i].id, sellerId: products[i].seller_id } : item
-          )
-        )
-      })
-      .catch(() => {})
-  }, [])
-
-  function handleQtyChange(id: string, qty: number) {
-    setItems((prev) => prev.map((item) => item.id === id ? { ...item, qty } : item))
-  }
-
-  function handleRemove(id: string) {
-    setItems((prev) => prev.filter((item) => item.id !== id))
-  }
-
-  function handleClearCart() {
-    setItems([])
-  }
 
   async function handleCheckout() {
     setIsCheckingOut(true)
     setCheckoutError(null)
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const sellerId = (items as any[]).find((i) => i.sellerId)?.sellerId
+    const sellerId = items.find((i) => i.sellerId)?.sellerId
     if (!sellerId) {
       setCheckoutError(t('cart.checkoutError.noSeller'))
       setIsCheckingOut(false)
       return
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const orderItems = (items as any[])
+    const orderItems = items
       .filter((i) => i.productId)
-      .map((i) => ({ productId: i.productId as string, quantity: i.qty }))
+      .map((i) => ({ productId: i.productId!, quantity: i.qty }))
 
     try {
       await createOrder({ sellerId, items: orderItems })
+      clearCart()
       router.push(`/${locale}/buyer/orders`)
     } catch (err) {
       setCheckoutError(err instanceof Error ? err.message : t('cart.checkoutError.orderFailed'))
@@ -130,7 +72,7 @@ export default function BuyerCartPage() {
               <Button
                 variant="ghost"
                 size="sm"
-                onClick={handleClearCart}
+                onClick={clearCart}
                 className="text-error hover:bg-error/10 hover:text-error"
               >
                 <IconTrashX size={18} />
@@ -165,8 +107,8 @@ export default function BuyerCartPage() {
                   <CartItemCard
                     key={item.id}
                     item={item}
-                    onQtyChange={handleQtyChange}
-                    onRemove={handleRemove}
+                    onQtyChange={(id, qty) => updateQty(id, qty)}
+                    onRemove={(id) => removeItem(id)}
                   />
                 ))}
               </div>
