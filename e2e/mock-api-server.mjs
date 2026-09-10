@@ -138,18 +138,21 @@ const MOCK_SELLER_PRODUCTS = [
   {
     id: 'prod-1', seller_id: 'seed-seller', name: 'Organik Zeytinyağı', description: 'Soğuk sıkım, erken hasat',
     category: 'Yağlar', min_order_qty: 10, status: 'active', image_url: null, created_at: new Date().toISOString(),
+    stock_quantity: 245,
     price_tiers: [{ min_qty: 1, max_qty: 49, price: 185 }, { min_qty: 50, max_qty: null, price: 165 }],
     companies: { id: 'seed-seller', name: 'FreshFarm Gıda' },
   },
   {
     id: 'prod-2', seller_id: 'seed-seller', name: 'Tam Buğday Unu', description: 'Stone-ground tam buğday',
     category: 'Tahıl', min_order_qty: 20, status: 'active', image_url: null, created_at: new Date().toISOString(),
+    stock_quantity: 8,
     price_tiers: [{ min_qty: 1, max_qty: 99, price: 42 }, { min_qty: 100, max_qty: null, price: 38 }],
     companies: { id: 'seed-seller', name: 'FreshFarm Gıda' },
   },
   {
     id: 'prod-3', seller_id: 'seed-seller', name: 'Organik Çiçek Balı', description: 'Yöresel çiçek balı',
     category: 'Doğal Ürünler', min_order_qty: 5, status: 'active', image_url: null, created_at: new Date().toISOString(),
+    stock_quantity: 130,
     price_tiers: [{ min_qty: 1, max_qty: 49, price: 195 }, { min_qty: 50, max_qty: null, price: 175 }],
     companies: { id: 'seed-seller', name: 'FreshFarm Gıda' },
   },

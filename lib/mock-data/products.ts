@@ -15,6 +15,7 @@ export const products: Product[] = [
     ],
     image_url: null,
     status: 'active',
+    stock_quantity: 245,
   },
   {
     id: 'product-2',
@@ -30,6 +31,7 @@ export const products: Product[] = [
     ],
     image_url: null,
     status: 'active',
+    stock_quantity: 8,
   },
   {
     id: 'product-3',
@@ -45,6 +47,7 @@ export const products: Product[] = [
     ],
     image_url: null,
     status: 'active',
+    stock_quantity: 130,
   },
   {
     id: 'product-4',
@@ -59,6 +62,7 @@ export const products: Product[] = [
     ],
     image_url: null,
     status: 'draft',
+    stock_quantity: 0,
   },
   {
     id: 'product-5',
@@ -74,5 +78,6 @@ export const products: Product[] = [
     ],
     image_url: null,
     status: 'active',
+    stock_quantity: 52,
   },
 ]

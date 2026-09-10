@@ -10,11 +10,9 @@ export default async function BuyerApprovalsPage() {
   const t = await getTranslations('buyer')
 
   let allOrders: OrderWithDetails[] = []
-  let fetchError: string | null = null
   try {
     allOrders = await serverApiFetch<OrderWithDetails[]>('/orders')
-  } catch (err) {
-    fetchError = err instanceof Error ? err.message : String(err)
+  } catch {
     allOrders = []
   }
 
@@ -37,12 +35,6 @@ export default async function BuyerApprovalsPage() {
           </Button>
         </div>
       </div>
-
-      {fetchError && (
-        <div className="bg-error-container/20 border border-error/30 rounded-lg px-4 py-3 text-sm text-error font-mono">
-          API Hatası: {fetchError}
-        </div>
-      )}
 
       <ApprovalStatCards
         pendingCount={pendingApprovals.length}

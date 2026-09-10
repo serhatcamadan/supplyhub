@@ -27,6 +27,7 @@ export default function NewProductPage() {
     { min_qty: 11, max_qty: 50,   price: 0 },
     { min_qty: 51, max_qty: null, price: 0 },
   ])
+  const [stockQty, setStockQty]         = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError]               = useState<string | null>(null)
 
@@ -59,13 +60,14 @@ export default function NewProductPage() {
     setIsSubmitting(true)
     try {
       await createProduct({
-        name:          name.trim(),
-        description:   description.trim(),
+        name:           name.trim(),
+        description:    description.trim(),
         category,
-        min_order_qty: parseInt(minOrderQty, 10),
-        price_tiers:   tiers,
-        status:        'active',
-        image_url:     null,
+        min_order_qty:  parseInt(minOrderQty, 10),
+        price_tiers:    tiers,
+        status:         'active',
+        image_url:      null,
+        stock_quantity: stockQty ? parseInt(stockQty, 10) : 0,
       })
       router.push(`/${locale}/seller/products`)
     } catch (err) {
@@ -119,7 +121,7 @@ export default function NewProductPage() {
           </div>
           <div className="col-span-12 lg:col-span-4 flex flex-col gap-8">
             <ProductMedia />
-            <ProductLogistics />
+            <ProductLogistics stockQty={stockQty} onStockQtyChange={setStockQty} />
           </div>
         </div>
       </div>

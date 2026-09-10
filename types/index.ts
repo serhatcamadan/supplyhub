@@ -34,6 +34,7 @@ export interface Product {
   price_tiers: PriceTier[]
   image_url: string | null
   status: ProductStatus
+  stock_quantity: number
 }
 
 export interface QuoteRequest {
