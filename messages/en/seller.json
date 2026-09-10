@@ -151,6 +151,7 @@
       "actions": "Actions",
       "perUnit": "per unit",
       "rowsPerPage": "Rows per page",
+      "total": "products",
       "noResults": "No products match your search."
     },
     "status": {
@@ -161,12 +162,16 @@
     "form": {
       "breadcrumbProducts": "Products",
       "breadcrumbNew": "Add New Product",
+      "breadcrumbEdit": "Edit",
       "heading": "Create Product Listing",
+      "headingEdit": "Edit Product",
       "cancel": "Cancel",
       "saving": "Saving…",
       "save": "Save Product",
+      "saveChanges": "Save Changes",
       "errorRequired": "Product name, category and minimum order quantity are required.",
-      "errorNoSession": "Session not found."
+      "errorNoSession": "Session not found.",
+      "errorSave": "Failed to save. Please try again."
     },
     "basicInfo": {
       "heading": "Basic Information",
@@ -191,6 +196,7 @@
       "heading": "Logistics",
       "available": "Available for Order",
       "availableHint": "Product is visible to buyers",
+      "stockQty": "STOCK QUANTITY",
       "weight": "WEIGHT (KG)",
       "leadTime": "LEAD TIME (DAYS)"
     }

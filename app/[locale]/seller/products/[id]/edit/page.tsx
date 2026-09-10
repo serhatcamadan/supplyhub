@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
+import { useTranslations, useLocale } from 'next-intl'
 import { getProduct, updateProduct } from '@/lib/api/products'
 import type { PriceTier } from '@/types'
 import { Button } from '@/components/ui/button'
@@ -15,6 +16,8 @@ import { IconChevronRight, IconDeviceFloppy } from '@tabler/icons-react'
 
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
+  const t = useTranslations('seller')
+  const locale = useLocale()
 
   const [productId, setProductId]     = useState<string | null>(null)
   const [name, setName]               = useState('')
@@ -22,6 +25,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const [minOrderQty, setMinOrderQty] = useState('')
   const [description, setDescription] = useState('')
   const [tiers, setTiers]             = useState<PriceTier[]>([])
+  const [stockQty, setStockQty]       = useState('')
   const [isLoading, setIsLoading]     = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError]             = useState<string | null>(null)
@@ -37,8 +41,9 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         setMinOrderQty(String(data.min_order_qty))
         setDescription(data.description ?? '')
         setTiers((data.price_tiers as PriceTier[]) ?? [])
+        setStockQty(String(data.stock_quantity ?? 0))
       } catch {
-        setError('Ürün yüklenemedi.')
+        setError(t('products.form.errorRequired'))
       } finally {
         setIsLoading(false)
       }
@@ -69,21 +74,22 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   async function handleSave() {
     setError(null)
     if (!name.trim() || !category || !minOrderQty || !productId) {
-      setError('Ürün adı, kategori ve minimum sipariş adedi zorunludur.')
+      setError(t('products.form.errorRequired'))
       return
     }
     setIsSubmitting(true)
     try {
       await updateProduct(productId, {
-        name:          name.trim(),
-        description:   description.trim(),
+        name:           name.trim(),
+        description:    description.trim(),
         category,
-        min_order_qty: parseInt(minOrderQty, 10),
-        price_tiers:   tiers,
+        min_order_qty:  parseInt(minOrderQty, 10),
+        price_tiers:    tiers,
+        stock_quantity: stockQty ? parseInt(stockQty, 10) : 0,
       })
-      router.push('/seller/products')
+      router.push(`/${locale}/seller/products`)
     } catch {
-      setError('Kaydedilemedi, lütfen tekrar deneyin.')
+      setError(t('products.form.errorSave'))
       setIsSubmitting(false)
     }
   }
@@ -129,20 +135,22 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
       <div className="flex items-center justify-between px-8 py-8 border-b border-outline-variant/20 bg-surface">
         <div>
           <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-2">
-            <Link href="/seller/products" className="hover:text-primary transition-colors">Products</Link>
+            <Link href={`/${locale}/seller/products`} className="hover:text-primary transition-colors">
+              {t('products.form.breadcrumbProducts')}
+            </Link>
             <IconChevronRight className="text-[16px]" />
-            <span className="text-on-surface">Edit Product</span>
+            <span className="text-on-surface">{t('products.form.breadcrumbEdit')}</span>
           </div>
-          <h1 className="text-2xl font-semibold text-on-surface tracking-tight">{name || 'Ürün Düzenle'}</h1>
+          <h1 className="text-2xl font-semibold text-on-surface tracking-tight">{name || t('products.form.headingEdit')}</h1>
         </div>
         <div className="flex items-center gap-4">
           {error && <p className="text-sm text-error">{error}</p>}
-          <Link href="/seller/products" className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface hover:bg-surface-container-high transition-colors">
-            Cancel
+          <Link href={`/${locale}/seller/products`} className="px-4 py-2 rounded-lg text-sm font-semibold text-on-surface hover:bg-surface-container-high transition-colors">
+            {t('products.form.cancel')}
           </Link>
           <Button type="button" variant="secondary" onClick={handleSave} disabled={isSubmitting} className="active:scale-[0.98]">
             <IconDeviceFloppy className="text-[18px]" />
-            {isSubmitting ? 'Kaydediliyor…' : 'Save Changes'}
+            {isSubmitting ? t('products.form.saving') : t('products.form.saveChanges')}
           </Button>
         </div>
       </div>
@@ -166,7 +174,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           </div>
           <div className="col-span-12 lg:col-span-4 flex flex-col gap-8">
             <ProductMedia />
-            <ProductLogistics />
+            <ProductLogistics stockQty={stockQty} onStockQtyChange={setStockQty} />
           </div>
         </div>
       </div>

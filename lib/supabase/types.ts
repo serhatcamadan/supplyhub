@@ -22,15 +22,17 @@ export type Database = {
           id: string; seller_id: string; name: string; description: string
           category: string; min_order_qty: number; price_tiers: PriceTier[]
           image_url: string | null; status: 'active' | 'draft'; created_at: string
+          stock_quantity: number
         }
         Insert: {
           id?: string; seller_id: string; name: string; description?: string
           category: string; min_order_qty?: number; price_tiers?: PriceTier[]
-          image_url?: string | null; status?: 'active' | 'draft'
+          image_url?: string | null; status?: 'active' | 'draft'; stock_quantity?: number
         }
         Update: {
           name?: string; description?: string; category?: string; min_order_qty?: number
           price_tiers?: PriceTier[]; image_url?: string | null; status?: 'active' | 'draft'
+          stock_quantity?: number
         }
         Relationships: [
           { foreignKeyName: 'products_seller_id_fkey'; columns: ['seller_id']; isOneToOne: false; referencedRelation: 'companies'; referencedColumns: ['id'] }
