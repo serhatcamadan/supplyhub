@@ -35,9 +35,14 @@ function toCartItem(s: StoredItem): CartItem {
       : 100
   }
 
+  const discountPct =
+    basePrice > 0 && activeTier && activeIdx > 0
+      ? Math.round(((basePrice - activeTier.price) / basePrice) * 100)
+      : 0
+
   const tierLabel =
     activeIdx > 0 && activeTier
-      ? `Tier ${activeIdx + 1} (min ${activeTier.min_qty} adet)`
+      ? `Tier ${activeIdx + 1} (min ${activeTier.min_qty} adet — %${discountPct} indirim uygulandı)`
       : null
 
   const sku = s.name

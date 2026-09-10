@@ -1,9 +1,43 @@
 import { test, expect } from '@playwright/test'
 import { loginAs, resetDb } from './fixtures'
 
+const CART_SEED = [
+  {
+    productId: 'prod-1',
+    sellerId: 'seed-seller',
+    name: 'Organik Zeytinyağı (5L)',
+    imageUrl: null,
+    supplierName: 'FreshFarm Gıda',
+    qty: 100,
+    minQty: 10,
+    priceTiers: [
+      { min_qty: 10, max_qty: 49,  price: 185 },
+      { min_qty: 50, max_qty: 199, price: 165 },
+      { min_qty: 200, max_qty: null, price: 145 },
+    ],
+  },
+  {
+    productId: 'prod-2',
+    sellerId: 'seed-seller',
+    name: 'Tam Buğday Unu (25kg)',
+    imageUrl: null,
+    supplierName: 'FreshFarm Gıda',
+    qty: 20,
+    minQty: 20,
+    priceTiers: [
+      { min_qty: 20,  max_qty: 99,  price: 42 },
+      { min_qty: 100, max_qty: 499, price: 38 },
+      { min_qty: 500, max_qty: null, price: 34 },
+    ],
+  },
+]
+
 test.beforeEach(async ({ page }) => {
   await resetDb(page)
   await loginAs(page, 'buyerAdmin')
+  await page.evaluate((data) => {
+    localStorage.setItem('supplyhub_cart', JSON.stringify(data))
+  }, CART_SEED)
 })
 
 test('sepette 2 ürün görünüyor', async ({ page }) => {
