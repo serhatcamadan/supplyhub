@@ -27,6 +27,14 @@ export default function SellerProductsPage() {
       .finally(() => setIsLoading(false))
   }, [])
 
+  function handleDelete(id: string) {
+    setProducts((prev) => prev.filter((p) => p.id !== id))
+  }
+
+  function handleStatusChange(id: string, status: 'active' | 'draft') {
+    setProducts((prev) => prev.map((p) => (p.id === id ? { ...p, status } : p)))
+  }
+
   const filtered = search
     ? products.filter(
         (p) =>
@@ -77,7 +85,7 @@ export default function SellerProductsPage() {
         filteredCount={filtered.length}
       />
 
-      <ProductTable products={filtered} />
+      <ProductTable products={filtered} onDelete={handleDelete} onStatusChange={handleStatusChange} />
 
     </div>
   )

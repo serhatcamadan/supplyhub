@@ -8,7 +8,12 @@ import { IconTruck } from '@tabler/icons-react'
 
 const INPUT = 'w-full px-3 py-2 bg-surface border border-outline-variant/40 rounded-lg text-sm font-mono text-on-surface focus:outline-none focus:border-primary'
 
-export function ProductLogistics() {
+interface ProductLogisticsProps {
+  stockQty: string
+  onStockQtyChange: (v: string) => void
+}
+
+export function ProductLogistics({ stockQty, onStockQtyChange }: ProductLogisticsProps) {
   const [isActive, setIsActive] = useState(true)
   const t = useTranslations('seller')
 
@@ -29,6 +34,20 @@ export function ProductLogistics() {
           >
             <span className={cn('absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform', isActive ? 'translate-x-5' : 'translate-x-0')} />
           </button>
+        </div>
+
+        <div className="flex flex-col gap-2">
+          <label className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
+            {t('products.logistics.stockQty')}
+          </label>
+          <input
+            type="number"
+            min={0}
+            placeholder="0"
+            value={stockQty}
+            onChange={(e) => onStockQtyChange(e.target.value)}
+            className={INPUT}
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-4">

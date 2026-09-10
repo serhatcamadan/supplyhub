@@ -151,6 +151,7 @@
       "actions": "İşlemler",
       "perUnit": "birim fiyatı",
       "rowsPerPage": "Sayfa başına satır",
+      "total": "ürün",
       "noResults": "Aramanızla eşleşen ürün yok."
     },
     "status": {
@@ -161,12 +162,16 @@
     "form": {
       "breadcrumbProducts": "Ürünler",
       "breadcrumbNew": "Yeni Ürün Ekle",
+      "breadcrumbEdit": "Düzenle",
       "heading": "Ürün Listesi Oluştur",
+      "headingEdit": "Ürün Düzenle",
       "cancel": "İptal",
       "saving": "Kaydediliyor…",
       "save": "Ürünü Kaydet",
+      "saveChanges": "Değişiklikleri Kaydet",
       "errorRequired": "Ürün adı, kategori ve minimum sipariş adedi zorunludur.",
-      "errorNoSession": "Oturum bulunamadı."
+      "errorNoSession": "Oturum bulunamadı.",
+      "errorSave": "Kaydedilemedi, lütfen tekrar deneyin."
     },
     "basicInfo": {
       "heading": "Temel Bilgiler",
@@ -191,6 +196,7 @@
       "heading": "Lojistik",
       "available": "Siparişe Açık",
       "availableHint": "Ürün alıcılara görünür",
+      "stockQty": "STOK MİKTARI",
       "weight": "AĞIRLIK (KG)",
       "leadTime": "TESLİMAT SÜRESİ (GÜN)"
     }

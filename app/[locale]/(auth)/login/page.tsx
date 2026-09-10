@@ -133,12 +133,17 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <p className="text-center text-xs text-on-surface-variant/60">
-            {t('login.noAccount')}{' '}
-            <Link href={`/${locale}/signup`} className="text-primary font-semibold hover:underline">
-              {t('login.register')}
+          <div className="flex items-center justify-between text-xs text-on-surface-variant/60">
+            <span>
+              {t('login.noAccount')}{' '}
+              <Link href={`/${locale}/signup`} className="text-primary font-semibold hover:underline">
+                {t('login.register')}
+              </Link>
+            </span>
+            <Link href={`/${locale}/forgot-password`} className="text-primary font-semibold hover:underline">
+              {t('login.forgotPassword')}
             </Link>
-          </p>
+          </div>
 
           {/* Developer seed tool */}
           <div className="border-t border-outline-variant/30 pt-4 flex flex-col gap-2">

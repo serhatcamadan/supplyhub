@@ -39,6 +39,8 @@ export async function proxy(request: NextRequest) {
   const isAuthPage =
     pathWithoutLocale === '/login' ||
     pathWithoutLocale === '/signup' ||
+    pathWithoutLocale === '/forgot-password' ||
+    pathWithoutLocale === '/reset-password' ||
     pathWithoutLocale.startsWith('/login/') ||
     pathWithoutLocale.startsWith('/signup/')
 

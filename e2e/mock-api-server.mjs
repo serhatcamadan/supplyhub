@@ -106,7 +106,7 @@ function cookie(name, value, opts = {}) {
 
 function cors(res) {
   res.setHeader('Access-Control-Allow-Origin', '*')
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, OPTIONS')
+  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, PATCH, DELETE, OPTIONS')
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
 }
 
@@ -138,18 +138,21 @@ const MOCK_SELLER_PRODUCTS = [
   {
     id: 'prod-1', seller_id: 'seed-seller', name: 'Organik Zeytinyağı', description: 'Soğuk sıkım, erken hasat',
     category: 'Yağlar', min_order_qty: 10, status: 'active', image_url: null, created_at: new Date().toISOString(),
+    stock_quantity: 245,
     price_tiers: [{ min_qty: 1, max_qty: 49, price: 185 }, { min_qty: 50, max_qty: null, price: 165 }],
     companies: { id: 'seed-seller', name: 'FreshFarm Gıda' },
   },
   {
     id: 'prod-2', seller_id: 'seed-seller', name: 'Tam Buğday Unu', description: 'Stone-ground tam buğday',
     category: 'Tahıl', min_order_qty: 20, status: 'active', image_url: null, created_at: new Date().toISOString(),
+    stock_quantity: 8,
     price_tiers: [{ min_qty: 1, max_qty: 99, price: 42 }, { min_qty: 100, max_qty: null, price: 38 }],
     companies: { id: 'seed-seller', name: 'FreshFarm Gıda' },
   },
   {
     id: 'prod-3', seller_id: 'seed-seller', name: 'Organik Çiçek Balı', description: 'Yöresel çiçek balı',
     category: 'Doğal Ürünler', min_order_qty: 5, status: 'active', image_url: null, created_at: new Date().toISOString(),
+    stock_quantity: 130,
     price_tiers: [{ min_qty: 1, max_qty: 49, price: 195 }, { min_qty: 50, max_qty: null, price: 175 }],
     companies: { id: 'seed-seller', name: 'FreshFarm Gıda' },
   },
@@ -257,6 +260,33 @@ const server = http.createServer(async (req, res) => {
       }
       res.writeHead(201)
       res.end(JSON.stringify(created))
+      return
+    }
+
+    // ── PATCH /seller/products/:id/status ────────────────────────────────────
+    if (req.method === 'PATCH' && /^\/seller\/products\/[^/]+\/status$/.test(path)) {
+      const id = path.split('/')[3]
+      const payload = parseJwtPayload(req.headers['authorization'])
+      if (!payload) { res.writeHead(401); res.end(JSON.stringify({ statusCode: 401 })); return }
+      const body = await readBody(req)
+      if (SUPABASE_URL && SUPABASE_KEY) {
+        await sbWrite('products', 'PATCH', { id: `eq.${id}` }, { status: body.status })
+      }
+      res.writeHead(200)
+      res.end(JSON.stringify({ id, status: body.status }))
+      return
+    }
+
+    // ── DELETE /seller/products/:id ───────────────────────────────────────────
+    if (req.method === 'DELETE' && /^\/seller\/products\/[^/]+$/.test(path)) {
+      const id = path.split('/')[3]
+      const payload = parseJwtPayload(req.headers['authorization'])
+      if (!payload) { res.writeHead(401); res.end(JSON.stringify({ statusCode: 401 })); return }
+      if (SUPABASE_URL && SUPABASE_KEY) {
+        await sbWrite('products', 'DELETE', { id: `eq.${id}` }, {})
+      }
+      res.writeHead(204)
+      res.end()
       return
     }
 

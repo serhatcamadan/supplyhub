@@ -18,26 +18,31 @@ export function ApprovalCard({ order }: ApprovalCardProps) {
   const locale = useLocale()
   const router = useRouter()
   const [isLoading, setIsLoading] = useState(false)
+  const [hidden, setHidden] = useState(false)
 
   async function handleApprove() {
     setIsLoading(true)
     try {
       await approveOrder(order.id)
+      setHidden(true)
+      router.refresh()
     } catch {
-      // noop
+      setIsLoading(false)
     }
-    router.refresh()
   }
 
   async function handleReject() {
     setIsLoading(true)
     try {
       await rejectOrder(order.id)
+      setHidden(true)
+      router.refresh()
     } catch {
-      // noop
+      setIsLoading(false)
     }
-    router.refresh()
   }
+
+  if (hidden) return null
 
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-sm border border-tertiary-container/40 overflow-hidden">
