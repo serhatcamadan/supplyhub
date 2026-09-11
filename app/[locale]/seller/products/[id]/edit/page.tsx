@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
 import { getProduct, updateProduct } from '@/lib/api/products'
+import { uploadProductImage } from '@/lib/supabase/storage'
 import type { PriceTier } from '@/types'
 import { Button } from '@/components/ui/button'
 import { ProductBasicInfo } from '@/components/seller/product-basic-info'
@@ -25,6 +26,8 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const [minOrderQty, setMinOrderQty] = useState('')
   const [description, setDescription] = useState('')
   const [tiers, setTiers]             = useState<PriceTier[]>([])
+  const [imageFile, setImageFile]     = useState<File | null>(null)
+  const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null)
   const [stockQty, setStockQty]       = useState('')
   const [isLoading, setIsLoading]     = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
@@ -42,6 +45,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         setDescription(data.description ?? '')
         setTiers((data.price_tiers as PriceTier[]) ?? [])
         setStockQty(String(data.stock_quantity ?? 0))
+        setCurrentImageUrl(data.image_url ?? null)
       } catch {
         setError(t('products.form.errorRequired'))
       } finally {
@@ -79,6 +83,14 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     }
     setIsSubmitting(true)
     try {
+      let image_url = currentImageUrl
+      if (imageFile) {
+        try {
+          image_url = await uploadProductImage(productId, imageFile)
+        } catch {
+          // upload failed; keep existing image_url
+        }
+      }
       await updateProduct(productId, {
         name:           name.trim(),
         description:    description.trim(),
@@ -86,6 +98,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         min_order_qty:  parseInt(minOrderQty, 10),
         price_tiers:    tiers,
         stock_quantity: stockQty ? parseInt(stockQty, 10) : 0,
+        ...(image_url !== currentImageUrl && { image_url }),
       })
       router.push(`/${locale}/seller/products`)
     } catch {
@@ -173,7 +186,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             />
           </div>
           <div className="col-span-12 lg:col-span-4 flex flex-col gap-8">
-            <ProductMedia />
+            <ProductMedia initialUrl={currentImageUrl} onFileSelect={setImageFile} />
             <ProductLogistics stockQty={stockQty} onStockQtyChange={setStockQty} />
           </div>
         </div>

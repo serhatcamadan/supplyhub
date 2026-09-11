@@ -192,6 +192,11 @@
       "maxQty": "MAKS ADEDİ",
       "unitPrice": "BİRİM FİYAT (₺)"
     },
+    "media": {
+      "heading": "Ürün Görselleri",
+      "dropzoneLabel": "Görsel yüklemek için tıklayın veya sürükleyin",
+      "dropzoneSub": "JPG, PNG, WebP maks 5MB"
+    },
     "logistics": {
       "heading": "Lojistik",
       "available": "Siparişe Açık",

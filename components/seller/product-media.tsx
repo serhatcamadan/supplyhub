@@ -1,11 +1,18 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { SectionHeading } from '@/components/ui/section-heading'
 import { IconCloudUpload, IconPhoto, IconPhotoPlus, IconTrash } from '@tabler/icons-react'
 
-export function ProductMedia() {
-  const [preview, setPreview] = useState<string | null>(null)
+interface ProductMediaProps {
+  initialUrl?: string | null
+  onFileSelect?: (file: File | null) => void
+}
+
+export function ProductMedia({ initialUrl, onFileSelect }: ProductMediaProps) {
+  const t = useTranslations('seller')
+  const [preview, setPreview] = useState<string | null>(initialUrl ?? null)
 
   function handleChange(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0]
@@ -13,16 +20,21 @@ export function ProductMedia() {
     const reader = new FileReader()
     reader.onload = (ev) => setPreview(ev.target?.result as string)
     reader.readAsDataURL(file)
+    onFileSelect?.(file)
+  }
+
+  function handleRemove() {
+    setPreview(null)
+    onFileSelect?.(null)
   }
 
   return (
     <div className="bg-surface-container-lowest rounded-xl shadow-sm p-8 border border-outline-variant/20">
-      <SectionHeading icon={IconPhoto} label="Product Media" />
+      <SectionHeading icon={IconPhoto} label={t('products.media.heading')} />
 
       <div className="w-full aspect-video rounded-xl border-2 border-dashed border-outline-variant/50 bg-surface flex flex-col items-center justify-center p-6 text-center hover:bg-surface-container-low hover:border-primary/50 transition-all cursor-pointer mb-4 group relative overflow-hidden">
         <input
           accept="image/*"
-          multiple
           type="file"
           onChange={handleChange}
           className="absolute inset-0 w-full h-full opacity-0 cursor-pointer z-10"
@@ -30,8 +42,8 @@ export function ProductMedia() {
         <div className="w-12 h-12 rounded-full bg-primary-container/20 flex items-center justify-center mb-3 group-hover:scale-110 transition-transform">
           <IconCloudUpload className="text-primary text-[24px]" />
         </div>
-        <p className="text-sm font-semibold text-on-surface mb-1">Click or drag images to upload</p>
-        <p className="text-xs text-on-surface-variant">JPG, PNG, WebP up to 5MB</p>
+        <p className="text-sm font-semibold text-on-surface mb-1">{t('products.media.dropzoneLabel')}</p>
+        <p className="text-xs text-on-surface-variant">{t('products.media.dropzoneSub')}</p>
       </div>
 
       <div className="grid grid-cols-3 gap-3">
@@ -40,7 +52,7 @@ export function ProductMedia() {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={preview} alt="Product preview" className="w-full h-full object-cover" />
             <div className="absolute inset-0 bg-on-surface/50 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center">
-              <button type="button" onClick={() => setPreview(null)} className="p-1.5 bg-surface text-error rounded shadow hover:scale-105 transition-transform">
+              <button type="button" onClick={handleRemove} className="p-1.5 bg-surface text-error rounded shadow hover:scale-105 transition-transform">
                 <IconTrash className="text-[16px]" />
               </button>
             </div>
