@@ -74,7 +74,52 @@
   "notifications": {
     "heading": "Notifications",
     "markAllRead": "Mark all as read",
-    "viewAll": "View all notifications"
+    "viewAll": "View all notifications",
+    "empty": "No notifications",
+    "justNow": "just now",
+    "minutesAgo": "{count}m ago",
+    "hoursAgo": "{count}h ago",
+    "daysAgo": "{count}d ago",
+    "types": {
+      "order_created": {
+        "title": "New Order Received",
+        "message": "A new order from {buyerName} with {itemCount} item(s) was received ({total}).",
+        "actionLabel": "View Order"
+      },
+      "order_status_changed": {
+        "title": "Order Status Updated",
+        "message": "Your order is now: {status}",
+        "actionLabel": "View Order"
+      },
+      "quote_requested": {
+        "title": "New Quote Request",
+        "message": "{buyerName} requested a quote for {productName}.",
+        "actionLabel": "View Quote"
+      },
+      "quote_responded": {
+        "title": "Quote Responded",
+        "message": "Your quote request for {productName} has been responded to.",
+        "actionLabel": "View My Quotes"
+      }
+    },
+    "filters": {
+      "all": "All Notifications",
+      "unread": "Unread",
+      "orders": "Orders",
+      "quotes": "Quotes",
+      "system": "System"
+    },
+    "page": {
+      "subheading": "Stay updated on your orders, quotes, and account activity.",
+      "allCaughtUp": "All caught up!",
+      "noMatch": "No notifications match this filter.",
+      "showing": "Showing {shown} of {total} notifications",
+      "searchPlaceholder": "Search...",
+      "settingsTitle": "Notification Settings",
+      "settingsBody": "Customize which alerts you receive via email and SMS.",
+      "managePreferences": "Manage Preferences",
+      "filtersLabel": "Filters"
+    }
   },
   "emptyState": {
     "noOrders": "No orders found.",

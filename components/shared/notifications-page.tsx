@@ -1,96 +1,44 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
+import { useTranslations, useLocale } from 'next-intl'
 import { Button } from '@/components/ui/button'
-import { NotificationItem, type FullNotification } from './notification-item'
-import { NotificationFilterSidebar, FILTERS, type FilterType } from './notification-filter-sidebar'
-import { IconAlertTriangle, IconChecks, IconChevronLeft, IconChevronRight, IconCircleCheck, IconFileInvoice, IconPackage, IconSettings, IconShoppingBag } from '@tabler/icons-react'
+import { NotificationItem } from './notification-item'
+import { NotificationFilterSidebar, type FilterType } from './notification-filter-sidebar'
+import { getNotifications, markNotificationRead, markAllNotificationsRead } from '@/lib/api/notifications'
+import { translateNotification, timeAgo } from '@/lib/notifications'
+import { IconChecks, IconChevronLeft, IconChevronRight, IconCircleCheck, IconSettings } from '@tabler/icons-react'
+import type { Notification } from '@/types'
 
-const INITIAL: FullNotification[] = [
-  {
-    id: '1',
-    category: 'order',
-    icon: IconShoppingBag,
-    iconBg: 'bg-primary-container',
-    iconColor: 'text-on-primary-container',
-    title: 'Order #ORD-8472 Shipped',
-    message: 'Your wholesale order for 500x Industrial Widgets has been dispatched via Freight Forwarding Inc. Expected delivery is Thursday, Oct 12.',
-    time: '10 mins ago',
-    read: false,
-    actions: [
-      { label: 'Track Shipment', variant: 'primary' },
-      { label: 'View Order',     variant: 'outline' },
-    ],
-  },
-  {
-    id: '2',
-    category: 'quote',
-    icon: IconFileInvoice,
-    iconBg: 'bg-secondary-container',
-    iconColor: 'text-on-secondary-container',
-    title: 'New Quote Received: RFQ-992',
-    message: "TechCorp Supplies has submitted a quote for your request regarding 'Bulk Silicone Sealant'. The quoted price is 15% below your target.",
-    time: '2 hours ago',
-    read: false,
-    actions: [{ label: 'Review Quote', variant: 'secondary' }],
-  },
-  {
-    id: '3',
-    category: 'system',
-    icon: IconAlertTriangle,
-    iconBg: 'bg-error-container',
-    iconColor: 'text-on-error-container',
-    title: 'Payment Failed: Invoice #INV-102',
-    message: 'Your scheduled ACH transfer for Invoice #INV-102 was declined by your bank. Please update your payment method to avoid shipping delays.',
-    time: 'Yesterday, 14:30',
-    read: false,
-    actions: [{ label: 'Update Payment', variant: 'destructive' }],
-  },
-  {
-    id: '4',
-    category: 'system',
-    icon: IconCircleCheck,
-    iconBg: 'bg-surface-container-highest',
-    iconColor: 'text-on-surface-variant',
-    title: 'Account Verified',
-    message: 'Your business credentials have been successfully verified. You now have full access to the B2B wholesale marketplace.',
-    time: 'Oct 4, 2023',
-    read: true,
-  },
-  {
-    id: '5',
-    category: 'order',
-    icon: IconPackage,
-    iconBg: 'bg-surface-container-highest',
-    iconColor: 'text-on-surface-variant',
-    title: 'Low Stock Alert',
-    message: 'Item SKU: AL-9902 is running low. Only 15 units remain in your reserved inventory. Consider restocking soon.',
-    time: 'Oct 2, 2023',
-    read: true,
-    actions: [{ label: 'Reorder', variant: 'outline' }],
-  },
-]
-
-function matches(n: FullNotification, filter: FilterType, search: string): boolean {
+function matches(n: Notification, filter: FilterType, search: string, title: string, message: string): boolean {
   const q = search.toLowerCase()
-  if (q && !n.title.toLowerCase().includes(q) && !n.message.toLowerCase().includes(q)) return false
-  if (filter === 'unread')  return !n.read
-  if (filter === 'orders')  return n.category === 'order'
-  if (filter === 'quotes')  return n.category === 'quote'
-  if (filter === 'system')  return n.category === 'system'
+  if (q && !title.toLowerCase().includes(q) && !message.toLowerCase().includes(q)) return false
+  if (filter === 'unread') return !n.read
+  if (filter === 'orders') return n.category === 'order'
+  if (filter === 'quotes') return n.category === 'quote'
+  if (filter === 'system') return n.category === 'system'
   return true
 }
 
 export function NotificationsPage() {
-  const [notifications, setNotifications] = useState(INITIAL)
+  const t = useTranslations('common')
+  const locale = useLocale()
+  const [notifications, setNotifications] = useState<Notification[]>([])
   const [activeFilter,  setActiveFilter]  = useState<FilterType>('all')
   const [search,        setSearch]        = useState('')
 
-  const unreadCount    = notifications.filter((n) => !n.read).length
-  const visible        = notifications.filter((n) => matches(n, activeFilter, search))
+  useEffect(() => {
+    getNotifications().then(setNotifications).catch(() => {})
+  }, [])
+
+  const unreadCount = notifications.filter((n) => !n.read).length
+
+  const translated = notifications.map((n) => ({ n, ...translateNotification(t, n, locale) }))
+  const visible = translated.filter(({ n, title, message }) => matches(n, activeFilter, search, title, message))
+
   const countByFilter: Record<FilterType, number> = {
     all:    notifications.length,
-    unread: notifications.filter((n) => !n.read).length,
+    unread: unreadCount,
     orders: notifications.filter((n) => n.category === 'order').length,
     quotes: notifications.filter((n) => n.category === 'quote').length,
     system: notifications.filter((n) => n.category === 'system').length,
@@ -98,9 +46,16 @@ export function NotificationsPage() {
 
   function markAllRead() {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
+    markAllNotificationsRead().catch(() => {})
   }
   function dismiss(id: string) {
     setNotifications((prev) => prev.filter((n) => n.id !== id))
+    markNotificationRead(id).catch(() => {})
+  }
+  function handleAction(n: Notification) {
+    if (n.read) return
+    setNotifications((prev) => prev.map((x) => (x.id === n.id ? { ...x, read: true } : x)))
+    markNotificationRead(n.id).catch(() => {})
   }
 
   return (
@@ -109,21 +64,21 @@ export function NotificationsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
         <div>
           <h1 className="text-4xl font-bold tracking-tight text-on-surface mb-1 flex items-center gap-3">
-            Notifications
+            {t('notifications.heading')}
             {unreadCount > 0 && (
               <span className="text-xl font-semibold text-on-surface-variant bg-surface-variant px-3 py-1 rounded-full">
-                {unreadCount} Unread
+                {unreadCount} {t('notifications.filters.unread')}
               </span>
             )}
           </h1>
           <p className="text-sm text-on-surface-variant">
-            Stay updated on your orders, quotes, and account activity.
+            {t('notifications.page.subheading')}
           </p>
         </div>
         <div className="flex items-center gap-3">
           <Button variant="ghost" onClick={markAllRead} className="gap-2">
             <IconChecks className="text-[20px]" />
-            Mark all as read
+            {t('notifications.markAllRead')}
           </Button>
           <Button variant="ghost" className="w-10 h-10 p-0">
             <IconSettings />
@@ -149,25 +104,35 @@ export function NotificationsPage() {
                   <IconCircleCheck className="text-secondary text-[32px]" />
                 </div>
                 <div>
-                  <p className="font-semibold text-on-surface text-lg">All caught up!</p>
-                  <p className="text-sm text-on-surface-variant mt-1">No notifications match this filter.</p>
+                  <p className="font-semibold text-on-surface text-lg">{t('notifications.page.allCaughtUp')}</p>
+                  <p className="text-sm text-on-surface-variant mt-1">{t('notifications.page.noMatch')}</p>
                 </div>
               </div>
             ) : (
-              visible.map((n) => (
-                <NotificationItem key={n.id} n={n} onDismiss={dismiss} />
+              visible.map(({ n, title, message, actionLabel }) => (
+                <NotificationItem
+                  key={n.id}
+                  n={n}
+                  title={title}
+                  message={message}
+                  actionLabel={actionLabel}
+                  timeLabel={timeAgo(t, n.created_at)}
+                  href={n.action_href ? `/${locale}${n.action_href}` : '#'}
+                  onDismiss={dismiss}
+                  onAction={handleAction}
+                />
               ))
             )}
 
             <div className="p-4 flex items-center justify-between bg-surface-container-lowest border-t border-outline-variant/10">
               <span className="text-xs text-on-surface-variant">
-                Showing {visible.length} of {notifications.length} notifications
+                {t('notifications.page.showing', { shown: visible.length, total: notifications.length })}
               </span>
               <div className="flex gap-2">
                 <button className="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/50 text-on-surface-variant opacity-50 cursor-not-allowed">
                   <IconChevronLeft className="text-[20px]" />
                 </button>
-                <button className="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/50 text-on-surface-variant hover:bg-surface-variant hover:text-primary transition-colors">
+                <button className="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/50 text-on-surface-variant opacity-50 cursor-not-allowed">
                   <IconChevronRight className="text-[20px]" />
                 </button>
               </div>

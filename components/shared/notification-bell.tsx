@@ -3,76 +3,27 @@
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { useTranslations } from 'next-intl'
+import { useTranslations, useLocale } from 'next-intl'
 import { Button } from '@/components/ui/button'
-import { IconArrowRight, IconBell, IconFileInvoice, IconTruck, IconCircleCheck, IconAlertTriangle } from '@tabler/icons-react'
-import type { ElementType } from 'react'
-
-type Notification = {
-  id: string
-  icon: ElementType
-  iconBg: string
-  iconColor: string
-  title: string
-  message: string
-  time: string
-  read: boolean
-  action?: { label: string; href: string }
-}
-
-const MOCK_NOTIFICATIONS: Notification[] = [
-  {
-    id: '1',
-    icon: IconFileInvoice,
-    iconBg: 'bg-primary-container',
-    iconColor: 'text-on-primary-container',
-    title: 'New Quote Response',
-    message: 'Supplier Acme Corp has responded to your RFQ for Industrial Bearings. Review the updated pricing.',
-    time: '2m ago',
-    read: false,
-    action: { label: 'View Quote', href: '/buyer/quotes' },
-  },
-  {
-    id: '2',
-    icon: IconTruck,
-    iconBg: 'bg-secondary-container',
-    iconColor: 'text-on-secondary-container',
-    title: 'Order #552 Shipped',
-    message: 'Your order for 500x Steel Brackets has been shipped. Estimated delivery: Oct 24.',
-    time: '1h ago',
-    read: false,
-  },
-  {
-    id: '3',
-    icon: IconCircleCheck,
-    iconBg: 'bg-surface-container-high',
-    iconColor: 'text-on-surface-variant',
-    title: 'Payment Confirmed',
-    message: 'Invoice INV-2023-089 has been successfully settled.',
-    time: 'Yesterday',
-    read: true,
-  },
-  {
-    id: '4',
-    icon: IconAlertTriangle,
-    iconBg: 'bg-tertiary-container',
-    iconColor: 'text-on-tertiary-container',
-    title: 'Action Required: Compliance',
-    message: 'Please update your tax certification documents before the end of Q4 to avoid disruptions.',
-    time: 'Oct 20',
-    read: true,
-  },
-]
+import { getNotifications, markNotificationRead, markAllNotificationsRead } from '@/lib/api/notifications'
+import { translateNotification, timeAgo, CATEGORY_STYLE } from '@/lib/notifications'
+import { IconArrowRight, IconBell } from '@tabler/icons-react'
+import type { Notification } from '@/types'
 
 export function NotificationBell() {
   const [open,          setOpen]          = useState(false)
-  const [notifications, setNotifications] = useState(MOCK_NOTIFICATIONS)
+  const [notifications, setNotifications] = useState<Notification[]>([])
   const containerRef = useRef<HTMLDivElement>(null)
   const pathname     = usePathname()
   const t            = useTranslations('common')
-  const allNotificationsHref = pathname.startsWith('/buyer') ? '/buyer/notifications' : '/seller/notifications'
+  const locale       = useLocale()
+  const allNotificationsHref = pathname.startsWith('/buyer') ? `/${locale}/buyer/notifications` : `/${locale}/seller/notifications`
 
   const unreadCount = notifications.filter((n) => !n.read).length
+
+  useEffect(() => {
+    getNotifications().then(setNotifications).catch(() => {})
+  }, [])
 
   useEffect(() => {
     function handleClickOutside(e: MouseEvent) {
@@ -86,6 +37,15 @@ export function NotificationBell() {
 
   function markAllRead() {
     setNotifications((prev) => prev.map((n) => ({ ...n, read: true })))
+    markAllNotificationsRead().catch(() => {})
+  }
+
+  function handleAction(n: Notification) {
+    setOpen(false)
+    if (!n.read) {
+      setNotifications((prev) => prev.map((x) => (x.id === n.id ? { ...x, read: true } : x)))
+      markNotificationRead(n.id).catch(() => {})
+    }
   }
 
   return (
@@ -124,48 +84,52 @@ export function NotificationBell() {
 
         {/* List */}
         <div className="flex-1 overflow-y-auto max-h-100">
-          {notifications.map((n) => (
-            <div
-              key={n.id}
-              className={`
-                group relative px-6 py-4 flex gap-4 cursor-pointer transition-colors hover:bg-surface-container-low
-                ${n.read ? 'bg-surface-container-lowest opacity-75 hover:opacity-100' : 'bg-surface'}
-              `}
-            >
-              {/* Unread accent bar */}
-              {!n.read && (
-                <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r-full" />
-              )}
+          {notifications.length === 0 ? (
+            <div className="py-10 text-center text-sm text-on-surface-variant">{t('notifications.empty')}</div>
+          ) : (
+            notifications.map((n) => {
+              const { icon: Icon, bg, color } = CATEGORY_STYLE[n.category]
+              const { title, message, actionLabel } = translateNotification(t, n, locale)
+              return (
+                <div
+                  key={n.id}
+                  className={`
+                    group relative px-6 py-4 flex gap-4 cursor-pointer transition-colors hover:bg-surface-container-low
+                    ${n.read ? 'bg-surface-container-lowest opacity-75 hover:opacity-100' : 'bg-surface'}
+                  `}
+                >
+                  {!n.read && (
+                    <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-8 bg-primary rounded-r-full" />
+                  )}
 
-              {/* Icon */}
-              <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${n.iconBg}`}>
-                <n.icon className={n.iconColor} size={20} />
-              </div>
-
-              {/* Content */}
-              <div className="flex-1 min-w-0">
-                <div className="flex justify-between items-start mb-1">
-                  <p className="text-sm font-semibold text-on-surface truncate">{n.title}</p>
-                  <span className="text-xs text-on-surface-variant whitespace-nowrap ml-2">{n.time}</span>
-                </div>
-                <p className="text-xs text-on-surface-variant line-clamp-2 leading-relaxed">{n.message}</p>
-                {n.action && (
-                  <div className="mt-3">
-                    <Link href={n.action.href} onClick={() => setOpen(false)}>
-                      <Button size="sm" className="text-xs">
-                        {n.action.label}
-                      </Button>
-                    </Link>
+                  <div className={`w-10 h-10 rounded-full flex items-center justify-center shrink-0 ${bg}`}>
+                    <Icon className={color} size={20} />
                   </div>
-                )}
-              </div>
 
-              {/* Unread dot */}
-              {!n.read && (
-                <div className="w-2 h-2 rounded-full bg-primary shrink-0 mt-1.5 shadow-[0_0_8px_rgba(2,36,72,0.4)]" />
-              )}
-            </div>
-          ))}
+                  <div className="flex-1 min-w-0">
+                    <div className="flex justify-between items-start mb-1">
+                      <p className="text-sm font-semibold text-on-surface truncate">{title}</p>
+                      <span className="text-xs text-on-surface-variant whitespace-nowrap ml-2">{timeAgo(t, n.created_at)}</span>
+                    </div>
+                    <p className="text-xs text-on-surface-variant line-clamp-2 leading-relaxed">{message}</p>
+                    {n.action_href && (
+                      <div className="mt-3">
+                        <Link href={`/${locale}${n.action_href}`} onClick={() => handleAction(n)}>
+                          <Button size="sm" className="text-xs">
+                            {actionLabel}
+                          </Button>
+                        </Link>
+                      </div>
+                    )}
+                  </div>
+
+                  {!n.read && (
+                    <div className="w-2 h-2 rounded-full bg-primary shrink-0 mt-1.5 shadow-[0_0_8px_rgba(2,36,72,0.4)]" />
+                  )}
+                </div>
+              )
+            })
+          )}
         </div>
 
         {/* Footer */}

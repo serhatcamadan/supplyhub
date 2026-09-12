@@ -87,3 +87,16 @@ export interface OrderWithDetails extends Order {
   created_by_user: User
   approved_by_user: User | null
 }
+
+export type NotificationCategory = 'order' | 'quote' | 'system'
+
+export interface Notification {
+  id: string
+  company_id: string
+  category: NotificationCategory
+  type: string
+  data: Record<string, unknown>
+  action_href: string | null
+  read: boolean
+  created_at: string
+}
