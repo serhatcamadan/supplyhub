@@ -192,6 +192,11 @@
       "maxQty": "MAX QUANTITY",
       "unitPrice": "UNIT PRICE (₺)"
     },
+    "media": {
+      "heading": "Product Media",
+      "dropzoneLabel": "Click or drag images to upload",
+      "dropzoneSub": "JPG, PNG, WebP up to 5MB"
+    },
     "logistics": {
       "heading": "Logistics",
       "available": "Available for Order",
