@@ -1,16 +1,13 @@
-import { createClient } from './client'
-
 export async function uploadProductImage(productId: string, file: File): Promise<string> {
-  const supabase = createClient()
-  const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg'
-  const path = `${productId}/main.${ext}`
+  const form = new FormData()
+  form.append('file', file)
+  form.append('productId', productId)
 
-  const { error } = await supabase.storage
-    .from('product-images')
-    .upload(path, file, { upsert: true, contentType: file.type })
-
-  if (error) throw new Error(error.message)
-
-  const { data } = supabase.storage.from('product-images').getPublicUrl(path)
-  return data.publicUrl
+  const res = await fetch('/api/products/upload-image', { method: 'POST', body: form })
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}))
+    throw new Error((body as { error?: string }).error ?? 'Upload failed')
+  }
+  const { url } = (await res.json()) as { url: string }
+  return url
 }
