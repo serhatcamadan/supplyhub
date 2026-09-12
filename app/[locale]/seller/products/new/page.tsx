@@ -4,7 +4,8 @@ import { useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { useLocale, useTranslations } from 'next-intl'
-import { createProduct } from '@/lib/api/products'
+import { createProduct, updateProduct } from '@/lib/api/products'
+import { uploadProductImage } from '@/lib/supabase/storage'
 import type { PriceTier } from '@/types'
 import { Button } from '@/components/ui/button'
 import { ProductBasicInfo } from '@/components/seller/product-basic-info'
@@ -27,6 +28,7 @@ export default function NewProductPage() {
     { min_qty: 11, max_qty: 50,   price: 0 },
     { min_qty: 51, max_qty: null, price: 0 },
   ])
+  const [imageFile, setImageFile]       = useState<File | null>(null)
   const [stockQty, setStockQty]         = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError]               = useState<string | null>(null)
@@ -59,7 +61,7 @@ export default function NewProductPage() {
     }
     setIsSubmitting(true)
     try {
-      await createProduct({
+      const product = await createProduct({
         name:           name.trim(),
         description:    description.trim(),
         category,
@@ -69,6 +71,14 @@ export default function NewProductPage() {
         image_url:      null,
         stock_quantity: stockQty ? parseInt(stockQty, 10) : 0,
       })
+      if (imageFile) {
+        try {
+          const imageUrl = await uploadProductImage(product.id, imageFile)
+          await updateProduct(product.id, { image_url: imageUrl })
+        } catch {
+          // product created; image upload failed silently
+        }
+      }
       router.push(`/${locale}/seller/products`)
     } catch (err) {
       setError(err instanceof Error ? err.message : t('products.form.errorRequired'))
@@ -120,7 +130,7 @@ export default function NewProductPage() {
             />
           </div>
           <div className="col-span-12 lg:col-span-4 flex flex-col gap-8">
-            <ProductMedia />
+            <ProductMedia onFileSelect={setImageFile} />
             <ProductLogistics stockQty={stockQty} onStockQtyChange={setStockQty} />
           </div>
         </div>
