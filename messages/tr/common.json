@@ -74,7 +74,52 @@
   "notifications": {
     "heading": "Bildirimler",
     "markAllRead": "Tümünü okundu işaretle",
-    "viewAll": "Tüm bildirimleri gör"
+    "viewAll": "Tüm bildirimleri gör",
+    "empty": "Bildirim yok",
+    "justNow": "az önce",
+    "minutesAgo": "{count} dk önce",
+    "hoursAgo": "{count} sa önce",
+    "daysAgo": "{count} gün önce",
+    "types": {
+      "order_created": {
+        "title": "Yeni Sipariş Alındı",
+        "message": "{buyerName} firmasından {itemCount} ürün içeren yeni bir sipariş alındı ({total}).",
+        "actionLabel": "Siparişi Görüntüle"
+      },
+      "order_status_changed": {
+        "title": "Sipariş Durumu Güncellendi",
+        "message": "Siparişiniz artık: {status}",
+        "actionLabel": "Siparişi Görüntüle"
+      },
+      "quote_requested": {
+        "title": "Yeni Teklif Talebi",
+        "message": "{buyerName}, {productName} için teklif talep etti.",
+        "actionLabel": "Teklifi Görüntüle"
+      },
+      "quote_responded": {
+        "title": "Teklif Yanıtlandı",
+        "message": "{productName} için teklif talebiniz yanıtlandı.",
+        "actionLabel": "Tekliflerimi Görüntüle"
+      }
+    },
+    "filters": {
+      "all": "Tüm Bildirimler",
+      "unread": "Okunmamış",
+      "orders": "Siparişler",
+      "quotes": "Teklifler",
+      "system": "Sistem"
+    },
+    "page": {
+      "subheading": "Siparişlerinizi, tekliflerinizi ve hesap etkinliğinizi takip edin.",
+      "allCaughtUp": "Her şey güncel!",
+      "noMatch": "Bu filtreyle eşleşen bildirim yok.",
+      "showing": "{total} bildirimden {shown} tanesi gösteriliyor",
+      "searchPlaceholder": "Ara...",
+      "settingsTitle": "Bildirim Ayarları",
+      "settingsBody": "E-posta ve SMS ile hangi uyarıları alacağınızı özelleştirin.",
+      "managePreferences": "Tercihleri Yönet",
+      "filtersLabel": "Filtreler"
+    }
   },
   "emptyState": {
     "noOrders": "Sipariş bulunamadı.",
