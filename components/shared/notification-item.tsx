@@ -1,31 +1,25 @@
 'use client'
 
+import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { CATEGORY_STYLE } from '@/lib/notifications'
 import { cn } from '@/lib/utils'
 import { IconX } from '@tabler/icons-react'
-import type { ElementType } from 'react'
+import type { Notification } from '@/types'
 
-export type FullNotification = {
-  id: string
-  category: 'order' | 'quote' | 'system'
-  icon: ElementType
-  iconBg: string
-  iconColor: string
+interface NotificationItemProps {
+  n: Notification
   title: string
   message: string
-  time: string
-  read: boolean
-  actions?: { label: string; variant: 'primary' | 'secondary' | 'outline' | 'destructive' }[]
+  actionLabel: string
+  timeLabel: string
+  href: string
+  onDismiss: (id: string) => void
+  onAction: (n: Notification) => void
 }
 
-export function NotificationItem({
-  n,
-  onDismiss,
-}: {
-  n: FullNotification
-  onDismiss: (id: string) => void
-}) {
-  const Icon = n.icon
+export function NotificationItem({ n, title, message, actionLabel, timeLabel, href, onDismiss, onAction }: NotificationItemProps) {
+  const { icon: Icon, bg, color } = CATEGORY_STYLE[n.category]
   return (
     <div
       className={cn(
@@ -37,26 +31,26 @@ export function NotificationItem({
         <div className="absolute left-0 top-0 bottom-0 w-1 bg-primary rounded-r-sm" />
       )}
 
-      <div className={cn('w-12 h-12 rounded-full flex items-center justify-center shrink-0 mt-0.5 shadow-inner', n.iconBg)}>
-        <Icon className={n.iconColor} size={24} />
+      <div className={cn('w-12 h-12 rounded-full flex items-center justify-center shrink-0 mt-0.5 shadow-inner', bg)}>
+        <Icon className={color} size={24} />
       </div>
 
       <div className="flex-1 min-w-0">
         <div className="flex justify-between items-start gap-2 mb-1">
           <h3 className="text-sm font-semibold text-on-surface group-hover:text-primary transition-colors flex items-center gap-2">
-            {n.title}
+            {title}
             {!n.read && <span className="w-2 h-2 rounded-full bg-primary shrink-0" />}
           </h3>
-          <span className="text-xs text-on-surface-variant whitespace-nowrap">{n.time}</span>
+          <span className="text-xs text-on-surface-variant whitespace-nowrap">{timeLabel}</span>
         </div>
-        <p className="text-sm text-on-surface-variant mb-3 line-clamp-2 leading-relaxed">{n.message}</p>
-        {n.actions && n.actions.length > 0 && (
+        <p className="text-sm text-on-surface-variant mb-3 line-clamp-2 leading-relaxed">{message}</p>
+        {n.action_href && (
           <div className="flex flex-wrap items-center gap-2">
-            {n.actions.map((a) => (
-              <Button key={a.label} variant={a.variant} size="sm">
-                {a.label}
+            <Link href={href} onClick={() => onAction(n)}>
+              <Button variant="secondary" size="sm">
+                {actionLabel}
               </Button>
-            ))}
+            </Link>
           </div>
         )}
       </div>
