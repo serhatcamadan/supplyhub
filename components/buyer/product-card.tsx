@@ -19,6 +19,7 @@ interface ProductCardProps {
   unit?: string
   badge?: ProductBadge
   favorited?: boolean
+  onToggleFavorite?: (productId: string) => void
 }
 
 const BADGE_CLASS: Record<ProductBadge['colorScheme'], string> = {
@@ -33,6 +34,7 @@ export function ProductCard({
   unit,
   badge,
   favorited = false,
+  onToggleFavorite,
 }: ProductCardProps) {
   const t = useTranslations('buyer')
   const locale = useLocale()
@@ -50,6 +52,8 @@ export function ProductCard({
       )}
 
       <button
+        type="button"
+        onClick={() => onToggleFavorite?.(product.id)}
         className={`absolute top-4 right-4 z-10 w-8 h-8 flex items-center justify-center bg-surface/80 backdrop-blur-sm rounded-full transition-colors shadow-sm ${
           favorited ? 'text-error' : 'text-on-surface-variant hover:text-error'
         }`}
