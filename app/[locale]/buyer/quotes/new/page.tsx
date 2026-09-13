@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
-import { useRouter } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { getProducts } from '@/lib/api/products'
 import { createQuoteRequest } from '@/lib/api/quotes'
@@ -47,6 +47,7 @@ const UNITS = ['pieces', 'kg', 'tons', 'meters', 'liters'] as const
 
 export default function BuyerQuoteNewPage() {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const t = useTranslations('buyer')
   const locale = useLocale()
 
@@ -69,11 +70,16 @@ export default function BuyerQuoteNewPage() {
       .then((prods) => {
         if (prods.length) {
           setProducts(prods as Product[])
-          setProductId(prods[0].id)
+          const preselectId = searchParams.get('productId')
+          const preselect = prods.find((p) => p.id === preselectId)
+          const chosen = preselect ?? prods[0]
+          setProductId(chosen.id)
+          if (preselect) setQty(String(preselect.min_order_qty))
         }
       })
       .catch(() => {})
       .finally(() => setIsLoading(false))
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   async function handleSubmit(e: React.FormEvent) {

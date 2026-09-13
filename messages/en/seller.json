@@ -93,6 +93,12 @@
     "subHeading": "Manage and track wholesale orders from your buyers.",
     "filter": "Filter",
     "exportCsv": "Export CSV",
+    "dateFilter": {
+      "all": "All Time",
+      "last7": "Last 7 Days",
+      "last30": "Last 30 Days",
+      "thisMonth": "This Month"
+    },
     "stats": {
       "totalOrders": "Total Orders",
       "awaitingAction": "Awaiting Action",
