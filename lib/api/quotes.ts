@@ -32,6 +32,16 @@ export function createQuoteRequest(payload: {
   })
 }
 
+export function saveQuoteDraft(
+  id: string,
+  payload: { seller_response_price?: number; seller_message?: string },
+): Promise<ApiQuoteRequest> {
+  return apiFetch<ApiQuoteRequest>(`/quote-requests/${id}/draft`, {
+    method: 'PATCH',
+    body: JSON.stringify(payload),
+  })
+}
+
 export function respondToQuoteRequest(
   id: string,
   payload: { seller_response_price: number; seller_message?: string },

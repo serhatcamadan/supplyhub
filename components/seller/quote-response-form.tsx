@@ -5,8 +5,7 @@ import { useTranslations } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { QuoteSentScreen } from '@/components/seller/quote-sent-screen'
-import { createClient } from '@/lib/supabase/client'
-import { respondToQuoteRequest } from '@/lib/api/quotes'
+import { respondToQuoteRequest, saveQuoteDraft } from '@/lib/api/quotes'
 import { IconCalendarEvent, IconChevronDown, IconDeviceFloppy, IconSend } from '@tabler/icons-react'
 
 interface QuoteResponseFormProps {
@@ -53,13 +52,14 @@ export function QuoteResponseForm({
 
   async function handleSaveDraft() {
     setIsSaving(true)
-    const supabase = createClient()
-    await supabase
-      .from('quote_requests')
-      .update({ seller_response_price: price, seller_message: message })
-      .eq('id', quoteId)
-    setSavedAt(Date.now())
-    setIsSaving(false)
+    try {
+      await saveQuoteDraft(quoteId, { seller_response_price: price, seller_message: message })
+      setSavedAt(Date.now())
+    } catch {
+      // noop — leave "Unsaved" state, user can retry
+    } finally {
+      setIsSaving(false)
+    }
   }
 
   async function handleSend() {

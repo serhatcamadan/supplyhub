@@ -426,6 +426,23 @@ const server = http.createServer(async (req, res) => {
       return
     }
 
+    // ── PATCH /quote-requests/:id/draft ───────────────────────────────────────
+    if (req.method === 'PATCH' && /^\/quote-requests\/[^/]+\/draft$/.test(path)) {
+      const id = path.split('/')[2]
+      const payload = parseJwtPayload(req.headers['authorization'])
+      if (!payload) { res.writeHead(401); res.end(JSON.stringify({ statusCode: 401 })); return }
+      const body = await readBody(req)
+      if (SUPABASE_URL && SUPABASE_KEY) {
+        const update = {}
+        if (body.seller_response_price !== undefined) update.seller_response_price = body.seller_response_price
+        if (body.seller_message !== undefined) update.seller_message = body.seller_message
+        await sbWrite('quote_requests', 'PATCH', { id: `eq.${id}` }, update)
+      }
+      res.writeHead(200)
+      res.end(JSON.stringify({ id, ...body }))
+      return
+    }
+
     // ── PATCH /quote-requests/:id/seller-decline ──────────────────────────────
     if (req.method === 'PATCH' && /^\/quote-requests\/[^/]+\/seller-decline$/.test(path)) {
       const id = path.split('/')[2]
