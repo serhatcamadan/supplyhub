@@ -93,6 +93,12 @@
     "subHeading": "Alıcılarınızdan gelen toptan siparişleri yönetin ve takip edin.",
     "filter": "Filtrele",
     "exportCsv": "CSV İndir",
+    "dateFilter": {
+      "all": "Tüm Zamanlar",
+      "last7": "Son 7 Gün",
+      "last30": "Son 30 Gün",
+      "thisMonth": "Bu Ay"
+    },
     "stats": {
       "totalOrders": "Toplam Sipariş",
       "awaitingAction": "Eylem Bekliyor",
