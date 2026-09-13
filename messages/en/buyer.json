@@ -4,6 +4,13 @@
     "subHeading": "Discover high-quality products from verified wholesale suppliers and strengthen your supply chain.",
     "searchPlaceholder": "Search products…",
     "filter": "Filter",
+    "priceFilter": {
+      "label": "Price Range",
+      "min": "Min ₺",
+      "max": "Max ₺",
+      "apply": "Apply",
+      "clear": "Clear"
+    },
     "allCategory": "All",
     "unknownSupplier": "Unknown Supplier",
     "noProducts": "No products found in this category.",
