@@ -46,6 +46,7 @@ export interface QuoteRequest {
   status: QuoteStatus
   seller_response_price: number | null
   seller_message: string | null
+  attachment_urls: string[]
   created_at: string
 }
 

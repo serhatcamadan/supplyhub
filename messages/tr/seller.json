@@ -55,6 +55,7 @@
       "unit": "adet",
       "buyerMessage": "Alıcı Mesajı",
       "noMessage": "Mesaj girilmemiş.",
+      "attachments": "Ekli Dosyalar",
       "unknownBuyer": "Bilinmeyen Alıcı",
       "unknownProduct": "Bilinmeyen Ürün"
     },

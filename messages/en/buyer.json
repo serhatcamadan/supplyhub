@@ -340,12 +340,16 @@
         "charCount": "{count} / 2000 characters",
         "attachments": "Files & Technical Drawings",
         "dropzoneTitle": "Click to upload or drag and drop",
-        "dropzoneHint": "PDF, STEP, IGES, DWG or ZIP, max 50 MB"
+        "dropzoneHint": "PDF, STEP, IGES, DWG or ZIP, max 50 MB",
+        "removeFile": "Remove file",
+        "tooLarge": "{name} exceeds the 50 MB limit.",
+        "uploadError": "Failed to upload files, please try again."
       },
       "actions": {
         "cancel": "Cancel",
         "submit": "Submit Request",
-        "submitting": "Submitting…"
+        "submitting": "Submitting…",
+        "uploading": "Uploading files…"
       },
       "tips": {
         "heading": "Tips for better quotes",

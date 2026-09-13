@@ -55,6 +55,7 @@
       "unit": "units",
       "buyerMessage": "Buyer Message",
       "noMessage": "No message provided.",
+      "attachments": "Attached Files",
       "unknownBuyer": "Unknown Buyer",
       "unknownProduct": "Unknown Product"
     },

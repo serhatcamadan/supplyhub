@@ -93,6 +93,7 @@ export default async function QuoteDetailPage({
           quantity={quote.quantity}
           listPrice={listPrice}
           minOrderQty={quote.product.min_order_qty}
+          attachmentUrls={quote.attachment_urls}
         />
 
         <QuoteResponseForm

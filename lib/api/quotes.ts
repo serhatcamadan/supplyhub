@@ -24,6 +24,7 @@ export function createQuoteRequest(payload: {
   productId: string
   quantity: number
   buyer_note?: string
+  attachment_urls?: string[]
 }): Promise<ApiQuoteRequest> {
   return apiFetch<ApiQuoteRequest>('/quote-requests', {
     method: 'POST',

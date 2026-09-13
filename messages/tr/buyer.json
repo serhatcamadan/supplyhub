@@ -340,12 +340,16 @@
         "charCount": "{count} / 2000 karakter",
         "attachments": "Dosya ve Teknik Çizimler",
         "dropzoneTitle": "Yüklemek için tıklayın veya sürükleyin",
-        "dropzoneHint": "PDF, STEP, IGES, DWG veya ZIP, maks. 50 MB"
+        "dropzoneHint": "PDF, STEP, IGES, DWG veya ZIP, maks. 50 MB",
+        "removeFile": "Dosyayı kaldır",
+        "tooLarge": "{name} 50 MB sınırını aşıyor.",
+        "uploadError": "Dosyalar yüklenemedi, lütfen tekrar deneyin."
       },
       "actions": {
         "cancel": "İptal",
         "submit": "Talep Gönder",
-        "submitting": "Gönderiliyor…"
+        "submitting": "Gönderiliyor…",
+        "uploading": "Dosyalar yükleniyor…"
       },
       "tips": {
         "heading": "Daha iyi teklifler için",
