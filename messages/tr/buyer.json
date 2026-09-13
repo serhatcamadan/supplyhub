@@ -4,6 +4,13 @@
     "subHeading": "Onaylı toptan tedarikçilerden yüksek kaliteli ürünleri keşfedin ve tedarik zincirinizi güçlendirin.",
     "searchPlaceholder": "Ürün ara…",
     "filter": "Filtrele",
+    "priceFilter": {
+      "label": "Fiyat Aralığı",
+      "min": "Min ₺",
+      "max": "Maks ₺",
+      "apply": "Uygula",
+      "clear": "Temizle"
+    },
     "allCategory": "Tümü",
     "unknownSupplier": "Bilinmeyen Tedarikçi",
     "noProducts": "Bu kategoride ürün bulunamadı.",

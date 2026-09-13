@@ -8,7 +8,7 @@ import { buttonVariants } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
 import { TablePagination } from '@/components/ui/table-pagination'
 import { TableEmptyRow } from '@/components/ui/table-empty-row'
-import { IconChecks, IconCircleCheck, IconCircleX, IconDotsVertical, IconFileInvoice } from '@tabler/icons-react'
+import { IconChecks, IconCircleCheck, IconCircleX, IconFileInvoice } from '@tabler/icons-react'
 import type { ElementType } from 'react'
 
 export interface EnrichedQuote extends QuoteRequest {
@@ -155,9 +155,6 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
                           {t('quotes.table.respond')}
                         </Link>
                       )}
-                      <button className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors">
-                        <IconDotsVertical size={20} />
-                      </button>
                     </div>
                   </td>
                 </tr>

@@ -1,8 +1,9 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { getProducts, type ApiProduct } from '@/lib/api/products'
+import { useFavorites } from '@/lib/hooks/use-favorites'
 import { Button } from '@/components/ui/button'
 import { CategoryChips } from '@/components/buyer/category-chips'
 import { ProductCard, type ProductBadge } from '@/components/buyer/product-card'
@@ -34,6 +35,13 @@ export default function BuyerDiscoverPage() {
   const [search, setSearch] = useState('')
   const [products, setProducts] = useState<ApiProduct[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [minPrice, setMinPrice] = useState('')
+  const [maxPrice, setMaxPrice] = useState('')
+  const [draftMin, setDraftMin] = useState('')
+  const [draftMax, setDraftMax] = useState('')
+  const [filterOpen, setFilterOpen] = useState(false)
+  const filterRef = useRef<HTMLDivElement>(null)
+  const { isFavorited, toggleFavorite } = useFavorites()
 
   useEffect(() => {
     getProducts()
@@ -42,15 +50,50 @@ export default function BuyerDiscoverPage() {
       .finally(() => setIsLoading(false))
   }, [])
 
-  const categories = [ALL, ...Array.from(new Set(products.map((p) => p.category)))]
+  useEffect(() => {
+    function handleClickOutside(e: MouseEvent) {
+      if (filterRef.current && !filterRef.current.contains(e.target as Node)) {
+        setFilterOpen(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [])
 
-  const filtered = products.filter(
-    (p) =>
+  const categories = [ALL, ...Array.from(new Set(products.map((p) => p.category)))]
+  const priceFilterActive = minPrice !== '' || maxPrice !== ''
+
+  const filtered = products.filter((p) => {
+    const fromPrice = p.price_tiers[0]?.price ?? 0
+    return (
       (category === ALL || p.category === category) &&
       (!search ||
         p.name.toLowerCase().includes(search.toLowerCase()) ||
-        p.description.toLowerCase().includes(search.toLowerCase()))
-  )
+        p.description.toLowerCase().includes(search.toLowerCase())) &&
+      (minPrice === '' || fromPrice >= Number(minPrice)) &&
+      (maxPrice === '' || fromPrice <= Number(maxPrice))
+    )
+  })
+
+  function openFilter() {
+    setDraftMin(minPrice)
+    setDraftMax(maxPrice)
+    setFilterOpen((v) => !v)
+  }
+
+  function applyFilter() {
+    setMinPrice(draftMin)
+    setMaxPrice(draftMax)
+    setFilterOpen(false)
+  }
+
+  function clearFilter() {
+    setDraftMin('')
+    setDraftMax('')
+    setMinPrice('')
+    setMaxPrice('')
+    setFilterOpen(false)
+  }
 
   return (
     <div className="p-8 flex flex-col gap-10">
@@ -72,10 +115,47 @@ export default function BuyerDiscoverPage() {
                 className="h-10 pl-9 pr-4 bg-surface border border-outline-variant rounded-lg text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/60 w-56"
               />
             </div>
-            <Button variant="ghost">
-              <IconAdjustments size={18} />
-              {t('discover.filter')}
-            </Button>
+            <div className="relative" ref={filterRef}>
+              <Button variant="ghost" onClick={openFilter} className={priceFilterActive ? 'text-primary' : ''}>
+                <IconAdjustments size={18} />
+                {t('discover.filter')}
+                {priceFilterActive && <span className="w-1.5 h-1.5 rounded-full bg-primary" />}
+              </Button>
+              {filterOpen && (
+                <div className="absolute right-0 top-full mt-2 w-64 bg-surface-container-lowest rounded-lg shadow-xl border border-outline-variant/20 p-4 z-20">
+                  <p className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant mb-3">
+                    {t('discover.priceFilter.label')}
+                  </p>
+                  <div className="flex items-center gap-2 mb-4">
+                    <input
+                      type="number"
+                      min={0}
+                      value={draftMin}
+                      onChange={(e) => setDraftMin(e.target.value)}
+                      placeholder={t('discover.priceFilter.min')}
+                      className="w-full h-9 px-3 bg-surface border border-outline-variant rounded-lg text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/60"
+                    />
+                    <span className="text-on-surface-variant">–</span>
+                    <input
+                      type="number"
+                      min={0}
+                      value={draftMax}
+                      onChange={(e) => setDraftMax(e.target.value)}
+                      placeholder={t('discover.priceFilter.max')}
+                      className="w-full h-9 px-3 bg-surface border border-outline-variant rounded-lg text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/60"
+                    />
+                  </div>
+                  <div className="flex gap-2">
+                    <Button variant="ghost" size="sm" className="flex-1 justify-center" onClick={clearFilter}>
+                      {t('discover.priceFilter.clear')}
+                    </Button>
+                    <Button variant="primary" size="sm" className="flex-1 justify-center" onClick={applyFilter}>
+                      {t('discover.priceFilter.apply')}
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 
@@ -100,6 +180,8 @@ export default function BuyerDiscoverPage() {
                 badge={badgeDef
                   ? { label: t(`discover.badges.${badgeDef.key}`), colorScheme: badgeDef.colorScheme }
                   : undefined}
+                favorited={isFavorited(product.id)}
+                onToggleFavorite={toggleFavorite}
               />
             )
           })}
