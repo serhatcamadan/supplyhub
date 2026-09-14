@@ -4,7 +4,7 @@ import { useTranslations } from 'next-intl'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { Order, QuoteRequest } from '@/types'
 import { buttonVariants } from '@/components/ui/button'
-import { IconCircleCheck, IconDotsVertical, IconMailFast, IconShoppingBag, IconTruck } from '@tabler/icons-react'
+import { IconCircleCheck, IconDotsVertical, IconInbox, IconMailFast, IconShoppingBag, IconTruck } from '@tabler/icons-react'
 import type { ElementType } from 'react'
 
 interface ActivityFeedProps {
@@ -45,6 +45,12 @@ export function ActivityFeed({ orders, quote, buyerNames, locale }: ActivityFeed
         </button>
       </div>
 
+      {orders.length === 0 && !quote ? (
+        <div className="flex flex-col items-center justify-center py-10 text-center">
+          <IconInbox size={32} className="text-outline-variant mb-2" />
+          <p className="text-sm text-on-surface-variant">{t('dashboard.activity.empty')}</p>
+        </div>
+      ) : (
       <div className="flex flex-col relative">
         <div className="absolute left-5 top-2 bottom-2 w-px bg-surface-container-high" />
 
@@ -128,6 +134,7 @@ export function ActivityFeed({ orders, quote, buyerNames, locale }: ActivityFeed
           </div>
         )}
       </div>
+      )}
     </div>
   )
 }

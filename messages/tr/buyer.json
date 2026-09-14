@@ -31,32 +31,6 @@
       "sack": "/ çuval",
       "piece": "/ adet",
       "pack": "/ paket"
-    },
-    "features": {
-      "oils": [
-        "Soğuk sıkım tekniği ile üretilmiş",
-        "AB organik sertifikalı",
-        "Ege bölgesi zeytinlerinden",
-        "Cam şişe, ışık geçirmez ambalaj"
-      ],
-      "grains": [
-        "Doğrudan değirmenden tedarik",
-        "Yüksek protein içeriği (%13+)",
-        "Standart 25 kg çuval ambalaj",
-        "Uzun raf ömrü (18 ay)"
-      ],
-      "natural": [
-        "Saf ve katkısız, ham bal",
-        "Karadeniz yayla çiçeklerinden",
-        "Mikrobiyolojik test onaylı",
-        "Yıl boyunca stok garantisi"
-      ],
-      "legumes": [
-        "Günlük taze üretim",
-        "Serbest gezen tavuk yumurtası",
-        "500g vakumlu paket",
-        "Soğuk zincir taşımacılık"
-      ]
     }
   },
   "productDetail": {
@@ -67,16 +41,14 @@
       "priceRange": "Fiyat Aralığı",
       "priceTiers": "Fiyat Kademeleri",
       "deliveryTime": "Teslimat Süresi",
-      "warehouseLocation": "Depo Konumu",
-      "shelfLife": "Raf Ömrü"
+      "weight": "Ağırlık"
     },
     "specValues": {
       "pieces": "{count} adet",
       "tiers": "{count} kademe",
       "pricePerPiece": "/ adet",
-      "deliveryDays": "7–14 iş günü",
-      "warehouseLocation": "Türkiye",
-      "shelfLife": "18 ay"
+      "leadTimeDays": "{count} iş günü",
+      "weightKg": "{value} kg"
     }
   },
   "productCard": {
@@ -89,15 +61,7 @@
   "productTabs": {
     "overview": "Genel Bakış",
     "specs": "Teknik Özellikler",
-    "docs": "Belgeler",
-    "keyFeatures": "Temel Özellikler",
-    "noSpecs": "Teknik özellik bilgisi mevcut değil.",
-    "documents": {
-      "sds": "Ürün Güvenlik Bilgi Formu (SDS)",
-      "quality": "Kalite Güvencesi Sertifikası",
-      "organic": "Organik Sertifikasyon",
-      "lab": "Laboratuvar Test Raporu"
-    }
+    "noSpecs": "Teknik özellik bilgisi mevcut değil."
   },
   "orderPanel": {
     "listPrice": "Liste Fiyatı",
@@ -129,6 +93,17 @@
     "itemCount": "{count} ürün türü",
     "clearCart": "Sepeti Temizle",
     "saveAsTemplate": "Bu sepeti şablon olarak kaydet",
+    "templates": {
+      "menuLabel": "Şablonlar",
+      "namePlaceholder": "Şablon adı...",
+      "cancel": "Vazgeç",
+      "save": "Kaydet",
+      "empty": "Henüz kaydedilmiş şablon yok.",
+      "itemCount": "{count} ürün",
+      "load": "Sepete Yükle",
+      "delete": "Sil",
+      "confirmReplace": "Sepetteki mevcut ürünler şablondakilerle değiştirilecek. Devam edilsin mi?"
+    },
     "empty": {
       "heading": "Sepetiniz boş",
       "subtext": "Tedarikçi ürünlerini keşfetmek için aşağıdaki butona tıklayın.",

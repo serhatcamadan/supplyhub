@@ -1,12 +1,7 @@
 import { getTranslations, getLocale } from 'next-intl/server'
 import { serverApiFetch } from '@/lib/api/server-client'
-import { Button } from '@/components/ui/button'
-import { RevenueChartCard } from '@/components/seller/revenue-chart-card'
-import { StatCards } from '@/components/seller/stat-cards'
-import { TopProducts } from '@/components/seller/top-products'
-import { ActivityFeed } from '@/components/seller/activity-feed'
+import { DashboardContent } from '@/components/seller/dashboard-content'
 import type { Product, OrderWithDetails, QuoteRequestWithDetails } from '@/types'
-import { IconCalendar, IconChevronDown } from '@tabler/icons-react'
 
 type OrderForChart = { status: string; total: number; created_at: string }
 
@@ -70,15 +65,10 @@ export default async function SellerDashboardPage() {
   const activeProducts = allProducts.filter((p) => p.status === 'active')
   const draftProducts = allProducts.filter((p) => p.status === 'draft')
   const pendingQuotes = allQuotes.filter((q) => q.status === 'pending')
-  const totalRevenue = allOrders.filter((o) => o.status === 'delivered').reduce((sum, o) => sum + o.total, 0)
   const shippingOrders = allOrders.filter((o) => o.status === 'shipped')
   const processingOrders = allOrders.filter((o) => o.status === 'confirmed')
 
   const topProducts = activeProducts.slice(0, 3)
-  const recentOrders = [...allOrders]
-    .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
-    .slice(0, 2)
-  const firstPendingQuote = pendingQuotes[0] ?? null
 
   const monthNames = t.raw('dashboard.months') as string[]
   const monthlyRevenue = buildMonthlyRevenue(allOrders, monthNames)
@@ -86,39 +76,21 @@ export default async function SellerDashboardPage() {
 
   return (
     <div className="p-8 flex flex-col gap-8">
-
-      <div className="flex items-center justify-between">
-        <div>
-          <h1 className="text-4xl font-bold tracking-tight text-on-surface">{t('dashboard.heading')}</h1>
-          <p className="text-sm text-on-surface-variant mt-2">{t('dashboard.subHeading')}</p>
-        </div>
-        <div className="flex gap-3">
-          <Button variant="ghost">
-            <IconCalendar size={20} />
-            {t('dashboard.last30Days')}
-            <IconChevronDown size={16} />
-          </Button>
-        </div>
-      </div>
-
-      <StatCards
-        totalRevenue={totalRevenue}
+      <DashboardContent
+        allOrders={allOrders}
+        allQuotes={allQuotes}
         pendingQuotesCount={pendingQuotes.length}
         activeOrdersCount={shippingOrders.length + processingOrders.length}
         shippingCount={shippingOrders.length}
         processingCount={processingOrders.length}
         activeProductsCount={activeProducts.length}
         draftProductsCount={draftProducts.length}
+        topProducts={topProducts}
+        buyerNames={buyerNames}
         locale={locale}
+        monthlyRevenue={monthlyRevenue}
+        weeklyRevenue={weeklyRevenue}
       />
-
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        <RevenueChartCard weeklyData={weeklyRevenue} monthlyData={monthlyRevenue} />
-        <TopProducts products={topProducts} locale={locale} />
-      </div>
-
-      <ActivityFeed orders={recentOrders} quote={firstPendingQuote} buyerNames={buyerNames} locale={locale} />
-
     </div>
   )
 }

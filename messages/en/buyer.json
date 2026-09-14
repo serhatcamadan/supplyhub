@@ -31,32 +31,6 @@
       "sack": "/ sack",
       "piece": "/ unit",
       "pack": "/ pack"
-    },
-    "features": {
-      "oils": [
-        "Produced using cold-press technique",
-        "EU organic certified",
-        "From Aegean region olives",
-        "Glass bottle, light-proof packaging"
-      ],
-      "grains": [
-        "Sourced directly from the mill",
-        "High protein content (13%+)",
-        "Standard 25 kg sack packaging",
-        "Long shelf life (18 months)"
-      ],
-      "natural": [
-        "Pure and additive-free raw honey",
-        "From Black Sea highland flowers",
-        "Microbiological test approved",
-        "Year-round stock guarantee"
-      ],
-      "legumes": [
-        "Daily fresh production",
-        "Free-range chicken eggs",
-        "500g vacuum pack",
-        "Cold chain transport"
-      ]
     }
   },
   "productDetail": {
@@ -67,16 +41,14 @@
       "priceRange": "Price Range",
       "priceTiers": "Price Tiers",
       "deliveryTime": "Delivery Time",
-      "warehouseLocation": "Warehouse Location",
-      "shelfLife": "Shelf Life"
+      "weight": "Weight"
     },
     "specValues": {
       "pieces": "{count} units",
       "tiers": "{count} tiers",
       "pricePerPiece": "/ unit",
-      "deliveryDays": "7–14 business days",
-      "warehouseLocation": "Turkey",
-      "shelfLife": "18 months"
+      "leadTimeDays": "{count} business days",
+      "weightKg": "{value} kg"
     }
   },
   "productCard": {
@@ -89,15 +61,7 @@
   "productTabs": {
     "overview": "Overview",
     "specs": "Specifications",
-    "docs": "Documents",
-    "keyFeatures": "Key Features",
-    "noSpecs": "No specification data available.",
-    "documents": {
-      "sds": "Safety Data Sheet (SDS)",
-      "quality": "Quality Assurance Certificate",
-      "organic": "Organic Certification",
-      "lab": "Laboratory Test Report"
-    }
+    "noSpecs": "No specification data available."
   },
   "orderPanel": {
     "listPrice": "List Price",
@@ -129,6 +93,17 @@
     "itemCount": "{count} product types",
     "clearCart": "Clear Cart",
     "saveAsTemplate": "Save this cart as template",
+    "templates": {
+      "menuLabel": "Templates",
+      "namePlaceholder": "Template name...",
+      "cancel": "Cancel",
+      "save": "Save",
+      "empty": "No saved templates yet.",
+      "itemCount": "{count} items",
+      "load": "Load into Cart",
+      "delete": "Delete",
+      "confirmReplace": "This will replace the items currently in your cart with the template's items. Continue?"
+    },
     "empty": {
       "heading": "Your cart is empty",
       "subtext": "Click the button below to discover supplier products.",

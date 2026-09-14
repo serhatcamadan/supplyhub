@@ -12,6 +12,7 @@ import { FormError } from '@/components/ui/form-error'
 import { updateMyProfile, updateMyCompany } from '@/lib/api/users'
 import type { UserProfile } from '@/lib/api/users'
 import { refreshToken } from '@/lib/api/auth'
+import { ApiError } from '@/lib/api/client'
 import {
   IconChevronRight,
   IconDeviceFloppy,
@@ -71,9 +72,10 @@ export function ProfileEditForm({ profile, portal }: Props) {
     const e: Record<string, string> = {}
     if (!name.trim())        e.name        = t('errors.nameRequired')
     if (!companyName.trim()) e.companyName = t('errors.companyNameRequired')
-    if (showPasswordSection) {
-      if (newPassword.length > 0 && newPassword.length < 8) e.newPassword     = t('password.tooShort')
-      if (newPassword !== confirmPassword)                   e.confirmPassword = t('password.mismatch')
+    if (showPasswordSection && newPassword) {
+      if (!currentPassword.trim())         e.currentPassword = t('password.currentRequired')
+      if (newPassword.length < 8)          e.newPassword     = t('password.tooShort')
+      if (newPassword !== confirmPassword) e.confirmPassword = t('password.mismatch')
     }
     return e
   }
@@ -86,7 +88,10 @@ export function ProfileEditForm({ profile, portal }: Props) {
     try {
       const userPayload: Parameters<typeof updateMyProfile>[0] = { name: name.trim() }
       if (phone.trim()) userPayload.phone = phone.trim()
-      if (showPasswordSection && newPassword) userPayload.password = newPassword
+      if (showPasswordSection && newPassword) {
+        userPayload.password = newPassword
+        userPayload.currentPassword = currentPassword
+      }
 
       const companyPayload: Parameters<typeof updateMyCompany>[0] = {
         name: companyName.trim(),
@@ -100,9 +105,13 @@ export function ProfileEditForm({ profile, portal }: Props) {
 
       await refreshToken().catch(() => {})
       window.location.href = backHref
-    } catch {
+    } catch (err) {
       setSaving(false)
-      setErrors({ submit: t('errors.saveFailed') })
+      if (showPasswordSection && err instanceof ApiError && err.status === 401) {
+        setErrors({ currentPassword: t('password.currentWrong') })
+      } else {
+        setErrors({ submit: t('errors.saveFailed') })
+      }
     }
   }
 
@@ -256,7 +265,8 @@ export function ProfileEditForm({ profile, portal }: Props) {
                   label={t('fields.currentPassword')}
                   type="password"
                   value={currentPassword}
-                  onChange={(e) => setCurrentPassword(e.target.value)}
+                  onChange={(e) => { setCurrentPassword(e.target.value); clearError('currentPassword') }}
+                  error={errors.currentPassword}
                 />
                 <PasswordField
                   id="newPassword"
