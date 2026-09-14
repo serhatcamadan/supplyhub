@@ -17,6 +17,9 @@
     "breadcrumb": "Keşfet",
     "priceTrend": "Fiyat Trendi (30 Gün)",
     "priceTrendStable": "Stabil",
+    "gallery": {
+      "noImage": "Görsel yok"
+    },
     "badges": {
       "organic": "Organik",
       "natural": "Doğal",
@@ -162,11 +165,6 @@
       "tax": "KDV (%{rate})",
       "total": "Toplam Tutar",
       "saved": "{amount} tasarruf ettiniz",
-      "promoLabel": "Promosyon Kodu / Sipariş No",
-      "promoPlaceholder": "PROMO veya PO-XXXX",
-      "promoApply": "Uygula",
-      "promoApplied": "Uygulandı",
-      "promoAppliedMsg": "Kod uygulandı",
       "checkout": "Siparişi Tamamla",
       "checkoutLoading": "İşleniyor…",
       "requestQuote": "Resmi Teklif Talep Et",

@@ -30,6 +30,7 @@ export default async function BuyerProductDetailPage({
   if (!product) notFound()
 
   const seller = product.companies
+  const images = product.images.length > 0 ? product.images : product.image_url ? [product.image_url] : []
 
   const featuresKey = CATEGORY_TO_FEATURES_KEY[product.category]
   const features: string[] = featuresKey
@@ -74,7 +75,7 @@ export default async function BuyerProductDetailPage({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
         <div className="lg:col-span-8 flex flex-col gap-8">
-          <ProductImageGallery imageUrl={product.image_url} productName={product.name} />
+          <ProductImageGallery images={images} productName={product.name} />
           <ProductTabs description={product.description} features={features} specs={specs} />
         </div>
 

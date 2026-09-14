@@ -1,10 +1,9 @@
 'use client'
 
-import { useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { formatCurrency } from '@/lib/utils'
-import { IconCircleCheck, IconFileInvoice, IconHeadset, IconLock, IconRosetteDiscountCheck, IconShoppingBag } from '@tabler/icons-react'
+import { IconFileInvoice, IconHeadset, IconLock, IconRosetteDiscountCheck, IconShoppingBag } from '@tabler/icons-react'
 import type { ElementType } from 'react'
 
 interface OrderSummaryProps {
@@ -57,17 +56,11 @@ export function OrderSummary({
 }: OrderSummaryProps) {
   const t = useTranslations('buyer')
   const locale = useLocale()
-  const [promo, setPromo] = useState('')
-  const [applied, setApplied] = useState(false)
 
   const shipping = subtotal >= SHIPPING_THRESHOLD ? 0 : 450
   const taxable = subtotal - volumeDiscount
   const tax = Math.round(taxable * TAX_RATE)
   const total = taxable + shipping + tax
-
-  function handleApply() {
-    if (promo.trim()) setApplied(true)
-  }
 
   const TRUST_ITEMS: { icon: ElementType; label: string }[] = [
     { icon: IconLock,                  label: t('cart.summary.trust.ssl') },
@@ -115,36 +108,6 @@ export function OrderSummary({
           {volumeDiscount > 0 && (
             <p className="text-xs text-secondary text-right mt-1">
               {t('cart.summary.saved', { amount: formatCurrency(volumeDiscount, locale) })}
-            </p>
-          )}
-        </div>
-
-        <div className="space-y-2">
-          <label className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
-            {t('cart.summary.promoLabel')}
-          </label>
-          <div className="flex gap-2">
-            <input
-              type="text"
-              placeholder={t('cart.summary.promoPlaceholder')}
-              value={promo}
-              onChange={(e) => { setPromo(e.target.value); setApplied(false) }}
-              className="flex-1 bg-surface-container rounded-lg px-3 py-2 text-sm text-on-surface placeholder:text-on-surface-variant/50 border border-outline-variant focus:outline-none focus:ring-2 focus:ring-primary/60"
-            />
-            <Button
-              variant="outline"
-              size="sm"
-              onClick={handleApply}
-              disabled={!promo.trim() || applied}
-              className="shrink-0"
-            >
-              {applied ? t('cart.summary.promoApplied') : t('cart.summary.promoApply')}
-            </Button>
-          </div>
-          {applied && (
-            <p className="text-xs text-secondary font-semibold flex items-center gap-1">
-              <IconCircleCheck size={14} />
-              {t('cart.summary.promoAppliedMsg')}
             </p>
           )}
         </div>

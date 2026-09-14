@@ -17,6 +17,9 @@
     "breadcrumb": "Discover",
     "priceTrend": "Price Trend (30 Days)",
     "priceTrendStable": "Stable",
+    "gallery": {
+      "noImage": "No image"
+    },
     "badges": {
       "organic": "Organic",
       "natural": "Natural",
@@ -162,11 +165,6 @@
       "tax": "VAT ({rate}%)",
       "total": "Total Amount",
       "saved": "You saved {amount}",
-      "promoLabel": "Promo Code / Purchase Order No.",
-      "promoPlaceholder": "PROMO or PO-XXXX",
-      "promoApply": "Apply",
-      "promoApplied": "Applied",
-      "promoAppliedMsg": "Code applied",
       "checkout": "Complete Order",
       "checkoutLoading": "Processing…",
       "requestQuote": "Request Official Quote",
