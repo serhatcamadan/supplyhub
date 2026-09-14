@@ -1,7 +1,7 @@
 'use client'
 
 import { useState } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, usePathname } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { logout } from '@/lib/api/auth'
 import { Button } from '@/components/ui/button'
@@ -18,13 +18,19 @@ interface ProfileButtonProps {
 export function ProfileButton({ userName, userRole }: ProfileButtonProps) {
   const [open, setOpen] = useState(false)
   const router = useRouter()
+  const pathname = usePathname()
   const t = useTranslations('common')
   const locale = useLocale()
 
   const portal = typeof window !== 'undefined' && window.location.pathname.includes('/buyer/') ? 'buyer' : 'seller'
   const profileHref = `/${locale}/${portal}/profile`
 
-  const sections: { title: string; items: { icon: ElementType; label: string; href?: string }[] }[] = [
+  function switchLocale() {
+    const nextLocale = locale === 'tr' ? 'en' : 'tr'
+    router.push(pathname.replace(`/${locale}`, `/${nextLocale}`))
+  }
+
+  const sections: { title: string; items: { icon: ElementType; label: string; href?: string; onClick?: () => void }[] }[] = [
     {
       title: t('profile.sections.account'),
       items: [
@@ -41,8 +47,8 @@ export function ProfileButton({ userName, userRole }: ProfileButtonProps) {
     {
       title: t('profile.sections.preferences'),
       items: [
-        { icon: IconBell,     label: t('profile.items.notifications') },
-        { icon: IconLanguage, label: t('profile.items.language') },
+        { icon: IconBell,     label: t('profile.items.notifications'), href: `/${locale}/${portal}/notifications` },
+        { icon: IconLanguage, label: t('profile.items.language'), onClick: switchLocale },
       ],
     },
   ]
@@ -105,7 +111,8 @@ export function ProfileButton({ userName, userRole }: ProfileButtonProps) {
                     key={item.label}
                     onClick={() => {
                       setOpen(false)
-                      if (item.href) router.push(item.href)
+                      if (item.onClick) item.onClick()
+                      else if (item.href) router.push(item.href)
                     }}
                     className="w-full flex items-center py-2.5 text-sm text-on-surface hover:text-primary transition-colors group"
                   >
