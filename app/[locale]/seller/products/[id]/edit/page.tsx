@@ -10,7 +10,7 @@ import type { PriceTier } from '@/types'
 import { Button } from '@/components/ui/button'
 import { ProductBasicInfo } from '@/components/seller/product-basic-info'
 import { ProductPricingTiers } from '@/components/seller/product-pricing-tiers'
-import { ProductMedia } from '@/components/seller/product-media'
+import { ProductMedia, type MediaItem } from '@/components/seller/product-media'
 import { ProductLogistics } from '@/components/seller/product-logistics'
 import { Skeleton } from '@/components/ui/skeleton'
 import { IconChevronRight, IconDeviceFloppy } from '@tabler/icons-react'
@@ -26,8 +26,8 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const [minOrderQty, setMinOrderQty] = useState('')
   const [description, setDescription] = useState('')
   const [tiers, setTiers]             = useState<PriceTier[]>([])
-  const [imageFile, setImageFile]     = useState<File | null>(null)
-  const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null)
+  const [initialImages, setInitialImages] = useState<string[]>([])
+  const [mediaItems, setMediaItems]   = useState<MediaItem[]>([])
   const [stockQty, setStockQty]       = useState('')
   const [isActive, setIsActive]       = useState(true)
   const [weight, setWeight]           = useState('')
@@ -48,7 +48,9 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         setDescription(data.description ?? '')
         setTiers((data.price_tiers as PriceTier[]) ?? [])
         setStockQty(String(data.stock_quantity ?? 0))
-        setCurrentImageUrl(data.image_url ?? null)
+        const imgs = data.images.length > 0 ? data.images : data.image_url ? [data.image_url] : []
+        setInitialImages(imgs)
+        setMediaItems(imgs.map((url) => ({ id: url, url })))
         setIsActive(data.status === 'active')
         setWeight(data.weight != null ? String(data.weight) : '')
         setLeadTimeDays(data.lead_time_days != null ? String(data.lead_time_days) : '')
@@ -89,13 +91,15 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
     }
     setIsSubmitting(true)
     try {
-      let image_url = currentImageUrl
-      if (imageFile) {
-        try {
-          image_url = await uploadProductImage(productId, imageFile)
-        } catch {
-          // upload failed; keep existing image_url
-        }
+      let images = initialImages
+      try {
+        images = await Promise.all(
+          mediaItems.map((item, i) =>
+            item.file ? uploadProductImage(productId, item.file, i) : Promise.resolve(item.url)
+          )
+        )
+      } catch {
+        // upload failed; keep existing images
       }
       await updateProduct(productId, {
         name:           name.trim(),
@@ -107,7 +111,8 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         status:         isActive ? 'active' : 'draft',
         weight:         weight ? parseFloat(weight) : null,
         lead_time_days: leadTimeDays ? parseInt(leadTimeDays, 10) : null,
-        ...(image_url !== currentImageUrl && { image_url }),
+        images,
+        image_url: images[0] ?? null,
       })
       router.push(`/${locale}/seller/products`)
     } catch {
@@ -195,7 +200,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             />
           </div>
           <div className="col-span-12 lg:col-span-4 flex flex-col gap-8">
-            <ProductMedia initialUrl={currentImageUrl} onFileSelect={setImageFile} />
+            <ProductMedia initialImages={initialImages} onChange={setMediaItems} />
             <ProductLogistics
               stockQty={stockQty} onStockQtyChange={setStockQty}
               isActive={isActive} onIsActiveChange={setIsActive}

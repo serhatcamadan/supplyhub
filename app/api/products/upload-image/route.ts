@@ -8,6 +8,7 @@ export async function POST(req: NextRequest) {
     const formData = await req.formData()
     const file = formData.get('file') as File | null
     const productId = formData.get('productId') as string | null
+    const slot = formData.get('slot') as string | null
 
     if (!file || !productId) {
       return NextResponse.json({ error: 'file and productId required' }, { status: 400 })
@@ -22,7 +23,8 @@ export async function POST(req: NextRequest) {
     }
 
     const ext = file.name.split('.').pop()?.toLowerCase() ?? 'jpg'
-    const path = `${productId}/main.${ext}`
+    const filename = slot !== null ? `img-${slot}` : 'main'
+    const path = `${productId}/${filename}.${ext}`
     const bytes = await file.arrayBuffer()
 
     const { error } = await supabase.storage

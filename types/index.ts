@@ -33,6 +33,7 @@ export interface Product {
   min_order_qty: number
   price_tiers: PriceTier[]
   image_url: string | null
+  images: string[]
   status: ProductStatus
   stock_quantity: number
   weight: number | null

@@ -10,10 +10,11 @@ export async function uploadQuoteAttachment(file: File): Promise<{ name: string;
   return res.json() as Promise<{ name: string; url: string }>
 }
 
-export async function uploadProductImage(productId: string, file: File): Promise<string> {
+export async function uploadProductImage(productId: string, file: File, slot?: number): Promise<string> {
   const form = new FormData()
   form.append('file', file)
   form.append('productId', productId)
+  if (slot !== undefined) form.append('slot', String(slot))
 
   const res = await fetch('/api/products/upload-image', { method: 'POST', body: form })
   if (!res.ok) {

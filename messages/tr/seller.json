@@ -224,7 +224,10 @@
     "media": {
       "heading": "Ürün Görselleri",
       "dropzoneLabel": "Görsel yüklemek için tıklayın veya sürükleyin",
-      "dropzoneSub": "JPG, PNG, WebP maks 5MB"
+      "dropzoneSub": "JPG, PNG, WebP maks 5MB",
+      "primary": "Ana Görsel",
+      "makePrimary": "Ana görsel yap",
+      "remove": "Kaldır"
     },
     "logistics": {
       "heading": "Lojistik",

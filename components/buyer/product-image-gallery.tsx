@@ -1,26 +1,27 @@
 'use client'
 
 import { useState } from 'react'
+import { useTranslations } from 'next-intl'
 import { IconPhoto, IconZoomIn } from '@tabler/icons-react'
 
 interface ProductImageGalleryProps {
-  imageUrl: string | null
+  images: string[]
   productName: string
 }
 
-const THUMBS = [0, 1, 2]
-
-export function ProductImageGallery({ imageUrl, productName }: ProductImageGalleryProps) {
+export function ProductImageGallery({ images, productName }: ProductImageGalleryProps) {
+  const t = useTranslations('buyer')
   const [selected, setSelected] = useState(0)
+  const mainImage = images[selected] ?? null
 
   return (
     <div className="bg-surface-container-lowest rounded-xl overflow-hidden shadow-sm flex flex-col">
       {/* Main image */}
       <div className="w-full aspect-[4/3] bg-surface-container flex items-center justify-center relative overflow-hidden group">
-        {imageUrl ? (
+        {mainImage ? (
           <>
             <img
-              src={imageUrl}
+              src={mainImage}
               alt={productName}
               className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
@@ -31,37 +32,33 @@ export function ProductImageGallery({ imageUrl, productName }: ProductImageGalle
         ) : (
           <div className="flex flex-col items-center justify-center gap-3">
             <IconPhoto size={80} className="text-on-surface-variant/20" />
-            <span className="text-xs text-on-surface-variant/40">Görsel yok</span>
+            <span className="text-xs text-on-surface-variant/40">{t('discover.gallery.noImage')}</span>
           </div>
         )}
       </div>
 
       {/* Thumbnails */}
-      <div className="p-4 flex gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
-        {THUMBS.map((idx) => (
-          <button
-            key={idx}
-            onClick={() => setSelected(idx)}
-            className={`flex-shrink-0 w-20 aspect-square rounded-lg bg-surface-container overflow-hidden border-2 transition-colors focus:outline-none ${
-              selected === idx
-                ? 'border-primary'
-                : 'border-transparent hover:border-outline-variant'
-            }`}
-          >
-            {imageUrl ? (
+      {images.length > 1 && (
+        <div className="p-4 flex gap-3 overflow-x-auto" style={{ scrollbarWidth: 'none' }}>
+          {images.map((url, idx) => (
+            <button
+              key={url}
+              onClick={() => setSelected(idx)}
+              className={`flex-shrink-0 w-20 aspect-square rounded-lg bg-surface-container overflow-hidden border-2 transition-colors focus:outline-none ${
+                selected === idx
+                  ? 'border-primary'
+                  : 'border-transparent hover:border-outline-variant'
+              }`}
+            >
               <img
-                src={imageUrl}
+                src={url}
                 alt={`${productName} görsel ${idx + 1}`}
                 className="w-full h-full object-cover"
               />
-            ) : (
-              <div className="w-full h-full flex items-center justify-center">
-                <IconPhoto className="text-on-surface-variant/30" />
-              </div>
-            )}
-          </button>
-        ))}
-      </div>
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

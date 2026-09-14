@@ -17,6 +17,9 @@
     "breadcrumb": "Discover",
     "priceTrend": "Price Trend (30 Days)",
     "priceTrendStable": "Stable",
+    "gallery": {
+      "noImage": "No image"
+    },
     "badges": {
       "organic": "Organic",
       "natural": "Natural",

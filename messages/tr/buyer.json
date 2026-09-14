@@ -17,6 +17,9 @@
     "breadcrumb": "Keşfet",
     "priceTrend": "Fiyat Trendi (30 Gün)",
     "priceTrendStable": "Stabil",
+    "gallery": {
+      "noImage": "Görsel yok"
+    },
     "badges": {
       "organic": "Organik",
       "natural": "Doğal",

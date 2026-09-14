@@ -224,7 +224,10 @@
     "media": {
       "heading": "Product Media",
       "dropzoneLabel": "Click or drag images to upload",
-      "dropzoneSub": "JPG, PNG, WebP up to 5MB"
+      "dropzoneSub": "JPG, PNG, WebP up to 5MB",
+      "primary": "Primary",
+      "makePrimary": "Make primary",
+      "remove": "Remove"
     },
     "logistics": {
       "heading": "Logistics",
