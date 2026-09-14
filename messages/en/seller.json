@@ -151,7 +151,17 @@
       "searchPlaceholder": "Search by name, SKU, or category...",
       "filters": "Filters",
       "categoryAll": "Category: All",
-      "showing": "Showing {filtered} of {total} products"
+      "showing": "Showing {filtered} of {total} products",
+      "filterStatus": "Status",
+      "filterStock": "Stock Status",
+      "stock": {
+        "in_stock": "In Stock",
+        "low_stock": "Low Stock",
+        "out_of_stock": "Out of Stock"
+      },
+      "clearFilters": "Clear Filters",
+      "listView": "List View",
+      "gridView": "Grid View"
     },
     "table": {
       "image": "Image",
@@ -162,9 +172,16 @@
       "status": "Status",
       "actions": "Actions",
       "perUnit": "per unit",
-      "rowsPerPage": "Rows per page",
-      "total": "products",
+      "pagination": "Showing {shown} of {total} products",
       "noResults": "No products match your search."
+    },
+    "bulk": {
+      "selected": "{count} products selected",
+      "setActive": "Publish",
+      "setDraft": "Set to Draft",
+      "delete": "Delete",
+      "clear": "Clear Selection",
+      "confirmDelete": "Are you sure you want to delete {count} products?"
     },
     "status": {
       "active": "Active",
@@ -207,7 +224,10 @@
     "media": {
       "heading": "Product Media",
       "dropzoneLabel": "Click or drag images to upload",
-      "dropzoneSub": "JPG, PNG, WebP up to 5MB"
+      "dropzoneSub": "JPG, PNG, WebP up to 5MB",
+      "primary": "Primary",
+      "makePrimary": "Make primary",
+      "remove": "Remove"
     },
     "logistics": {
       "heading": "Logistics",
@@ -221,7 +241,12 @@
   "dashboard": {
     "heading": "Seller Dashboard",
     "subHeading": "Overview of your wholesale operations and performance metrics.",
-    "last30Days": "Last 30 Days",
+    "dateFilter": {
+      "last7": "Last 7 Days",
+      "last30": "Last 30 Days",
+      "last90": "Last 90 Days",
+      "all": "All Time"
+    },
     "exportReport": "Export Report",
     "monthlyRevenue": "Monthly Revenue",
     "weekly": "Weekly",
@@ -243,6 +268,7 @@
     },
     "activity": {
       "heading": "Recent Activity",
+      "empty": "No activity in this period.",
       "orderDelivered": "Order delivered successfully to",
       "newOrder": "New Order #{id} placed by",
       "quoteReceived": "Quote Request",

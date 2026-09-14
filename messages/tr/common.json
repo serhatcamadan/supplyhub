@@ -1,5 +1,6 @@
 {
-  "searchPlaceholder": "Ürün, sipariş veya tedarikçi ara...",
+  "searchPlaceholder": "Ürün veya teklif talebi ara...",
+  "searchNoResults": "Sonuç bulunamadı.",
   "profile": {
     "sections": {
       "account": "Hesap Ayarları",
@@ -57,7 +58,9 @@
       "toggle": "Şifre değiştir",
       "mismatch": "Şifreler eşleşmiyor.",
       "tooShort": "En az 8 karakter olmalı.",
-      "success": "Şifre başarıyla değiştirildi."
+      "success": "Şifre başarıyla değiştirildi.",
+      "currentRequired": "Mevcut şifrenizi girmelisiniz.",
+      "currentWrong": "Mevcut şifre yanlış."
     },
     "errors": {
       "nameRequired": "Ad Soyad zorunludur.",

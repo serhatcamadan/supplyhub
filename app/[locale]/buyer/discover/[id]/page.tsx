@@ -9,13 +9,6 @@ import { ProductOrderPanel } from '@/components/buyer/product-order-panel'
 import { SellerInfoCard } from '@/components/buyer/seller-info-card'
 import { IconChevronRight } from '@tabler/icons-react'
 
-const CATEGORY_TO_FEATURES_KEY: Record<string, string> = {
-  'Yağlar':                'oils',
-  'Tahıllar':              'grains',
-  'Doğal Ürünler':         'natural',
-  'Baklagiller & Makarna': 'legumes',
-}
-
 const SPARKLINE = 'M0,25 L10,22 L20,24 L30,15 L40,18 L50,12 L60,14 L70,8 L80,10 L90,5 L100,5'
 
 export default async function BuyerProductDetailPage({
@@ -30,11 +23,7 @@ export default async function BuyerProductDetailPage({
   if (!product) notFound()
 
   const seller = product.companies
-
-  const featuresKey = CATEGORY_TO_FEATURES_KEY[product.category]
-  const features: string[] = featuresKey
-    ? (t.raw(`discover.features.${featuresKey}`) as string[])
-    : []
+  const images = product.images.length > 0 ? product.images : product.image_url ? [product.image_url] : []
 
   const minPrice = product.price_tiers.length > 0
     ? Math.min(...product.price_tiers.map((tier) => tier.price))
@@ -46,14 +35,17 @@ export default async function BuyerProductDetailPage({
   const fallbackSeller = t('discover.unknownSupplier')
 
   const specs = [
-    { label: t('productDetail.specs.category'),         value: product.category },
-    { label: t('productDetail.specs.minOrderQty'),      value: t('productDetail.specValues.pieces', { count: product.min_order_qty }) },
-    { label: t('productDetail.specs.startingPrice'),    value: formatCurrency(minPrice, locale) + ' ' + t('productDetail.specValues.pricePerPiece') },
-    { label: t('productDetail.specs.priceRange'),       value: `${formatCurrency(minPrice, locale)} – ${formatCurrency(maxPrice, locale)}` },
-    { label: t('productDetail.specs.priceTiers'),       value: t('productDetail.specValues.tiers', { count: product.price_tiers.length }) },
-    { label: t('productDetail.specs.deliveryTime'),     value: t('productDetail.specValues.deliveryDays') },
-    { label: t('productDetail.specs.warehouseLocation'),value: t('productDetail.specValues.warehouseLocation') },
-    { label: t('productDetail.specs.shelfLife'),        value: t('productDetail.specValues.shelfLife') },
+    { label: t('productDetail.specs.category'),      value: product.category },
+    { label: t('productDetail.specs.minOrderQty'),   value: t('productDetail.specValues.pieces', { count: product.min_order_qty }) },
+    { label: t('productDetail.specs.startingPrice'), value: formatCurrency(minPrice, locale) + ' ' + t('productDetail.specValues.pricePerPiece') },
+    { label: t('productDetail.specs.priceRange'),    value: `${formatCurrency(minPrice, locale)} – ${formatCurrency(maxPrice, locale)}` },
+    { label: t('productDetail.specs.priceTiers'),    value: t('productDetail.specValues.tiers', { count: product.price_tiers.length }) },
+    ...(product.lead_time_days != null
+      ? [{ label: t('productDetail.specs.deliveryTime'), value: t('productDetail.specValues.leadTimeDays', { count: product.lead_time_days }) }]
+      : []),
+    ...(product.weight != null
+      ? [{ label: t('productDetail.specs.weight'), value: t('productDetail.specValues.weightKg', { value: product.weight }) }]
+      : []),
   ]
 
   return (
@@ -74,8 +66,8 @@ export default async function BuyerProductDetailPage({
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
 
         <div className="lg:col-span-8 flex flex-col gap-8">
-          <ProductImageGallery imageUrl={product.image_url} productName={product.name} />
-          <ProductTabs description={product.description} features={features} specs={specs} />
+          <ProductImageGallery images={images} productName={product.name} />
+          <ProductTabs description={product.description} specs={specs} />
         </div>
 
         <div className="lg:col-span-4 flex flex-col gap-6 sticky top-24">

@@ -1,5 +1,6 @@
 {
-  "searchPlaceholder": "Search products, orders, or suppliers...",
+  "searchPlaceholder": "Search products or quote requests...",
+  "searchNoResults": "No results found.",
   "profile": {
     "sections": {
       "account": "Account Settings",
@@ -57,7 +58,9 @@
       "toggle": "Change password",
       "mismatch": "Passwords do not match.",
       "tooShort": "Must be at least 8 characters.",
-      "success": "Password changed successfully."
+      "success": "Password changed successfully.",
+      "currentRequired": "You must enter your current password.",
+      "currentWrong": "Current password is incorrect."
     },
     "errors": {
       "nameRequired": "Full name is required.",

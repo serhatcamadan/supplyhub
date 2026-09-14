@@ -18,7 +18,7 @@ export default async function SellerLayout({ children }: { children: React.React
   return (
     <div className="min-h-screen bg-surface">
       <Sidebar portal="seller" />
-      <Topbar userName={name} userRole={role} />
+      <Topbar userName={name} userRole={role} portal="seller" />
       <div className="pl-72">
         <main className="pt-16 min-h-screen">{children}</main>
       </div>

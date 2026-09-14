@@ -15,6 +15,19 @@ type QuoteTab = 'all' | 'pending' | 'responded' | 'archived'
 
 const SEVEN_DAYS_MS = 7 * 24 * 60 * 60 * 1000
 
+function toCsv(quotes: EnrichedQuote[], headers: Record<string, string>, locale: string): string {
+  const cols = [headers.rfqId, headers.buyer, headers.product, headers.quantity, headers.date, headers.status]
+  const rows = quotes.map((q) => [
+    q.id,
+    q.buyerName,
+    q.productName,
+    String(q.quantity),
+    new Date(q.created_at).toLocaleDateString(locale === 'tr' ? 'tr-TR' : 'en-US'),
+    q.status,
+  ].map((v) => `"${v.replace(/"/g, '""')}"`).join(','))
+  return [cols.join(','), ...rows].join('\n')
+}
+
 export default function SellerQuotesPage() {
   const t = useTranslations('seller')
   const locale = useLocale()
@@ -94,6 +107,24 @@ export default function SellerQuotesPage() {
       )
     : byTab
 
+  function handleExport() {
+    const csv = toCsv(filtered, {
+      rfqId: t('quotes.table.rfqId'),
+      buyer: t('quotes.table.buyerCol'),
+      product: t('quotes.table.product'),
+      quantity: t('quotes.table.quantity'),
+      date: t('quotes.table.dateReceived'),
+      status: t('quotes.table.status'),
+    }, locale)
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' })
+    const url = URL.createObjectURL(blob)
+    const a = document.createElement('a')
+    a.href = url
+    a.download = 'supplyhub-quotes.csv'
+    a.click()
+    URL.revokeObjectURL(url)
+  }
+
   return (
     <div className="p-8 flex flex-col gap-8">
 
@@ -102,7 +133,11 @@ export default function SellerQuotesPage() {
           <h1 className="text-4xl font-bold tracking-tight text-on-surface">{t('quotes.heading')}</h1>
           <p className="text-sm text-on-surface-variant mt-2">{t('quotes.subHeading')}</p>
         </div>
-        <button className="h-10 px-4 inline-flex items-center gap-2 bg-surface text-primary border border-outline-variant rounded-lg text-xs font-semibold uppercase tracking-wider hover:bg-surface-container-low transition-colors shadow-sm">
+        <button
+          onClick={handleExport}
+          disabled={filtered.length === 0}
+          className="h-10 px-4 inline-flex items-center gap-2 bg-surface text-primary border border-outline-variant rounded-lg text-xs font-semibold uppercase tracking-wider hover:bg-surface-container-low transition-colors shadow-sm disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:bg-surface"
+        >
           <IconDownload size={18} />
           {t('quotes.exportCsv')}
         </button>

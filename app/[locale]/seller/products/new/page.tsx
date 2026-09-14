@@ -10,7 +10,7 @@ import type { PriceTier } from '@/types'
 import { Button } from '@/components/ui/button'
 import { ProductBasicInfo } from '@/components/seller/product-basic-info'
 import { ProductPricingTiers } from '@/components/seller/product-pricing-tiers'
-import { ProductMedia } from '@/components/seller/product-media'
+import { ProductMedia, type MediaItem } from '@/components/seller/product-media'
 import { ProductLogistics } from '@/components/seller/product-logistics'
 import { IconChevronRight, IconDeviceFloppy } from '@tabler/icons-react'
 
@@ -28,7 +28,7 @@ export default function NewProductPage() {
     { min_qty: 11, max_qty: 50,   price: 0 },
     { min_qty: 51, max_qty: null, price: 0 },
   ])
-  const [imageFile, setImageFile]       = useState<File | null>(null)
+  const [mediaItems, setMediaItems]     = useState<MediaItem[]>([])
   const [stockQty, setStockQty]         = useState('')
   const [isActive, setIsActive]         = useState(true)
   const [weight, setWeight]             = useState('')
@@ -72,14 +72,19 @@ export default function NewProductPage() {
         price_tiers:    tiers,
         status:         isActive ? 'active' : 'draft',
         image_url:      null,
+        images:         [],
         stock_quantity: stockQty ? parseInt(stockQty, 10) : 0,
         weight:         weight ? parseFloat(weight) : null,
         lead_time_days: leadTimeDays ? parseInt(leadTimeDays, 10) : null,
       })
-      if (imageFile) {
+      if (mediaItems.length > 0) {
         try {
-          const imageUrl = await uploadProductImage(product.id, imageFile)
-          await updateProduct(product.id, { image_url: imageUrl })
+          const urls = await Promise.all(
+            mediaItems.map((item, i) =>
+              item.file ? uploadProductImage(product.id, item.file, i) : Promise.resolve(item.url)
+            )
+          )
+          await updateProduct(product.id, { images: urls, image_url: urls[0] ?? null })
         } catch {
           // product created; image upload failed silently
         }
@@ -135,7 +140,7 @@ export default function NewProductPage() {
             />
           </div>
           <div className="col-span-12 lg:col-span-4 flex flex-col gap-8">
-            <ProductMedia onFileSelect={setImageFile} />
+            <ProductMedia onChange={setMediaItems} />
             <ProductLogistics
               stockQty={stockQty} onStockQtyChange={setStockQty}
               isActive={isActive} onIsActiveChange={setIsActive}
