@@ -1,3 +1,5 @@
+import { getTranslations } from 'next-intl/server'
+
 export type SearchKeyword = {
   rank: number
   keyword: string
@@ -14,14 +16,16 @@ function MiniSparkline({ path, growing }: { path: string; growing: boolean }) {
   )
 }
 
-export function BuyerSearches({ keywords }: { keywords: SearchKeyword[] }) {
+export async function BuyerSearches({ keywords }: { keywords: SearchKeyword[] }) {
+  const t = await getTranslations('seller')
+
   return (
     <section className="flex flex-col gap-4">
-      <h2 className="text-xl font-semibold text-on-surface">Alıcı Aramaları</h2>
+      <h2 className="text-xl font-semibold text-on-surface">{t('discover.buyerSearches.heading')}</h2>
       <div className="bg-surface-container-lowest rounded-xl shadow-sm p-5 flex flex-col gap-4 flex-1">
         <div className="flex items-center justify-between pb-3 border-b border-surface-container">
-          <span className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Anahtar Kelime</span>
-          <span className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">Hacim</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">{t('discover.buyerSearches.keywordCol')}</span>
+          <span className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">{t('discover.buyerSearches.volumeCol')}</span>
         </div>
         {keywords.map((kw) => (
           <div

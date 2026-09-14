@@ -55,8 +55,12 @@
       "unit": "adet",
       "buyerMessage": "Alıcı Mesajı",
       "noMessage": "Mesaj girilmemiş.",
+      "attachments": "Ekli Dosyalar",
       "unknownBuyer": "Bilinmeyen Alıcı",
-      "unknownProduct": "Bilinmeyen Ürün"
+      "unknownProduct": "Bilinmeyen Ürün",
+      "accessDenied": "Bu kayda erişim yetkiniz yok",
+      "accessDeniedHint": "Bu teklif talebi başka bir şirkete ait olabilir.",
+      "backToList": "Teklif Taleplerine Dön"
     },
     "response": {
       "heading": "Taslak Yanıt",
@@ -74,6 +78,8 @@
       "saveDraft": "Taslak Kaydet",
       "saving": "Kaydediliyor…",
       "sendQuote": "Teklif Gönder",
+      "sending": "Gönderiliyor…",
+      "sendError": "Teklif gönderilemedi, lütfen tekrar deneyin.",
       "perUnit": "adet başına",
       "leadTimeOptions": {
         "7-14": "7–14 Gün",
@@ -257,6 +263,67 @@
     },
     "chart": {
       "revenue": "Gelir"
+    }
+  },
+  "discover": {
+    "title": "Market Discovery",
+    "subtitle": "Sektör trendlerini analiz edin, alıcı taleplerini takip edin ve yeni ürün fırsatları keşfedin.",
+    "addProduct": "Ürün Ekle",
+    "search": {
+      "placeholder": "Ürün kategorisi, malzeme veya pazar anahtar kelimesi ara…",
+      "comingSoon": "Yakında",
+      "filter": "Filtrele"
+    },
+    "trends": {
+      "heading": "Yükselen Kategoriler",
+      "viewAll": "Tümünü Gör",
+      "demandLabel": "Pazar Talebi",
+      "demand": {
+        "high": "Yüksek",
+        "mediumHigh": "Orta-Yüksek"
+      },
+      "items": {
+        "ecoPackaging": { "category": "Eko-Ambalaj", "subcategory": "Endüstriyel Malzemeler" },
+        "industrialSensors": { "category": "Endüstriyel Sensörler", "subcategory": "Elektronik & IoT" }
+      }
+    },
+    "buyerSearches": {
+      "heading": "Alıcı Aramaları",
+      "keywordCol": "Anahtar Kelime",
+      "volumeCol": "Hacim",
+      "items": {
+        "corrugatedBoxes": "Toplu Oluklu Kutu",
+        "palletWrap": "Biyobozunur Palet Sargısı",
+        "lithiumCell": "Lityum Hücre (18650)",
+        "oliveOil5L": "Organik Zeytinyağı 5L",
+        "branFlour25kg": "Kepek Unu 25kg"
+      }
+    },
+    "priceIndex": {
+      "heading": "Rakip Fiyat Endeksi",
+      "subheading": "Aktif kategorileriniz vs. pazar ortalaması · Son 30 gün",
+      "you": "Siz",
+      "market": "Pazar",
+      "unitLabel": "Birim: {unit}",
+      "marketLabel": "Pazar: {price}",
+      "items": {
+        "oliveOil5L": "Organik Zeytinyağı (5L)",
+        "wheatFlour25kg": "Tam Buğday Unu (25kg)"
+      },
+      "units": {
+        "piece": "Adet",
+        "sack": "Çuval"
+      }
+    },
+    "recommendations": {
+      "heading": "Eklemeniz Önerilen Ürünler",
+      "marginLabel": "Tahmini Kar: {margin}",
+      "createDraft": "Taslak Oluştur",
+      "items": {
+        "kraftTape": { "name": "Su Aktivasyonlu Kraft Bant", "description": "Eko-Ambalaj segmentinde yüksek talep. Düşük satıcı rekabeti." },
+        "thermalLabel": { "name": "Termal Transfer Etiket (4×6)", "description": "Bölgenizde yüksek hacimli sürekli aramalar. Hızlı tüketim ürünü." },
+        "fillGas": { "name": "Dolum Gazı (N₂ — 10L)", "description": "Gıda sektöründe artan MAP ambalaj talebi." }
+      }
     }
   }
 }

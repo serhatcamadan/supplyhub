@@ -282,6 +282,30 @@
       "description": "Talebiniz SupplyHub'ın güvenli işlem garantisi kapsamındadır. Teslimat onaylanana kadar ödemeler emanette tutulur.",
       "learnMore": "Daha fazla bilgi"
     },
+    "detail": {
+      "back": "Teklif Taleplerine Dön",
+      "heading": "Teklif Detayı",
+      "yourRequest": "Talebiniz",
+      "quantity": "Miktar",
+      "requestedOn": "Talep Tarihi",
+      "noMessage": "Ek mesaj girilmemiş.",
+      "attachments": "Ekli Dosyalar",
+      "sellerResponse": "Tedarikçi Yanıtı",
+      "unitPrice": "Birim Fiyat",
+      "total": "Toplam",
+      "noResponseYet": "Tedarikçi henüz yanıt vermedi.",
+      "waitingHint": "Genellikle 24–48 saat içinde yanıt alırsınız.",
+      "accept": "Teklifi Kabul Et",
+      "accepting": "İşleniyor…",
+      "decline": "Reddet",
+      "declining": "İşleniyor…",
+      "actionError": "İşlem başarısız oldu, lütfen tekrar deneyin.",
+      "statusAccepted": "Bu teklifi kabul ettiniz.",
+      "statusDeclined": "Bu teklifi reddettiniz.",
+      "accessDenied": "Bu kayda erişim yetkiniz yok",
+      "accessDeniedHint": "Bu teklif talebi başka bir şirkete ait olabilir.",
+      "backToList": "Teklif Taleplerine Dön"
+    },
     "list": {
       "heading": "Teklif Talepleri",
       "subHeading": "Tedarikçilere gönderdiğiniz teklif taleplerini takip edin ve yönetin.",
@@ -340,12 +364,16 @@
         "charCount": "{count} / 2000 karakter",
         "attachments": "Dosya ve Teknik Çizimler",
         "dropzoneTitle": "Yüklemek için tıklayın veya sürükleyin",
-        "dropzoneHint": "PDF, STEP, IGES, DWG veya ZIP, maks. 50 MB"
+        "dropzoneHint": "PDF, STEP, IGES, DWG veya ZIP, maks. 50 MB",
+        "removeFile": "Dosyayı kaldır",
+        "tooLarge": "{name} 50 MB sınırını aşıyor.",
+        "uploadError": "Dosyalar yüklenemedi, lütfen tekrar deneyin."
       },
       "actions": {
         "cancel": "İptal",
         "submit": "Talep Gönder",
-        "submitting": "Gönderiliyor…"
+        "submitting": "Gönderiliyor…",
+        "uploading": "Dosyalar yükleniyor…"
       },
       "tips": {
         "heading": "Daha iyi teklifler için",

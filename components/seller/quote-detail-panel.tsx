@@ -3,7 +3,7 @@
 import { useTranslations } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
 import { Avatar } from '@/components/ui/avatar'
-import { IconMapPin, IconMessage, IconPackage, IconQuote } from '@tabler/icons-react'
+import { IconMapPin, IconMessage, IconPackage, IconPaperclip, IconQuote } from '@tabler/icons-react'
 
 interface QuoteDetailPanelProps {
   buyerName: string
@@ -15,6 +15,16 @@ interface QuoteDetailPanelProps {
   quantity: number
   listPrice: number | null
   minOrderQty: number
+  attachmentUrls?: string[]
+}
+
+function attachmentName(url: string): string {
+  try {
+    const path = decodeURIComponent(new URL(url).pathname.split('/').pop() ?? url)
+    return path.replace(/^\d+-[a-z0-9]+-/, '')
+  } catch {
+    return url
+  }
 }
 
 export function QuoteDetailPanel({
@@ -27,6 +37,7 @@ export function QuoteDetailPanel({
   quantity,
   listPrice,
   minOrderQty,
+  attachmentUrls = [],
 }: QuoteDetailPanelProps) {
   const t = useTranslations('seller')
 
@@ -136,6 +147,31 @@ export function QuoteDetailPanel({
             </div>
           )}
         </section>
+
+        {/* Attachments */}
+        {attachmentUrls.length > 0 && (
+          <section>
+            <h3 className="text-base font-semibold text-on-surface mb-3 flex items-center gap-2">
+              <IconPaperclip size={20} className="text-primary" />
+              {t('quotes.detail.attachments')}
+            </h3>
+            <ul className="flex flex-col gap-2">
+              {attachmentUrls.map((url) => (
+                <li key={url}>
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 p-3 bg-surface-container-lowest rounded-xl border border-outline-variant/30 text-sm text-on-surface hover:border-primary/50 hover:text-primary transition-colors"
+                  >
+                    <IconPaperclip size={16} className="shrink-0" />
+                    <span className="truncate">{attachmentName(url)}</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
 
       </div>
     </div>

@@ -6,13 +6,14 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { getProducts } from '@/lib/api/products'
 import { createQuoteRequest } from '@/lib/api/quotes'
+import { uploadQuoteAttachment } from '@/lib/supabase/storage'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import type { Product } from '@/types'
 import {
   IconArrowLeft, IconCalendar, IconCurrencyLira, IconInfoCircle,
-  IconPackage, IconPaperclip, IconRulerMeasure, IconSend, IconTag,
+  IconPackage, IconPaperclip, IconRulerMeasure, IconSend, IconTag, IconX,
 } from '@tabler/icons-react'
 import type { ElementType } from 'react'
 
@@ -61,7 +62,26 @@ export default function BuyerQuoteNewPage() {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [submitError, setSubmitError] = useState<string | null>(null)
   const [isLoading, setIsLoading]     = useState(true)
+  const [files, setFiles]             = useState<File[]>([])
   const fileInputRef = useRef<HTMLInputElement>(null)
+
+  const MAX_FILE_SIZE = 50 * 1024 * 1024
+
+  function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+    const picked = Array.from(e.target.files ?? [])
+    e.target.value = ''
+    const tooLarge = picked.find((f) => f.size > MAX_FILE_SIZE)
+    if (tooLarge) {
+      setSubmitError(t('quotes.form.specs.tooLarge', { name: tooLarge.name }))
+      return
+    }
+    setSubmitError(null)
+    setFiles((prev) => [...prev, ...picked])
+  }
+
+  function removeFile(idx: number) {
+    setFiles((prev) => prev.filter((_, i) => i !== idx))
+  }
 
   const selectedProduct = products.find((p) => p.id === productId) ?? null
 
@@ -89,7 +109,18 @@ export default function BuyerQuoteNewPage() {
     setSubmitError(null)
     const quantity = parseInt(qty, 10) || selectedProduct?.min_order_qty || 1
     try {
-      await createQuoteRequest({ productId, quantity, buyer_note: description.trim() || undefined })
+      let attachment_urls: string[] | undefined
+      if (files.length > 0) {
+        try {
+          const uploaded = await Promise.all(files.map((f) => uploadQuoteAttachment(f)))
+          attachment_urls = uploaded.map((u) => u.url)
+        } catch {
+          setSubmitError(t('quotes.form.specs.uploadError'))
+          setIsSubmitting(false)
+          return
+        }
+      }
+      await createQuoteRequest({ productId, quantity, buyer_note: description.trim() || undefined, attachment_urls })
       router.push(`/${locale}/buyer/quotes`)
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : 'Bir hata oluştu')
@@ -286,7 +317,37 @@ export default function BuyerQuoteNewPage() {
                     <p className="text-sm font-medium text-on-surface">{t('quotes.form.specs.dropzoneTitle')}</p>
                     <p className="text-xs text-on-surface-variant mt-1">{t('quotes.form.specs.dropzoneHint')}</p>
                   </button>
-                  <input ref={fileInputRef} type="file" multiple accept=".pdf,.step,.iges,.dwg,.zip" className="hidden" />
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    multiple
+                    accept=".pdf,.step,.iges,.dwg,.zip"
+                    onChange={handleFileChange}
+                    className="hidden"
+                  />
+                  {files.length > 0 && (
+                    <ul className="mt-3 flex flex-col gap-2">
+                      {files.map((file, idx) => (
+                        <li
+                          key={`${file.name}-${idx}`}
+                          className="flex items-center justify-between gap-3 bg-surface-container rounded-lg px-3 py-2 text-sm"
+                        >
+                          <span className="flex items-center gap-2 min-w-0 text-on-surface">
+                            <IconPaperclip size={16} className="text-on-surface-variant shrink-0" />
+                            <span className="truncate">{file.name}</span>
+                          </span>
+                          <button
+                            type="button"
+                            onClick={() => removeFile(idx)}
+                            aria-label={t('quotes.form.specs.removeFile')}
+                            className="text-on-surface-variant hover:text-error transition-colors shrink-0"
+                          >
+                            <IconX size={16} />
+                          </button>
+                        </li>
+                      ))}
+                    </ul>
+                  )}
                 </div>
               </div>
             </SectionCard>
@@ -301,7 +362,9 @@ export default function BuyerQuoteNewPage() {
                 </Link>
                 <Button type="submit" size="lg" disabled={isSubmitting} data-testid="rfq-submit">
                   <IconSend size={18} className={isSubmitting ? '' : 'group-hover:translate-x-0.5 transition-transform'} />
-                  {isSubmitting ? t('quotes.form.actions.submitting') : t('quotes.form.actions.submit')}
+                  {isSubmitting
+                    ? (files.length > 0 ? t('quotes.form.actions.uploading') : t('quotes.form.actions.submitting'))
+                    : t('quotes.form.actions.submit')}
                 </Button>
               </div>
             </div>

@@ -55,8 +55,12 @@
       "unit": "units",
       "buyerMessage": "Buyer Message",
       "noMessage": "No message provided.",
+      "attachments": "Attached Files",
       "unknownBuyer": "Unknown Buyer",
-      "unknownProduct": "Unknown Product"
+      "unknownProduct": "Unknown Product",
+      "accessDenied": "You don't have access to this record",
+      "accessDeniedHint": "This quote request may belong to a different company.",
+      "backToList": "Back to Quote Requests"
     },
     "response": {
       "heading": "Draft Response",
@@ -74,6 +78,8 @@
       "saveDraft": "Save Draft",
       "saving": "Saving…",
       "sendQuote": "Send Quote",
+      "sending": "Sending…",
+      "sendError": "Failed to send the quote, please try again.",
       "perUnit": "per unit",
       "leadTimeOptions": {
         "7-14": "7–14 Days",
@@ -257,6 +263,67 @@
     },
     "chart": {
       "revenue": "Revenue"
+    }
+  },
+  "discover": {
+    "title": "Market Discovery",
+    "subtitle": "Analyze industry trends, track buyer demand, and discover new product opportunities.",
+    "addProduct": "Add Product",
+    "search": {
+      "placeholder": "Search product categories, materials, or market keywords…",
+      "comingSoon": "Coming Soon",
+      "filter": "Filter"
+    },
+    "trends": {
+      "heading": "Trending Categories",
+      "viewAll": "View All",
+      "demandLabel": "Market Demand",
+      "demand": {
+        "high": "High",
+        "mediumHigh": "Medium-High"
+      },
+      "items": {
+        "ecoPackaging": { "category": "Eco-Packaging", "subcategory": "Industrial Materials" },
+        "industrialSensors": { "category": "Industrial Sensors", "subcategory": "Electronics & IoT" }
+      }
+    },
+    "buyerSearches": {
+      "heading": "Buyer Searches",
+      "keywordCol": "Keyword",
+      "volumeCol": "Volume",
+      "items": {
+        "corrugatedBoxes": "Bulk Corrugated Box",
+        "palletWrap": "Biodegradable Pallet Wrap",
+        "lithiumCell": "Lithium Cell (18650)",
+        "oliveOil5L": "Organic Olive Oil 5L",
+        "branFlour25kg": "Bran Flour 25kg"
+      }
+    },
+    "priceIndex": {
+      "heading": "Competitor Price Index",
+      "subheading": "Your active categories vs. market average · Last 30 days",
+      "you": "You",
+      "market": "Market",
+      "unitLabel": "Unit: {unit}",
+      "marketLabel": "Market: {price}",
+      "items": {
+        "oliveOil5L": "Organic Olive Oil (5L)",
+        "wheatFlour25kg": "Whole Wheat Flour (25kg)"
+      },
+      "units": {
+        "piece": "Piece",
+        "sack": "Sack"
+      }
+    },
+    "recommendations": {
+      "heading": "Recommended Products to Add",
+      "marginLabel": "Est. Margin: {margin}",
+      "createDraft": "Create Draft",
+      "items": {
+        "kraftTape": { "name": "Water-Activated Kraft Tape", "description": "High demand in the Eco-Packaging segment. Low seller competition." },
+        "thermalLabel": { "name": "Thermal Transfer Label (4×6)", "description": "High-volume recurring searches in your region. Fast-moving consumer item." },
+        "fillGas": { "name": "Fill Gas (N₂ — 10L)", "description": "Growing MAP packaging demand in the food sector." }
+      }
     }
   }
 }

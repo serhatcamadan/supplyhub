@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server'
 import { IconArrowRight, IconTrendingUp } from '@tabler/icons-react'
 import type { ElementType } from 'react'
 
@@ -26,7 +27,7 @@ const COLOR = {
   },
 }
 
-function TrendCard({ trend }: { trend: MarketTrend }) {
+function TrendCard({ trend, demandLabel }: { trend: MarketTrend; demandLabel: string }) {
   const c = COLOR[trend.colorScheme]
   return (
     <div className="bg-surface-container-lowest p-5 rounded-xl shadow-sm flex flex-col justify-between hover:shadow-md transition-shadow relative overflow-hidden group">
@@ -50,7 +51,7 @@ function TrendCard({ trend }: { trend: MarketTrend }) {
 
       <div className="mt-6 flex flex-col gap-2 relative z-10">
         <div className="flex justify-between text-xs">
-          <span className="text-on-surface-variant">Pazar Talebi</span>
+          <span className="text-on-surface-variant">{demandLabel}</span>
           <span className="font-semibold text-on-surface">{trend.demand}</span>
         </div>
         <div className="h-1.5 w-full bg-surface-container rounded-full overflow-hidden">
@@ -61,18 +62,26 @@ function TrendCard({ trend }: { trend: MarketTrend }) {
   )
 }
 
-export function MarketTrends({ trends }: { trends: MarketTrend[] }) {
+export async function MarketTrends({ trends }: { trends: MarketTrend[] }) {
+  const t = await getTranslations('seller')
+
   return (
     <section className="lg:col-span-2 flex flex-col gap-4">
       <div className="flex items-center justify-between">
-        <h2 className="text-xl font-semibold text-on-surface">Yükselen Kategoriler</h2>
-        <button className="text-xs font-semibold text-primary hover:text-primary/80 transition-colors flex items-center gap-1">
-          Tümünü Gör
+        <h2 className="text-xl font-semibold text-on-surface">{t('discover.trends.heading')}</h2>
+        <button
+          type="button"
+          disabled
+          className="text-xs font-semibold text-primary/50 cursor-not-allowed flex items-center gap-1"
+        >
+          {t('discover.trends.viewAll')}
           <IconArrowRight size={16} />
         </button>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        {trends.map((t) => <TrendCard key={t.category} trend={t} />)}
+        {trends.map((tr) => (
+          <TrendCard key={tr.category} trend={tr} demandLabel={t('discover.trends.demandLabel')} />
+        ))}
       </div>
     </section>
   )

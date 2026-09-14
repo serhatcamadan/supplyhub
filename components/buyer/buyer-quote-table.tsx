@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
 import { formatDate, formatCurrency, cn } from '@/lib/utils'
@@ -7,7 +8,7 @@ import type { QuoteRequest } from '@/types'
 import { buttonVariants } from '@/components/ui/button'
 import { TablePagination } from '@/components/ui/table-pagination'
 import { TableEmptyRow } from '@/components/ui/table-empty-row'
-import { IconChecks, IconCircleCheck, IconCircleX, IconDotsVertical, IconFileInvoice } from '@tabler/icons-react'
+import { IconChecks, IconCircleCheck, IconCircleX, IconFileInvoice } from '@tabler/icons-react'
 import type { ElementType } from 'react'
 
 export interface BuyerEnrichedQuote extends QuoteRequest {
@@ -48,6 +49,12 @@ export function BuyerQuoteTable({ quotes }: { quotes: BuyerEnrichedQuote[] }) {
   const t = useTranslations('buyer')
   const locale = useLocale()
 
+  const ITEMS_PER_PAGE = 10
+  const [currentPage, setCurrentPage] = useState(1)
+  const totalPages = Math.max(1, Math.ceil(quotes.length / ITEMS_PER_PAGE))
+  const page = Math.min(currentPage, totalPages)
+  const paged = quotes.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
+
   return (
     <div className="flex-1 flex flex-col overflow-hidden">
       <div className="flex-1 overflow-auto">
@@ -76,7 +83,7 @@ export function BuyerQuoteTable({ quotes }: { quotes: BuyerEnrichedQuote[] }) {
             {quotes.length === 0 ? (
               <TableEmptyRow icon={IconFileInvoice} message={t('quotes.list.table.empty')} colSpan={5} />
             ) : (
-              quotes.map((quote) => (
+              paged.map((quote) => (
                 <tr
                   key={quote.id}
                   className="hover:bg-surface-container-low/50 transition-colors group cursor-pointer"
@@ -118,9 +125,6 @@ export function BuyerQuoteTable({ quotes }: { quotes: BuyerEnrichedQuote[] }) {
                           {t('quotes.list.table.viewResponse')}
                         </Link>
                       )}
-                      <button className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors">
-                        <IconDotsVertical size={20} />
-                      </button>
                     </div>
                   </td>
                 </tr>
@@ -130,7 +134,12 @@ export function BuyerQuoteTable({ quotes }: { quotes: BuyerEnrichedQuote[] }) {
         </table>
       </div>
 
-      <TablePagination label={t('quotes.list.table.pagination', { shown: quotes.length, total: quotes.length }) as string} />
+      <TablePagination
+        label={t('quotes.list.table.pagination', { shown: paged.length, total: quotes.length }) as string}
+        page={page}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   )
 }

@@ -30,6 +30,9 @@ export default function NewProductPage() {
   ])
   const [imageFile, setImageFile]       = useState<File | null>(null)
   const [stockQty, setStockQty]         = useState('')
+  const [isActive, setIsActive]         = useState(true)
+  const [weight, setWeight]             = useState('')
+  const [leadTimeDays, setLeadTimeDays] = useState('')
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError]               = useState<string | null>(null)
 
@@ -67,9 +70,11 @@ export default function NewProductPage() {
         category,
         min_order_qty:  parseInt(minOrderQty, 10),
         price_tiers:    tiers,
-        status:         'active',
+        status:         isActive ? 'active' : 'draft',
         image_url:      null,
         stock_quantity: stockQty ? parseInt(stockQty, 10) : 0,
+        weight:         weight ? parseFloat(weight) : null,
+        lead_time_days: leadTimeDays ? parseInt(leadTimeDays, 10) : null,
       })
       if (imageFile) {
         try {
@@ -131,7 +136,12 @@ export default function NewProductPage() {
           </div>
           <div className="col-span-12 lg:col-span-4 flex flex-col gap-8">
             <ProductMedia onFileSelect={setImageFile} />
-            <ProductLogistics stockQty={stockQty} onStockQtyChange={setStockQty} />
+            <ProductLogistics
+              stockQty={stockQty} onStockQtyChange={setStockQty}
+              isActive={isActive} onIsActiveChange={setIsActive}
+              weight={weight} onWeightChange={setWeight}
+              leadTimeDays={leadTimeDays} onLeadTimeDaysChange={setLeadTimeDays}
+            />
           </div>
         </div>
       </div>
