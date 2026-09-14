@@ -27,6 +27,7 @@ export function ProductOrderPanel({
   const router = useRouter()
   const { addItem } = useCart()
   const [qty, setQty] = useState(product.min_order_qty)
+  const [qtyInput, setQtyInput] = useState(String(product.min_order_qty))
   const [added, setAdded] = useState(false)
 
   function handleAddToCart() {
@@ -50,13 +51,30 @@ export function ProductOrderPanel({
   )
 
   function decrement() {
-    setQty((q) => Math.max(product.min_order_qty, q - 1))
+    setQty((q) => {
+      const next = Math.max(product.min_order_qty, q - 1)
+      setQtyInput(String(next))
+      return next
+    })
   }
   function increment() {
-    setQty((q) => q + 1)
+    setQty((q) => {
+      const next = q + 1
+      setQtyInput(String(next))
+      return next
+    })
   }
   function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
-    setQty(Math.max(product.min_order_qty, Number(e.target.value) || product.min_order_qty))
+    const raw = e.target.value
+    setQtyInput(raw)
+    const parsed = parseInt(raw, 10)
+    if (!isNaN(parsed)) setQty(Math.max(product.min_order_qty, parsed))
+  }
+  function handleBlur() {
+    const parsed = parseInt(qtyInput, 10)
+    const clamped = Math.max(product.min_order_qty, isNaN(parsed) ? product.min_order_qty : parsed)
+    setQty(clamped)
+    setQtyInput(String(clamped))
   }
 
   const displayPrice = unitPrice ?? baseTierPrice
@@ -144,9 +162,11 @@ export function ProductOrderPanel({
             </button>
             <input
               type="number"
-              value={qty}
+              value={qtyInput}
               min={product.min_order_qty}
               onChange={handleInput}
+              onBlur={handleBlur}
+              onFocus={(e) => e.target.select()}
               className="w-full text-center bg-transparent border-none focus:outline-none text-sm font-semibold text-on-surface h-10 appearance-none"
             />
             <button

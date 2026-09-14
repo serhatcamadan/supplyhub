@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { formatCurrency, formatDate, cn } from '@/lib/utils'
 import type { OrderStatus, OrderWithDetails } from '@/types'
@@ -83,6 +84,12 @@ export function OrderTable({
   const tCommon = useTranslations('common')
   const locale = useLocale()
 
+  const ITEMS_PER_PAGE = 10
+  const [currentPage, setCurrentPage] = useState(1)
+  const totalPages = Math.max(1, Math.ceil(orders.length / ITEMS_PER_PAGE))
+  const page = Math.min(currentPage, totalPages)
+  const paged = orders.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
+
   const STATUS_LABELS: Record<OrderStatus, string> = {
     pending:   tCommon('status.pending'),
     confirmed: tCommon('status.confirmed'),
@@ -131,7 +138,7 @@ export function OrderTable({
             {orders.length === 0 ? (
               <TableEmptyRow icon={IconShoppingBag} message={t('orders.table.noResults')} colSpan={7} />
             ) : (
-              orders.map((order, i) => (
+              paged.map((order, i) => (
                 <tr
                   key={order.id}
                   className="hover:bg-surface-container-low/50 transition-colors group cursor-pointer"
@@ -204,7 +211,12 @@ export function OrderTable({
         </table>
       </div>
 
-      <TablePagination label={t('orders.table.pagination', { shown: orders.length, total: orders.length })} />
+      <TablePagination
+        label={t('orders.table.pagination', { shown: paged.length, total: orders.length })}
+        page={page}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   )
 }

@@ -24,13 +24,13 @@ interface RfqSupplierSidebarProps {
 export function RfqSupplierSidebar({
   seller,
   stats,
-  rating = '4.8',
-  reviewCount = 124,
+  rating,
+  reviewCount,
 }: RfqSupplierSidebarProps) {
   const t = useTranslations('buyer')
   const locale = useLocale()
-  const fullStars = Math.floor(Number(rating))
-  const hasHalf  = Number(rating) % 1 >= 0.5
+  const fullStars = rating ? Math.floor(Number(rating)) : 0
+  const hasHalf  = rating ? Number(rating) % 1 >= 0.5 : false
 
   return (
     <div className="space-y-6">
@@ -45,20 +45,23 @@ export function RfqSupplierSidebar({
           <Avatar name={seller.name} size="lg" colorScheme="primary" />
           <div>
             <h4 className="text-sm font-semibold text-on-surface mb-1">{seller.name}</h4>
-            <div className="flex items-center gap-0.5 mb-1">
-              {Array.from({ length: fullStars }, (_, i) => (
-                <IconStarFilled key={i} size={15} className="text-on-tertiary-container" />
-              ))}
-              {hasHalf && (
-                <IconStarHalf className="text-[15px] text-on-tertiary-container" />
-              )}
-              <span className="ml-1 text-xs font-medium text-on-surface-variant">
-                {t('quotes.supplier.reviews', { rating, count: reviewCount })}
-              </span>
-            </div>
+            {rating && (
+              <div className="flex items-center gap-0.5 mb-1">
+                {Array.from({ length: fullStars }, (_, i) => (
+                  <IconStarFilled key={i} size={15} className="text-on-tertiary-container" />
+                ))}
+                {hasHalf && (
+                  <IconStarHalf className="text-[15px] text-on-tertiary-container" />
+                )}
+                <span className="ml-1 text-xs font-medium text-on-surface-variant">
+                  {t('quotes.supplier.reviews', { rating, count: reviewCount ?? 0 })}
+                </span>
+              </div>
+            )}
           </div>
         </div>
 
+        {stats.length > 0 && (
         <div className="space-y-3 text-sm mb-5">
           {stats.map((stat) => (
             <div
@@ -72,6 +75,7 @@ export function RfqSupplierSidebar({
             </div>
           ))}
         </div>
+        )}
 
         <Link
           href={`/${locale}/buyer/discover`}
