@@ -35,6 +35,7 @@ export function QuoteResponseForm({
   const t = useTranslations('seller')
   const initialPrice = existingResponse.price ?? listPrice ?? 0
   const [price, setPrice] = useState<number>(initialPrice)
+  const [priceInput, setPriceInput] = useState<string>(initialPrice ? String(initialPrice) : '')
   const [volumeDiscount, setVolumeDiscount] = useState(existingResponse.volumeDiscount)
   const [leadTime, setLeadTime] = useState(existingResponse.leadTime ?? '14-21')
   const [validUntil, setValidUntil] = useState(existingResponse.validUntil ?? defaultValidUntil())
@@ -137,12 +138,15 @@ export function QuoteResponseForm({
                   type="number"
                   step="0.01"
                   min={0}
-                  value={price}
+                  value={priceInput}
                   data-testid="response-price"
                   onChange={(e) => {
-                    setPrice(parseFloat(e.target.value) || 0)
+                    const raw = e.target.value
+                    setPriceInput(raw)
+                    setPrice(parseFloat(raw) || 0)
                     setSavedAt(null)
                   }}
+                  onFocus={(e) => e.target.select()}
                   className="w-full bg-surface-container-lowest border border-outline-variant rounded-lg py-3 pl-8 pr-4 font-mono text-base text-on-surface focus:outline-none focus:ring-2 focus:ring-primary focus:border-transparent transition-all shadow-sm"
                 />
               </div>

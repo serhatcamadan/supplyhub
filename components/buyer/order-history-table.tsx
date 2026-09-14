@@ -37,6 +37,12 @@ export function OrderHistoryTable({ orders }: { orders: OrderWithDetails[] }) {
   const router = useRouter()
   const [reorderingId, setReorderingId] = useState<string | null>(null)
 
+  const ITEMS_PER_PAGE = 5
+  const [currentPage, setCurrentPage] = useState(1)
+  const totalPages = Math.max(1, Math.ceil(orders.length / ITEMS_PER_PAGE))
+  const page = Math.min(currentPage, totalPages)
+  const paged = orders.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
+
   const STATUS_LABELS: Record<OrderStatus, string> = {
     pending:   tCommon('status.pending'),
     confirmed: tCommon('status.confirmed'),
@@ -94,7 +100,7 @@ export function OrderHistoryTable({ orders }: { orders: OrderWithDetails[] }) {
             {orders.length === 0 ? (
               <TableEmptyRow icon={IconShoppingBag} message={t('orders.table.empty')} colSpan={6} />
             ) : (
-              orders.map((order) => (
+              paged.map((order) => (
                 <tr
                   key={order.id}
                   className="border-b border-outline-variant/10 hover:bg-surface-container-lowest/50 transition-colors group cursor-pointer"
@@ -148,9 +154,12 @@ export function OrderHistoryTable({ orders }: { orders: OrderWithDetails[] }) {
 
       <TablePagination
         label={t('orders.table.paginationShowing', {
-          shown: Math.min(orders.length, 5),
+          shown: paged.length,
           total: orders.length,
         })}
+        page={page}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
       />
     </div>
   )

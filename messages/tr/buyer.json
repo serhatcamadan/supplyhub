@@ -301,7 +301,10 @@
       "declining": "İşleniyor…",
       "actionError": "İşlem başarısız oldu, lütfen tekrar deneyin.",
       "statusAccepted": "Bu teklifi kabul ettiniz.",
-      "statusDeclined": "Bu teklifi reddettiniz."
+      "statusDeclined": "Bu teklifi reddettiniz.",
+      "accessDenied": "Bu kayda erişim yetkiniz yok",
+      "accessDeniedHint": "Bu teklif talebi başka bir şirkete ait olabilir.",
+      "backToList": "Teklif Taleplerine Dön"
     },
     "list": {
       "heading": "Teklif Talepleri",

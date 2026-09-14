@@ -35,6 +35,8 @@ export interface Product {
   image_url: string | null
   status: ProductStatus
   stock_quantity: number
+  weight: number | null
+  lead_time_days: number | null
 }
 
 export interface QuoteRequest {

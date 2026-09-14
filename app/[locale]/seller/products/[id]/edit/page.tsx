@@ -29,6 +29,9 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const [imageFile, setImageFile]     = useState<File | null>(null)
   const [currentImageUrl, setCurrentImageUrl] = useState<string | null>(null)
   const [stockQty, setStockQty]       = useState('')
+  const [isActive, setIsActive]       = useState(true)
+  const [weight, setWeight]           = useState('')
+  const [leadTimeDays, setLeadTimeDays] = useState('')
   const [isLoading, setIsLoading]     = useState(true)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError]             = useState<string | null>(null)
@@ -46,6 +49,9 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         setTiers((data.price_tiers as PriceTier[]) ?? [])
         setStockQty(String(data.stock_quantity ?? 0))
         setCurrentImageUrl(data.image_url ?? null)
+        setIsActive(data.status === 'active')
+        setWeight(data.weight != null ? String(data.weight) : '')
+        setLeadTimeDays(data.lead_time_days != null ? String(data.lead_time_days) : '')
       } catch {
         setError(t('products.form.errorRequired'))
       } finally {
@@ -98,6 +104,9 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         min_order_qty:  parseInt(minOrderQty, 10),
         price_tiers:    tiers,
         stock_quantity: stockQty ? parseInt(stockQty, 10) : 0,
+        status:         isActive ? 'active' : 'draft',
+        weight:         weight ? parseFloat(weight) : null,
+        lead_time_days: leadTimeDays ? parseInt(leadTimeDays, 10) : null,
         ...(image_url !== currentImageUrl && { image_url }),
       })
       router.push(`/${locale}/seller/products`)
@@ -187,7 +196,12 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
           </div>
           <div className="col-span-12 lg:col-span-4 flex flex-col gap-8">
             <ProductMedia initialUrl={currentImageUrl} onFileSelect={setImageFile} />
-            <ProductLogistics stockQty={stockQty} onStockQtyChange={setStockQty} />
+            <ProductLogistics
+              stockQty={stockQty} onStockQtyChange={setStockQty}
+              isActive={isActive} onIsActiveChange={setIsActive}
+              weight={weight} onWeightChange={setWeight}
+              leadTimeDays={leadTimeDays} onLeadTimeDaysChange={setLeadTimeDays}
+            />
           </div>
         </div>
       </div>

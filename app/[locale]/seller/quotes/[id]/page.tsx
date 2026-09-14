@@ -1,14 +1,14 @@
 import { notFound, redirect } from 'next/navigation'
 import Link from 'next/link'
 import { getTranslations, getLocale } from 'next-intl/server'
-import { serverApiFetch } from '@/lib/api/server-client'
+import { serverApiFetch, ApiError } from '@/lib/api/server-client'
 import { getInitials } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { QuoteDetailPanel } from '@/components/seller/quote-detail-panel'
 import { QuoteResponseForm } from '@/components/seller/quote-response-form'
 import { PrintButton } from '@/components/seller/print-button'
 import type { ApiQuoteRequest } from '@/lib/api/quotes'
-import { IconArrowLeft, IconBan } from '@tabler/icons-react'
+import { IconArrowLeft, IconBan, IconLock } from '@tabler/icons-react'
 
 function formatReceived(iso: string, locale: string) {
   return new Intl.DateTimeFormat(locale === 'tr' ? 'tr-TR' : 'en-US', {
@@ -28,8 +28,33 @@ export default async function QuoteDetailPage({
   const { id } = await params
   const [t, locale] = await Promise.all([getTranslations('seller'), getLocale()])
 
-  const quote = await serverApiFetch<ApiQuoteRequest>(`/quote-requests/${id}`).catch(() => null)
-  if (!quote) notFound()
+  let quote: ApiQuoteRequest
+  try {
+    quote = await serverApiFetch<ApiQuoteRequest>(`/quote-requests/${id}`)
+  } catch (err) {
+    if (err instanceof ApiError && err.status === 404) notFound()
+    if (err instanceof ApiError && err.status === 403) {
+      return (
+        <div className="h-[calc(100vh-4rem)] flex flex-col items-center justify-center gap-4 text-center px-8">
+          <div className="w-16 h-16 rounded-full bg-error-container/20 flex items-center justify-center">
+            <IconLock size={28} className="text-error" />
+          </div>
+          <div>
+            <p className="font-semibold text-on-surface text-lg">{t('quotes.detail.accessDenied')}</p>
+            <p className="text-sm text-on-surface-variant mt-1">{t('quotes.detail.accessDeniedHint')}</p>
+          </div>
+          <Link
+            href={`/${locale}/seller/quotes`}
+            className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors flex items-center gap-1.5"
+          >
+            <IconArrowLeft size={16} />
+            {t('quotes.detail.backToList')}
+          </Link>
+        </div>
+      )
+    }
+    throw err
+  }
 
   const listPrice =
     quote.product.price_tiers.find(

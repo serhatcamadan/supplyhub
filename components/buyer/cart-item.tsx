@@ -1,5 +1,6 @@
 'use client'
 
+import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
 import { IconMinus, IconPhoto, IconPlus, IconX } from '@tabler/icons-react'
@@ -38,6 +39,9 @@ export function CartItemCard({ item, onQtyChange, onRemove }: CartItemCardProps)
   const hasDiscount = item.unitPrice < item.originalUnitPrice
   const originalTotal = item.originalUnitPrice * item.qty
 
+  const [qtyInput, setQtyInput] = useState(String(item.qty))
+  useEffect(() => { setQtyInput(String(item.qty)) }, [item.qty])
+
   function decrement() {
     onQtyChange(item.id, Math.max(item.minQty, item.qty - 1))
   }
@@ -45,8 +49,18 @@ export function CartItemCard({ item, onQtyChange, onRemove }: CartItemCardProps)
     onQtyChange(item.id, item.qty + 1)
   }
   function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
-    const v = Number(e.target.value)
-    if (v >= item.minQty) onQtyChange(item.id, v)
+    const raw = e.target.value
+    setQtyInput(raw)
+    const parsed = Number(raw)
+    if (raw !== '' && !isNaN(parsed) && parsed >= item.minQty) {
+      onQtyChange(item.id, parsed)
+    }
+  }
+  function handleBlur() {
+    const parsed = Number(qtyInput)
+    const clamped = Math.max(item.minQty, isNaN(parsed) || qtyInput === '' ? item.minQty : parsed)
+    if (clamped !== item.qty) onQtyChange(item.id, clamped)
+    setQtyInput(String(clamped))
   }
 
   return (
@@ -105,9 +119,11 @@ export function CartItemCard({ item, onQtyChange, onRemove }: CartItemCardProps)
               </button>
               <input
                 type="number"
-                value={item.qty}
+                value={qtyInput}
                 min={item.minQty}
                 onChange={handleInput}
+                onBlur={handleBlur}
+                onFocus={(e) => e.target.select()}
                 className="w-16 bg-transparent text-center font-mono text-sm text-on-surface focus:outline-none focus:ring-1 focus:ring-primary rounded-md py-1 appearance-none"
               />
               <button

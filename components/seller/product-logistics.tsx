@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
 import { SectionHeading } from '@/components/ui/section-heading'
@@ -11,10 +10,20 @@ const INPUT = 'w-full px-3 py-2 bg-surface border border-outline-variant/40 roun
 interface ProductLogisticsProps {
   stockQty: string
   onStockQtyChange: (v: string) => void
+  isActive: boolean
+  onIsActiveChange: (v: boolean) => void
+  weight: string
+  onWeightChange: (v: string) => void
+  leadTimeDays: string
+  onLeadTimeDaysChange: (v: string) => void
 }
 
-export function ProductLogistics({ stockQty, onStockQtyChange }: ProductLogisticsProps) {
-  const [isActive, setIsActive] = useState(true)
+export function ProductLogistics({
+  stockQty, onStockQtyChange,
+  isActive, onIsActiveChange,
+  weight, onWeightChange,
+  leadTimeDays, onLeadTimeDaysChange,
+}: ProductLogisticsProps) {
   const t = useTranslations('seller')
 
   return (
@@ -29,7 +38,7 @@ export function ProductLogistics({ stockQty, onStockQtyChange }: ProductLogistic
           </div>
           <button
             type="button"
-            onClick={() => setIsActive((v) => !v)}
+            onClick={() => onIsActiveChange(!isActive)}
             className={cn('relative w-11 h-6 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-secondary/30', isActive ? 'bg-secondary' : 'bg-surface-container-highest')}
           >
             <span className={cn('absolute top-0.5 left-0.5 w-5 h-5 bg-white rounded-full shadow transition-transform', isActive ? 'translate-x-5' : 'translate-x-0')} />
@@ -46,6 +55,7 @@ export function ProductLogistics({ stockQty, onStockQtyChange }: ProductLogistic
             placeholder="0"
             value={stockQty}
             onChange={(e) => onStockQtyChange(e.target.value)}
+            onFocus={(e) => e.target.select()}
             className={INPUT}
           />
         </div>
@@ -55,13 +65,30 @@ export function ProductLogistics({ stockQty, onStockQtyChange }: ProductLogistic
             <label className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
               {t('products.logistics.weight')}
             </label>
-            <input type="number" step="0.01" min={0} placeholder="0.00" className={INPUT} />
+            <input
+              type="number"
+              step="0.01"
+              min={0}
+              placeholder="0.00"
+              value={weight}
+              onChange={(e) => onWeightChange(e.target.value)}
+              onFocus={(e) => e.target.select()}
+              className={INPUT}
+            />
           </div>
           <div className="flex flex-col gap-2">
             <label className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
               {t('products.logistics.leadTime')}
             </label>
-            <input type="number" min={0} placeholder="14" className={INPUT} />
+            <input
+              type="number"
+              min={0}
+              placeholder="14"
+              value={leadTimeDays}
+              onChange={(e) => onLeadTimeDaysChange(e.target.value)}
+              onFocus={(e) => e.target.select()}
+              className={INPUT}
+            />
           </div>
         </div>
       </div>

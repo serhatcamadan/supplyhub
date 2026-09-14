@@ -57,7 +57,10 @@
       "noMessage": "No message provided.",
       "attachments": "Attached Files",
       "unknownBuyer": "Unknown Buyer",
-      "unknownProduct": "Unknown Product"
+      "unknownProduct": "Unknown Product",
+      "accessDenied": "You don't have access to this record",
+      "accessDeniedHint": "This quote request may belong to a different company.",
+      "backToList": "Back to Quote Requests"
     },
     "response": {
       "heading": "Draft Response",

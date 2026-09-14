@@ -301,7 +301,10 @@
       "declining": "Processing…",
       "actionError": "Action failed, please try again.",
       "statusAccepted": "You accepted this quote.",
-      "statusDeclined": "You declined this quote."
+      "statusDeclined": "You declined this quote.",
+      "accessDenied": "You don't have access to this record",
+      "accessDeniedHint": "This quote request may belong to a different company.",
+      "backToList": "Back to Quote Requests"
     },
     "list": {
       "heading": "Quote Requests",

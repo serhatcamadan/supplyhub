@@ -1,5 +1,6 @@
 'use client'
 
+import { useState } from 'react'
 import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
 import { formatCurrency, formatDate, cn } from '@/lib/utils'
@@ -45,6 +46,12 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
   const t = useTranslations('seller')
   const locale = useLocale()
 
+  const ITEMS_PER_PAGE = 10
+  const [currentPage, setCurrentPage] = useState(1)
+  const totalPages = Math.max(1, Math.ceil(quotes.length / ITEMS_PER_PAGE))
+  const page = Math.min(currentPage, totalPages)
+  const paged = quotes.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
+
   const headers = [
     t('quotes.table.rfqId'),
     t('quotes.table.buyerCol'),
@@ -82,7 +89,7 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
             {quotes.length === 0 ? (
               <TableEmptyRow icon={IconFileInvoice} message={t('quotes.table.noResults')} colSpan={8} />
             ) : (
-              quotes.map((quote) => (
+              paged.map((quote) => (
                 <tr
                   key={quote.id}
                   className="hover:bg-surface-container-low/50 transition-colors group cursor-pointer"
@@ -164,7 +171,12 @@ export function QuoteTable({ quotes }: { quotes: EnrichedQuote[] }) {
         </table>
       </div>
 
-      <TablePagination label={t('quotes.table.pagination', { shown: quotes.length, total: quotes.length })} />
+      <TablePagination
+        label={t('quotes.table.pagination', { shown: paged.length, total: quotes.length })}
+        page={page}
+        totalPages={totalPages}
+        onPageChange={setCurrentPage}
+      />
     </div>
   )
 }

@@ -9,7 +9,7 @@ import { QuoteResponseActions } from '@/components/buyer/quote-response-actions'
 import type { ApiQuoteRequest } from '@/lib/api/quotes'
 import {
   IconArrowLeft, IconCircleCheck, IconCircleX, IconClock,
-  IconFileInvoice, IconMessage, IconPaperclip, IconQuote,
+  IconFileInvoice, IconLock, IconMessage, IconPaperclip, IconQuote,
 } from '@tabler/icons-react'
 
 export default async function BuyerQuoteDetailPage({
@@ -25,6 +25,26 @@ export default async function BuyerQuoteDetailPage({
     quote = await serverApiFetch<ApiQuoteRequest>(`/quote-requests/${id}`)
   } catch (err) {
     if (err instanceof ApiError && err.status === 404) notFound()
+    if (err instanceof ApiError && err.status === 403) {
+      return (
+        <div className="px-8 py-24 flex flex-col items-center justify-center gap-4 text-center">
+          <div className="w-16 h-16 rounded-full bg-error-container/20 flex items-center justify-center">
+            <IconLock size={28} className="text-error" />
+          </div>
+          <div>
+            <p className="font-semibold text-on-surface text-lg">{t('quotes.detail.accessDenied')}</p>
+            <p className="text-sm text-on-surface-variant mt-1">{t('quotes.detail.accessDeniedHint')}</p>
+          </div>
+          <Link
+            href={`/${locale}/buyer/quotes`}
+            className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors flex items-center gap-1.5"
+          >
+            <IconArrowLeft size={16} />
+            {t('quotes.detail.backToList')}
+          </Link>
+        </div>
+      )
+    }
     throw err
   }
 

@@ -57,7 +57,10 @@
       "noMessage": "Mesaj girilmemiş.",
       "attachments": "Ekli Dosyalar",
       "unknownBuyer": "Bilinmeyen Alıcı",
-      "unknownProduct": "Bilinmeyen Ürün"
+      "unknownProduct": "Bilinmeyen Ürün",
+      "accessDenied": "Bu kayda erişim yetkiniz yok",
+      "accessDeniedHint": "Bu teklif talebi başka bir şirkete ait olabilir.",
+      "backToList": "Teklif Taleplerine Dön"
     },
     "response": {
       "heading": "Taslak Yanıt",
