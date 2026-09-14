@@ -1,8 +1,8 @@
 import { apiFetch } from './client'
-import type { QuoteRequest } from '@/types'
+import type { CompanyType, QuoteRequest } from '@/types'
 
 export interface ApiQuoteRequest extends QuoteRequest {
-  buyer: { id: string; name: string; type: string }
+  buyer: { id: string; name: string; type: CompanyType }
   product: {
     id: string
     name: string
@@ -12,7 +12,7 @@ export interface ApiQuoteRequest extends QuoteRequest {
     status: string
     image_url: string | null
     seller_id: string
-    companies: { id: string; name: string; type: string }
+    companies: { id: string; name: string; type: CompanyType }
   }
 }
 
@@ -32,9 +32,17 @@ export function createQuoteRequest(payload: {
   })
 }
 
+interface QuoteResponseFields {
+  seller_response_price?: number
+  seller_message?: string
+  lead_time?: string
+  valid_until?: string
+  volume_discount?: boolean
+}
+
 export function saveQuoteDraft(
   id: string,
-  payload: { seller_response_price?: number; seller_message?: string },
+  payload: QuoteResponseFields,
 ): Promise<ApiQuoteRequest> {
   return apiFetch<ApiQuoteRequest>(`/quote-requests/${id}/draft`, {
     method: 'PATCH',
@@ -44,7 +52,7 @@ export function saveQuoteDraft(
 
 export function respondToQuoteRequest(
   id: string,
-  payload: { seller_response_price: number; seller_message?: string },
+  payload: QuoteResponseFields & { seller_response_price: number },
 ): Promise<ApiQuoteRequest> {
   return apiFetch<ApiQuoteRequest>(`/quote-requests/${id}/respond`, {
     method: 'PATCH',

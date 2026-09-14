@@ -418,6 +418,9 @@ const server = http.createServer(async (req, res) => {
         await sbWrite('quote_requests', 'PATCH', { id: `eq.${id}` }, {
           seller_response_price: body.seller_response_price,
           seller_message: body.seller_message ?? null,
+          lead_time: body.lead_time ?? null,
+          valid_until: body.valid_until ?? null,
+          volume_discount: body.volume_discount ?? false,
           status: 'responded',
         })
       }
@@ -436,6 +439,9 @@ const server = http.createServer(async (req, res) => {
         const update = {}
         if (body.seller_response_price !== undefined) update.seller_response_price = body.seller_response_price
         if (body.seller_message !== undefined) update.seller_message = body.seller_message
+        if (body.lead_time !== undefined) update.lead_time = body.lead_time
+        if (body.valid_until !== undefined) update.valid_until = body.valid_until
+        if (body.volume_discount !== undefined) update.volume_discount = body.volume_discount
         await sbWrite('quote_requests', 'PATCH', { id: `eq.${id}` }, update)
       }
       res.writeHead(200)

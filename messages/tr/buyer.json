@@ -282,6 +282,27 @@
       "description": "Talebiniz SupplyHub'ın güvenli işlem garantisi kapsamındadır. Teslimat onaylanana kadar ödemeler emanette tutulur.",
       "learnMore": "Daha fazla bilgi"
     },
+    "detail": {
+      "back": "Teklif Taleplerine Dön",
+      "heading": "Teklif Detayı",
+      "yourRequest": "Talebiniz",
+      "quantity": "Miktar",
+      "requestedOn": "Talep Tarihi",
+      "noMessage": "Ek mesaj girilmemiş.",
+      "attachments": "Ekli Dosyalar",
+      "sellerResponse": "Tedarikçi Yanıtı",
+      "unitPrice": "Birim Fiyat",
+      "total": "Toplam",
+      "noResponseYet": "Tedarikçi henüz yanıt vermedi.",
+      "waitingHint": "Genellikle 24–48 saat içinde yanıt alırsınız.",
+      "accept": "Teklifi Kabul Et",
+      "accepting": "İşleniyor…",
+      "decline": "Reddet",
+      "declining": "İşleniyor…",
+      "actionError": "İşlem başarısız oldu, lütfen tekrar deneyin.",
+      "statusAccepted": "Bu teklifi kabul ettiniz.",
+      "statusDeclined": "Bu teklifi reddettiniz."
+    },
     "list": {
       "heading": "Teklif Talepleri",
       "subHeading": "Tedarikçilere gönderdiğiniz teklif taleplerini takip edin ve yönetin.",

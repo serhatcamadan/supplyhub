@@ -282,6 +282,27 @@
       "description": "Your request is covered by SupplyHub's secure transaction guarantee. Payments are held in escrow until delivery is confirmed.",
       "learnMore": "Learn more"
     },
+    "detail": {
+      "back": "Back to Quote Requests",
+      "heading": "Quote Detail",
+      "yourRequest": "Your Request",
+      "quantity": "Quantity",
+      "requestedOn": "Requested On",
+      "noMessage": "No additional message provided.",
+      "attachments": "Attachments",
+      "sellerResponse": "Supplier Response",
+      "unitPrice": "Unit Price",
+      "total": "Total",
+      "noResponseYet": "The supplier hasn't responded yet.",
+      "waitingHint": "You'll typically hear back within 24–48 hours.",
+      "accept": "Accept Quote",
+      "accepting": "Processing…",
+      "decline": "Decline",
+      "declining": "Processing…",
+      "actionError": "Action failed, please try again.",
+      "statusAccepted": "You accepted this quote.",
+      "statusDeclined": "You declined this quote."
+    },
     "list": {
       "heading": "Quote Requests",
       "subHeading": "Track and manage the quote requests you have sent to suppliers.",

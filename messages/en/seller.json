@@ -75,6 +75,8 @@
       "saveDraft": "Save Draft",
       "saving": "Saving…",
       "sendQuote": "Send Quote",
+      "sending": "Sending…",
+      "sendError": "Failed to send the quote, please try again.",
       "perUnit": "per unit",
       "leadTimeOptions": {
         "7-14": "7–14 Days",

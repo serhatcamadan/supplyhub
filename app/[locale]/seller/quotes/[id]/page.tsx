@@ -103,6 +103,9 @@ export default async function QuoteDetailPage({
           existingResponse={{
             price: quote.seller_response_price,
             message: quote.seller_message,
+            leadTime: quote.lead_time,
+            validUntil: quote.valid_until ? quote.valid_until.slice(0, 10) : null,
+            volumeDiscount: quote.volume_discount,
           }}
         />
       </div>

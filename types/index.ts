@@ -46,6 +46,9 @@ export interface QuoteRequest {
   status: QuoteStatus
   seller_response_price: number | null
   seller_message: string | null
+  lead_time: string | null
+  valid_until: string | null
+  volume_discount: boolean
   attachment_urls: string[]
   created_at: string
 }

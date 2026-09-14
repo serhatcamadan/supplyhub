@@ -75,6 +75,8 @@
       "saveDraft": "Taslak Kaydet",
       "saving": "Kaydediliyor…",
       "sendQuote": "Teklif Gönder",
+      "sending": "Gönderiliyor…",
+      "sendError": "Teklif gönderilemedi, lütfen tekrar deneyin.",
       "perUnit": "adet başına",
       "leadTimeOptions": {
         "7-14": "7–14 Gün",

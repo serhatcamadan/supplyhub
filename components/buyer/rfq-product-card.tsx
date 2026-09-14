@@ -2,11 +2,16 @@
 
 import { useTranslations } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
-import type { Company, Product } from '@/types'
+import type { Company, PriceTier } from '@/types'
 import { IconPackage } from '@tabler/icons-react'
 
 interface RfqProductCardProps {
-  product: Product
+  product: {
+    id: string
+    name: string
+    price_tiers: PriceTier[]
+    min_order_qty: number
+  }
   seller: Company
 }
 

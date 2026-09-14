@@ -15,6 +15,9 @@ interface QuoteResponseFormProps {
   existingResponse: {
     price: number | null
     message: string | null
+    leadTime: string | null
+    validUntil: string | null
+    volumeDiscount: boolean
   }
 }
 
@@ -32,13 +35,15 @@ export function QuoteResponseForm({
   const t = useTranslations('seller')
   const initialPrice = existingResponse.price ?? listPrice ?? 0
   const [price, setPrice] = useState<number>(initialPrice)
-  const [volumeDiscount, setVolumeDiscount] = useState(false)
-  const [leadTime, setLeadTime] = useState('14-21')
-  const [validUntil, setValidUntil] = useState(defaultValidUntil())
+  const [volumeDiscount, setVolumeDiscount] = useState(existingResponse.volumeDiscount)
+  const [leadTime, setLeadTime] = useState(existingResponse.leadTime ?? '14-21')
+  const [validUntil, setValidUntil] = useState(existingResponse.validUntil ?? defaultValidUntil())
   const [message, setMessage] = useState(existingResponse.message ?? '')
   const [savedAt, setSavedAt]   = useState<number | null>(existingResponse.price !== null ? Date.now() : null)
   const [isSent, setIsSent]     = useState(false)
   const [isSaving, setIsSaving] = useState(false)
+  const [sendError, setSendError] = useState<string | null>(null)
+  const [isSending, setIsSending] = useState(false)
 
   const total   = price * quantity
   const isSaved = savedAt !== null
@@ -50,10 +55,20 @@ export function QuoteResponseForm({
     { value: '30+',   label: t('quotes.response.leadTimeOptions.30+') },
   ]
 
+  function responsePayload() {
+    return {
+      seller_response_price: price,
+      seller_message: message,
+      lead_time: leadTime,
+      valid_until: validUntil,
+      volume_discount: volumeDiscount,
+    }
+  }
+
   async function handleSaveDraft() {
     setIsSaving(true)
     try {
-      await saveQuoteDraft(quoteId, { seller_response_price: price, seller_message: message })
+      await saveQuoteDraft(quoteId, responsePayload())
       setSavedAt(Date.now())
     } catch {
       // noop — leave "Unsaved" state, user can retry
@@ -63,12 +78,16 @@ export function QuoteResponseForm({
   }
 
   async function handleSend() {
+    setSendError(null)
+    setIsSending(true)
     try {
-      await respondToQuoteRequest(quoteId, { seller_response_price: price, seller_message: message })
+      await respondToQuoteRequest(quoteId, responsePayload())
+      setIsSent(true)
     } catch {
-      // Show success regardless — optimistic UI
+      setSendError(t('quotes.response.sendError'))
+    } finally {
+      setIsSending(false)
     }
-    setIsSent(true)
   }
 
   if (isSent) {
@@ -144,7 +163,7 @@ export function QuoteResponseForm({
                 <input
                   type="checkbox"
                   checked={volumeDiscount}
-                  onChange={(e) => setVolumeDiscount(e.target.checked)}
+                  onChange={(e) => { setVolumeDiscount(e.target.checked); setSavedAt(null) }}
                   className="w-4 h-4 rounded text-primary focus:ring-primary border-outline-variant"
                 />
                 <span className="text-sm text-on-surface">{t('quotes.response.volumeDiscount')}</span>
@@ -198,15 +217,25 @@ export function QuoteResponseForm({
       </div>
 
       {/* Footer */}
-      <div className="p-6 bg-surface-container-low border-t border-outline-variant/20 flex justify-between items-center z-10 shrink-0">
-        <Button variant="outline" onClick={handleSaveDraft} disabled={isSaving}>
-          <IconDeviceFloppy size={20} />
-          {isSaving ? t('quotes.response.saving') : t('quotes.response.saveDraft')}
-        </Button>
-        <Button variant="secondary" size="lg" onClick={handleSend} className="hover:-translate-y-0.5 shadow-md" data-testid="send-quote">
-          {t('quotes.response.sendQuote')}
-          <IconSend size={20} />
-        </Button>
+      <div className="p-6 bg-surface-container-low border-t border-outline-variant/20 flex flex-col gap-3 z-10 shrink-0">
+        {sendError && <p className="text-sm text-error">{sendError}</p>}
+        <div className="flex justify-between items-center">
+          <Button variant="outline" onClick={handleSaveDraft} disabled={isSaving}>
+            <IconDeviceFloppy size={20} />
+            {isSaving ? t('quotes.response.saving') : t('quotes.response.saveDraft')}
+          </Button>
+          <Button
+            variant="secondary"
+            size="lg"
+            onClick={handleSend}
+            disabled={isSending}
+            className="hover:-translate-y-0.5 shadow-md"
+            data-testid="send-quote"
+          >
+            {isSending ? t('quotes.response.sending') : t('quotes.response.sendQuote')}
+            <IconSend size={20} />
+          </Button>
+        </div>
       </div>
     </div>
   )
