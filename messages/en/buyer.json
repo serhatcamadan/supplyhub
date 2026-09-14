@@ -93,6 +93,17 @@
     "itemCount": "{count} product types",
     "clearCart": "Clear Cart",
     "saveAsTemplate": "Save this cart as template",
+    "templates": {
+      "menuLabel": "Templates",
+      "namePlaceholder": "Template name...",
+      "cancel": "Cancel",
+      "save": "Save",
+      "empty": "No saved templates yet.",
+      "itemCount": "{count} items",
+      "load": "Load into Cart",
+      "delete": "Delete",
+      "confirmReplace": "This will replace the items currently in your cart with the template's items. Continue?"
+    },
     "empty": {
       "heading": "Your cart is empty",
       "subtext": "Click the button below to discover supplier products.",

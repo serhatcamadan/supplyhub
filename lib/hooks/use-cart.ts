@@ -5,7 +5,7 @@ import { getUnitPrice } from '@/lib/pricing'
 import type { Product } from '@/types'
 import type { CartItem } from '@/components/buyer/cart-item'
 
-type StoredItem = {
+export type StoredItem = {
   productId: string
   sellerId: string
   name: string
@@ -89,6 +89,9 @@ export function useCart() {
   const [stored, setStored] = useState<StoredItem[]>([])
 
   useEffect(() => {
+    // Deliberately deferred: localStorage is unavailable during SSR, so state
+    // starts empty and is populated post-hydration to avoid a markup mismatch.
+    // eslint-disable-next-line react-hooks/set-state-in-effect
     setStored(readStorage())
   }, [])
 
@@ -129,8 +132,12 @@ export function useCart() {
     persist([])
   }
 
+  function replaceCart(items: StoredItem[]) {
+    persist(items)
+  }
+
   const items: CartItem[] = stored.map(toCartItem)
   const count = stored.reduce((sum, i) => sum + i.qty, 0)
 
-  return { items, count, addItem, removeItem, updateQty, clearCart }
+  return { items, storedItems: stored, count, addItem, removeItem, updateQty, clearCart, replaceCart }
 }

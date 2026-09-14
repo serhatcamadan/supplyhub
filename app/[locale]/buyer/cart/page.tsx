@@ -6,23 +6,25 @@ import { useTranslations, useLocale } from 'next-intl'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { createOrder } from '@/lib/api/orders'
-import { useCart } from '@/lib/hooks/use-cart'
+import { useCart, type StoredItem } from '@/lib/hooks/use-cart'
 import { CartItemCard } from '@/components/buyer/cart-item'
 import { OrderSummary } from '@/components/buyer/order-summary'
 import { CartPromoBanner } from '@/components/buyer/cart-promo-banner'
-import { IconBookmarkPlus, IconCompass, IconShoppingCart, IconTrashX } from '@tabler/icons-react'
-
-const TAX_RATE = 0.20
-const SHIPPING_THRESHOLD = 10_000
-const SHIPPING_COST = 450
+import { CartTemplatesMenu } from '@/components/buyer/cart-templates-menu'
+import { IconCompass, IconShoppingCart, IconTrashX } from '@tabler/icons-react'
 
 export default function BuyerCartPage() {
   const router = useRouter()
   const t = useTranslations('buyer')
   const locale = useLocale()
-  const { items, updateQty, removeItem, clearCart } = useCart()
+  const { items, storedItems, updateQty, removeItem, clearCart, replaceCart } = useCart()
   const [isCheckingOut, setIsCheckingOut] = useState(false)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
+
+  function handleLoadTemplate(templateItems: StoredItem[]) {
+    if (items.length > 0 && !window.confirm(t('cart.templates.confirmReplace'))) return
+    replaceCart(templateItems)
+  }
 
   async function handleCheckout() {
     setIsCheckingOut(true)
@@ -81,6 +83,15 @@ export default function BuyerCartPage() {
             )}
           </div>
 
+          <div className="flex items-center justify-center">
+            <CartTemplatesMenu
+              currentItems={storedItems}
+              hasCartItems={items.length > 0}
+              onLoadTemplate={handleLoadTemplate}
+              locale={locale}
+            />
+          </div>
+
           {items.length === 0 ? (
             <div className="flex flex-col items-center justify-center py-24 gap-6 text-center">
               <div className="w-24 h-24 rounded-full bg-surface-container flex items-center justify-center">
@@ -111,13 +122,6 @@ export default function BuyerCartPage() {
                     onRemove={(id) => removeItem(id)}
                   />
                 ))}
-              </div>
-
-              <div className="flex items-center justify-center pt-2">
-                <button className="flex items-center gap-1.5 text-sm text-on-surface-variant hover:text-primary transition-colors">
-                  <IconBookmarkPlus size={18} />
-                  {t('cart.saveAsTemplate')}
-                </button>
               </div>
             </>
           )}

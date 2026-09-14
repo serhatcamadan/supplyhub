@@ -93,6 +93,17 @@
     "itemCount": "{count} ürün türü",
     "clearCart": "Sepeti Temizle",
     "saveAsTemplate": "Bu sepeti şablon olarak kaydet",
+    "templates": {
+      "menuLabel": "Şablonlar",
+      "namePlaceholder": "Şablon adı...",
+      "cancel": "Vazgeç",
+      "save": "Kaydet",
+      "empty": "Henüz kaydedilmiş şablon yok.",
+      "itemCount": "{count} ürün",
+      "load": "Sepete Yükle",
+      "delete": "Sil",
+      "confirmReplace": "Sepetteki mevcut ürünler şablondakilerle değiştirilecek. Devam edilsin mi?"
+    },
     "empty": {
       "heading": "Sepetiniz boş",
       "subtext": "Tedarikçi ürünlerini keşfetmek için aşağıdaki butona tıklayın.",
