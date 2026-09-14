@@ -18,7 +18,7 @@ export default async function BuyerLayout({ children }: { children: React.ReactN
   return (
     <div className="min-h-screen bg-surface">
       <Sidebar portal="buyer" />
-      <Topbar userName={name} userRole={role} />
+      <Topbar userName={name} userRole={role} portal="buyer" />
       <div className="pl-72">
         <main className="pt-16 min-h-screen">{children}</main>
       </div>

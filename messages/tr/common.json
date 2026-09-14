@@ -1,5 +1,6 @@
 {
-  "searchPlaceholder": "Ürün, sipariş veya tedarikçi ara...",
+  "searchPlaceholder": "Ürün veya teklif talebi ara...",
+  "searchNoResults": "Sonuç bulunamadı.",
   "profile": {
     "sections": {
       "account": "Hesap Ayarları",

@@ -1,5 +1,6 @@
 {
-  "searchPlaceholder": "Search products, orders, or suppliers...",
+  "searchPlaceholder": "Search products or quote requests...",
+  "searchNoResults": "No results found.",
   "profile": {
     "sections": {
       "account": "Account Settings",
