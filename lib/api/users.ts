@@ -26,6 +26,7 @@ export interface UpdateProfilePayload {
   name?: string
   phone?: string
   password?: string
+  currentPassword?: string
 }
 
 export function getMyProfile(): Promise<UserProfile> {
