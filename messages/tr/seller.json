@@ -151,7 +151,17 @@
       "searchPlaceholder": "Ad, SKU veya kategoriye göre ara...",
       "filters": "Filtreler",
       "categoryAll": "Kategori: Tümü",
-      "showing": "{total} üründen {filtered} tanesi gösteriliyor"
+      "showing": "{total} üründen {filtered} tanesi gösteriliyor",
+      "filterStatus": "Durum",
+      "filterStock": "Stok Durumu",
+      "stock": {
+        "in_stock": "Stokta Var",
+        "low_stock": "Az Stok",
+        "out_of_stock": "Stokta Yok"
+      },
+      "clearFilters": "Filtreleri Temizle",
+      "listView": "Liste Görünümü",
+      "gridView": "Izgara Görünümü"
     },
     "table": {
       "image": "Görsel",
@@ -162,9 +172,16 @@
       "status": "Durum",
       "actions": "İşlemler",
       "perUnit": "birim fiyatı",
-      "rowsPerPage": "Sayfa başına satır",
-      "total": "ürün",
+      "pagination": "{total} üründen {shown} tanesi gösteriliyor",
       "noResults": "Aramanızla eşleşen ürün yok."
+    },
+    "bulk": {
+      "selected": "{count} ürün seçili",
+      "setActive": "Yayına Al",
+      "setDraft": "Taslağa Al",
+      "delete": "Sil",
+      "clear": "Seçimi Temizle",
+      "confirmDelete": "{count} ürünü silmek istediğinizden emin misiniz?"
     },
     "status": {
       "active": "Aktif",

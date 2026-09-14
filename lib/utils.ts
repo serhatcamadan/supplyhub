@@ -36,3 +36,11 @@ export function getInitials(name: string): string {
     .map((w) => w[0].toUpperCase())
     .join('')
 }
+
+export type StockBucket = 'out_of_stock' | 'low_stock' | 'in_stock'
+
+export function getStockBucket(qty: number): StockBucket {
+  if (qty === 0) return 'out_of_stock'
+  if (qty < 10) return 'low_stock'
+  return 'in_stock'
+}
