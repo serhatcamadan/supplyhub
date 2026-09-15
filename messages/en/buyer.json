@@ -154,6 +154,15 @@
     "heading": "Order History",
     "subHeading": "Track, manage and reorder your past wholesale purchases.",
     "filter": "Filter",
+    "filterStatus": "Status",
+    "filterDate": "Date",
+    "clearFilters": "Clear Filters",
+    "dateFilter": {
+      "all": "All Time",
+      "last7": "Last 7 Days",
+      "last30": "Last 30 Days",
+      "thisMonth": "This Month"
+    },
     "csvDownload": "Export CSV",
     "csvFilename": "orders",
     "csvHeaders": {
@@ -186,9 +195,16 @@
     "heading": "Pending Approvals",
     "subHeading": "Review and approve orders submitted by staff members that exceed spending limits.",
     "filter": "Filter",
+    "filterBySeller": "By Supplier",
+    "filterByRequester": "By Requester",
+    "clearFilters": "Clear Filters",
     "empty": {
       "heading": "All caught up!",
       "subtext": "No orders are waiting for your approval right now."
+    },
+    "noFilterResults": {
+      "heading": "No results found",
+      "subtext": "No pending approvals match the selected filters."
     },
     "stats": {
       "awaiting": "Awaiting Approval",
