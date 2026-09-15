@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
 import { formatCurrency, formatDate, cn } from '@/lib/utils'
 import type { OrderStatus, OrderWithDetails } from '@/types'
@@ -141,12 +142,15 @@ export function OrderTable({
               paged.map((order, i) => (
                 <tr
                   key={order.id}
-                  className="hover:bg-surface-container-low/50 transition-colors group cursor-pointer"
+                  className="hover:bg-surface-container-low/50 transition-colors group"
                 >
                   <td className="py-4 px-6">
-                    <span className="font-mono text-sm text-primary font-medium">
+                    <Link
+                      href={`/${locale}/seller/orders/${order.id}`}
+                      className="font-mono text-sm text-primary font-medium hover:underline"
+                    >
                       {formatOrderId(order.id)}
-                    </span>
+                    </Link>
                     {order.needs_approval && !order.approved_by && (
                       <p className="text-[10px] text-on-tertiary-container font-semibold mt-0.5">
                         {t('orders.table.awaitingApproval')}

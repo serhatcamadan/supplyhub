@@ -141,6 +141,22 @@
         "ship": "Ship",
         "deliver": "Deliver"
       }
+    },
+    "detail": {
+      "back": "Orders",
+      "backToList": "Back to Orders",
+      "accessDenied": "You don't have access to this record",
+      "accessDeniedHint": "This order may belong to a different company.",
+      "product": "Product",
+      "qty": "Qty",
+      "unitPrice": "Unit Price",
+      "lineTotal": "Line Total",
+      "total": "Total",
+      "buyer": "Buyer",
+      "requestedBy": "Requested By",
+      "approval": "Approval Status",
+      "approved": "Approved",
+      "pendingApproval": "Awaiting admin approval"
     }
   },
   "products": {
@@ -256,7 +272,7 @@
     "exportRevenueLabel": "Revenue (TRY)",
     "stats": {
       "totalRevenue": "Total Revenue",
-      "vsLastMonth": "vs last month",
+      "vsPreviousPeriod": "vs previous period",
       "pendingQuotes": "Pending Quotes",
       "immediateAction": "{count} require immediate action",
       "viewAll": "View All",

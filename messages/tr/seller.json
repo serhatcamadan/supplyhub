@@ -141,6 +141,22 @@
         "ship": "Kargoya Ver",
         "deliver": "Teslim Et"
       }
+    },
+    "detail": {
+      "back": "Siparişler",
+      "backToList": "Sipariş Listesine Dön",
+      "accessDenied": "Bu kayda erişim yetkiniz yok",
+      "accessDeniedHint": "Bu sipariş başka bir şirkete ait olabilir.",
+      "product": "Ürün",
+      "qty": "Miktar",
+      "unitPrice": "Birim Fiyat",
+      "lineTotal": "Satır Toplamı",
+      "total": "Toplam",
+      "buyer": "Alıcı",
+      "requestedBy": "Talep Eden",
+      "approval": "Onay Durumu",
+      "approved": "Onaylandı",
+      "pendingApproval": "Yönetici onayı bekliyor"
     }
   },
   "products": {
@@ -256,7 +272,7 @@
     "exportRevenueLabel": "Gelir (TRY)",
     "stats": {
       "totalRevenue": "Toplam Gelir",
-      "vsLastMonth": "önceki aya kıyasla",
+      "vsPreviousPeriod": "önceki döneme kıyasla",
       "pendingQuotes": "Bekleyen Teklifler",
       "immediateAction": "{count} acil işlem gerekiyor",
       "viewAll": "Tümünü Gör",
