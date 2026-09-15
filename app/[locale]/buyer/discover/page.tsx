@@ -175,7 +175,7 @@ export default function BuyerDiscoverPage() {
                 product={product}
                 locale={locale}
                 sellerName={product.companies?.name ?? t('discover.unknownSupplier')}
-                rating={4.7}
+                rating={product.avg_rating}
                 unit={t(`discover.units.${unitKey}`)}
                 badge={badgeDef
                   ? { label: t(`discover.badges.${badgeDef.key}`), colorScheme: badgeDef.colorScheme }

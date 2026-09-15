@@ -93,6 +93,7 @@ export interface OrderWithDetails extends Order {
   seller: Company
   created_by_user: User
   approved_by_user: User | null
+  reviewed_product_ids: string[]
 }
 
 export type NotificationCategory = 'order' | 'quote' | 'system'
