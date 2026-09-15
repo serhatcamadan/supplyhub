@@ -67,7 +67,11 @@
     "listPrice": "Liste Fiyatı",
     "perUnit": "/ adet",
     "total": "Toplam:",
-    "inStock": "Stokta mevcut",
+    "inStock": "Stokta mevcut ({count} adet)",
+    "lowStock": "Az stok kaldı ({count} adet)",
+    "outOfStock": "Stokta yok",
+    "insufficientStock": "Mevcut stok, minimum sipariş adedinin altında",
+    "maxQuantity": "Stokta {count} adet mevcut",
     "bulkDiscount": "Toplu Alım İndirimleri",
     "minUnitsWithSeller": "Min. {count} adet · {seller}",
     "nextTierHint": "{count} adet daha ekleyin → {price}/adet",
@@ -122,7 +126,8 @@
       "perUnit": "/ adet",
       "stock": {
         "in_stock": "STOKTA",
-        "low_stock": "AZ STOK"
+        "low_stock": "AZ STOK",
+        "out_of_stock": "STOKTA YOK"
       }
     },
     "promo": {

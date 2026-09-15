@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { useTranslations } from 'next-intl'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, type StockBucket } from '@/lib/utils'
 import { IconMinus, IconPhoto, IconPlus, IconX } from '@tabler/icons-react'
 
 export type CartItem = {
@@ -17,16 +17,18 @@ export type CartItem = {
   unitPrice: number
   originalUnitPrice: number
   tierLabel: string | null
-  stockStatus: 'in_stock' | 'low_stock'
+  stockStatus: StockBucket
   tierPct: number
   minQty: number
   nextTierMinQty: number | null
   nextTierNumber: number | null
+  stockQuantity: number | null
 }
 
 const STOCK_CLASS: Record<CartItem['stockStatus'], string> = {
-  in_stock:  'text-secondary bg-secondary-container/30',
-  low_stock: 'text-on-tertiary-container bg-tertiary-container/20',
+  in_stock:      'text-secondary bg-secondary-container/30',
+  low_stock:     'text-on-tertiary-container bg-tertiary-container/20',
+  out_of_stock:  'text-error bg-error-container/30',
 }
 
 interface CartItemCardProps {
@@ -49,23 +51,29 @@ export function CartItemCard({ item, onQtyChange, onRemove }: CartItemCardProps)
     setQtyInput(String(item.qty))
   }, [item.qty])
 
+  const maxQty = item.stockQuantity ?? Infinity
+
+  function clampQty(value: number) {
+    return Math.min(maxQty, Math.max(item.minQty, value))
+  }
+
   function decrement() {
-    onQtyChange(item.id, Math.max(item.minQty, item.qty - 1))
+    onQtyChange(item.id, clampQty(item.qty - 1))
   }
   function increment() {
-    onQtyChange(item.id, item.qty + 1)
+    onQtyChange(item.id, clampQty(item.qty + 1))
   }
   function handleInput(e: React.ChangeEvent<HTMLInputElement>) {
     const raw = e.target.value
     setQtyInput(raw)
     const parsed = Number(raw)
     if (raw !== '' && !isNaN(parsed) && parsed >= item.minQty) {
-      onQtyChange(item.id, parsed)
+      onQtyChange(item.id, clampQty(parsed))
     }
   }
   function handleBlur() {
     const parsed = Number(qtyInput)
-    const clamped = Math.max(item.minQty, isNaN(parsed) || qtyInput === '' ? item.minQty : parsed)
+    const clamped = clampQty(isNaN(parsed) || qtyInput === '' ? item.minQty : parsed)
     if (clamped !== item.qty) onQtyChange(item.id, clamped)
     setQtyInput(String(clamped))
   }
@@ -128,6 +136,7 @@ export function CartItemCard({ item, onQtyChange, onRemove }: CartItemCardProps)
                 type="number"
                 value={qtyInput}
                 min={item.minQty}
+                max={item.stockQuantity ?? undefined}
                 onChange={handleInput}
                 onBlur={handleBlur}
                 onFocus={(e) => e.target.select()}
@@ -135,7 +144,8 @@ export function CartItemCard({ item, onQtyChange, onRemove }: CartItemCardProps)
               />
               <button
                 onClick={increment}
-                className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-surface-container-high text-on-surface transition-colors"
+                disabled={item.qty >= maxQty}
+                className="w-8 h-8 flex items-center justify-center rounded-md hover:bg-surface-container-high text-on-surface transition-colors disabled:opacity-40 disabled:pointer-events-none"
                 aria-label={t('cart.item.increment')}
               >
                 <IconPlus size={18} />

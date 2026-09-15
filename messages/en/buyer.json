@@ -67,7 +67,11 @@
     "listPrice": "List Price",
     "perUnit": "/ unit",
     "total": "Total:",
-    "inStock": "In stock",
+    "inStock": "In stock ({count} units)",
+    "lowStock": "Low stock ({count} units left)",
+    "outOfStock": "Out of stock",
+    "insufficientStock": "Available stock is below the minimum order quantity",
+    "maxQuantity": "{count} units in stock",
     "bulkDiscount": "Bulk Purchase Discounts",
     "minUnitsWithSeller": "Min. {count} units · {seller}",
     "nextTierHint": "Add {count} more → {price}/unit",
@@ -122,7 +126,8 @@
       "perUnit": "/ unit",
       "stock": {
         "in_stock": "IN STOCK",
-        "low_stock": "LOW STOCK"
+        "low_stock": "LOW STOCK",
+        "out_of_stock": "OUT OF STOCK"
       }
     },
     "promo": {

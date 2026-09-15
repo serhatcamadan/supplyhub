@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from 'react'
 import { getUnitPrice } from '@/lib/pricing'
+import { getStockBucket } from '@/lib/utils'
 import type { Product } from '@/types'
 import type { CartItem } from '@/components/buyer/cart-item'
 
@@ -14,6 +15,7 @@ export type StoredItem = {
   qty: number
   minQty: number
   priceTiers: Product['price_tiers']
+  stockQuantity?: number
 }
 
 function toCartItem(s: StoredItem): CartItem {
@@ -63,11 +65,12 @@ function toCartItem(s: StoredItem): CartItem {
     unitPrice,
     originalUnitPrice: basePrice,
     tierLabel,
-    stockStatus: 'in_stock',
+    stockStatus: getStockBucket(s.stockQuantity ?? Infinity),
     tierPct: Math.min(100, Math.max(0, tierPct)),
     minQty: s.minQty,
     nextTierMinQty: nextTier ? nextTier.min_qty : null,
     nextTierNumber: nextTier ? activeIdx + 2 : null,
+    stockQuantity: s.stockQuantity ?? null,
   }
 }
 
@@ -106,7 +109,7 @@ export function useCart() {
     const current = readStorage()
     const idx = current.findIndex((i) => i.productId === product.id)
     if (idx >= 0) {
-      current[idx] = { ...current[idx], qty }
+      current[idx] = { ...current[idx], qty, stockQuantity: product.stock_quantity }
     } else {
       current.push({
         productId: product.id,
@@ -117,6 +120,7 @@ export function useCart() {
         qty,
         minQty: product.min_order_qty,
         priceTiers: product.price_tiers,
+        stockQuantity: product.stock_quantity,
       })
     }
     persist(current)
