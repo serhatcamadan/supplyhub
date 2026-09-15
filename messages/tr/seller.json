@@ -285,7 +285,8 @@
       "heading": "En Çok Satan",
       "viewReport": "Raporu Gör",
       "units": "adet",
-      "topCategory": "En İyi Kategori"
+      "topCategory": "En İyi Kategori",
+      "empty": "Bu dönemde teslim edilmiş sipariş yok."
     },
     "chart": {
       "revenue": "Gelir"
