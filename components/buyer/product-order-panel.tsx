@@ -3,7 +3,7 @@
 import { useState } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { useRouter } from 'next/navigation'
-import { formatCurrency } from '@/lib/utils'
+import { formatCurrency, getStockBucket } from '@/lib/utils'
 import { getUnitPrice, getTotalPrice, getNextTier } from '@/lib/pricing'
 import { Button } from '@/components/ui/button'
 import { TierRow } from '@/components/buyer/tier-row'
@@ -50,16 +50,23 @@ export function ProductOrderPanel({
     (tier) => qty >= tier.min_qty && (tier.max_qty === null || qty <= tier.max_qty)
   )
 
+  const stockBucket = getStockBucket(product.stock_quantity)
+  const canOrder = product.stock_quantity >= product.min_order_qty
+
+  function clampQty(value: number) {
+    return Math.min(product.stock_quantity, Math.max(product.min_order_qty, value))
+  }
+
   function decrement() {
     setQty((q) => {
-      const next = Math.max(product.min_order_qty, q - 1)
+      const next = clampQty(q - 1)
       setQtyInput(String(next))
       return next
     })
   }
   function increment() {
     setQty((q) => {
-      const next = q + 1
+      const next = clampQty(q + 1)
       setQtyInput(String(next))
       return next
     })
@@ -68,11 +75,11 @@ export function ProductOrderPanel({
     const raw = e.target.value
     setQtyInput(raw)
     const parsed = parseInt(raw, 10)
-    if (!isNaN(parsed)) setQty(Math.max(product.min_order_qty, parsed))
+    if (!isNaN(parsed)) setQty(clampQty(parsed))
   }
   function handleBlur() {
     const parsed = parseInt(qtyInput, 10)
-    const clamped = Math.max(product.min_order_qty, isNaN(parsed) ? product.min_order_qty : parsed)
+    const clamped = clampQty(isNaN(parsed) ? product.min_order_qty : parsed)
     setQty(clamped)
     setQtyInput(String(clamped))
   }
@@ -114,9 +121,21 @@ export function ProductOrderPanel({
             <span className="font-semibold text-on-surface">{formatCurrency(totalPrice)}</span>
           </p>
         )}
-        <p className="text-xs text-secondary mt-2 flex items-center gap-1">
+        <p
+          className={`text-xs mt-2 flex items-center gap-1 ${
+            stockBucket === 'out_of_stock'
+              ? 'text-error'
+              : stockBucket === 'low_stock'
+                ? 'text-tertiary'
+                : 'text-secondary'
+          }`}
+        >
           <IconPackage size={14} />
-          {t('orderPanel.inStock')}
+          {stockBucket === 'out_of_stock'
+            ? t('orderPanel.outOfStock')
+            : stockBucket === 'low_stock'
+              ? t('orderPanel.lowStock', { count: product.stock_quantity })
+              : t('orderPanel.inStock', { count: product.stock_quantity })}
         </p>
       </div>
 
@@ -155,8 +174,9 @@ export function ProductOrderPanel({
           <div className="flex items-center w-36 border border-outline-variant rounded-lg overflow-hidden focus-within:ring-2 focus-within:ring-primary focus-within:border-primary transition-all bg-surface-container-lowest shadow-sm">
             <button
               onClick={decrement}
+              disabled={!canOrder}
               aria-label={t('orderPanel.decrement')}
-              className="px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors border-r border-outline-variant/30"
+              className="px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors border-r border-outline-variant/30 disabled:opacity-40 disabled:pointer-events-none"
             >
               <IconMinus size={20} />
             </button>
@@ -164,21 +184,26 @@ export function ProductOrderPanel({
               type="number"
               value={qtyInput}
               min={product.min_order_qty}
+              max={product.stock_quantity}
+              disabled={!canOrder}
               onChange={handleInput}
               onBlur={handleBlur}
               onFocus={(e) => e.target.select()}
-              className="w-full text-center bg-transparent border-none focus:outline-none text-sm font-semibold text-on-surface h-10 appearance-none"
+              className="w-full text-center bg-transparent border-none focus:outline-none text-sm font-semibold text-on-surface h-10 appearance-none disabled:opacity-40"
             />
             <button
               onClick={increment}
+              disabled={!canOrder || qty >= product.stock_quantity}
               aria-label={t('orderPanel.increment')}
-              className="px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors border-l border-outline-variant/30"
+              className="px-3 py-2 text-on-surface-variant hover:bg-surface-container hover:text-on-surface transition-colors border-l border-outline-variant/30 disabled:opacity-40 disabled:pointer-events-none"
             >
               <IconPlus size={20} />
             </button>
           </div>
           <p className="text-xs text-on-surface-variant mt-1">
-            {t('orderPanel.minQuantity', { count: product.min_order_qty })}
+            {canOrder
+              ? `${t('orderPanel.minQuantity', { count: product.min_order_qty })} · ${t('orderPanel.maxQuantity', { count: product.stock_quantity })}`
+              : t('orderPanel.insufficientStock')}
           </p>
         </div>
 
@@ -188,6 +213,7 @@ export function ProductOrderPanel({
             size="lg"
             className="w-full justify-center transition-colors"
             onClick={handleAddToCart}
+            disabled={!canOrder}
           >
             {added ? <IconCheck size={20} /> : <IconShoppingCartPlus size={20} />}
             {added ? t('orderPanel.addedToCart') : t('orderPanel.addToCart')}
