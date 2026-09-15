@@ -118,9 +118,6 @@
       "noMatch": "No notifications match this filter.",
       "showing": "Showing {shown} of {total} notifications",
       "searchPlaceholder": "Search...",
-      "settingsTitle": "Notification Settings",
-      "settingsBody": "Customize which alerts you receive via email and SMS.",
-      "managePreferences": "Manage Preferences",
       "filtersLabel": "Filters"
     }
   },

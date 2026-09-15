@@ -67,7 +67,11 @@
     "listPrice": "List Price",
     "perUnit": "/ unit",
     "total": "Total:",
-    "inStock": "In stock",
+    "inStock": "In stock ({count} units)",
+    "lowStock": "Low stock ({count} units left)",
+    "outOfStock": "Out of stock",
+    "insufficientStock": "Available stock is below the minimum order quantity",
+    "maxQuantity": "{count} units in stock",
     "bulkDiscount": "Bulk Purchase Discounts",
     "minUnitsWithSeller": "Min. {count} units · {seller}",
     "nextTierHint": "Add {count} more → {price}/unit",
@@ -122,12 +126,13 @@
       "perUnit": "/ unit",
       "stock": {
         "in_stock": "IN STOCK",
-        "low_stock": "LOW STOCK"
+        "low_stock": "LOW STOCK",
+        "out_of_stock": "OUT OF STOCK"
       }
     },
     "promo": {
       "heading": "Bulk Discount Opportunity",
-      "subtext": "Add {count} more of {name} to reach Tier 3 pricing.",
+      "subtext": "Add {count} more of {name} to reach Tier {tier} pricing.",
       "cta": "Add Now"
     },
     "summary": {
@@ -154,6 +159,15 @@
     "heading": "Order History",
     "subHeading": "Track, manage and reorder your past wholesale purchases.",
     "filter": "Filter",
+    "filterStatus": "Status",
+    "filterDate": "Date",
+    "clearFilters": "Clear Filters",
+    "dateFilter": {
+      "all": "All Time",
+      "last7": "Last 7 Days",
+      "last30": "Last 30 Days",
+      "thisMonth": "This Month"
+    },
     "csvDownload": "Export CSV",
     "csvFilename": "orders",
     "csvHeaders": {
@@ -186,9 +200,16 @@
     "heading": "Pending Approvals",
     "subHeading": "Review and approve orders submitted by staff members that exceed spending limits.",
     "filter": "Filter",
+    "filterBySeller": "By Supplier",
+    "filterByRequester": "By Requester",
+    "clearFilters": "Clear Filters",
     "empty": {
       "heading": "All caught up!",
       "subtext": "No orders are waiting for your approval right now."
+    },
+    "noFilterResults": {
+      "heading": "No results found",
+      "subtext": "No pending approvals match the selected filters."
     },
     "stats": {
       "awaiting": "Awaiting Approval",

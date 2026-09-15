@@ -57,7 +57,11 @@ export default function BuyerCartPage() {
     0
   )
 
-  const nuggingItem = items.find((item) => item.tierPct < 50)
+  // Show the nudge for whichever cart item has a next pricing tier to reach,
+  // preferring the one closest to unlocking it (highest tierPct) when several qualify.
+  const nuggingItem = items
+    .filter((item) => item.nextTierMinQty !== null)
+    .sort((a, b) => b.tierPct - a.tierPct)[0]
 
   return (
     <div className="flex flex-col lg:flex-row h-[calc(100vh-4rem)]">

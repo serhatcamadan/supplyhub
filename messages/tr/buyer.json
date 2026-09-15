@@ -67,7 +67,11 @@
     "listPrice": "Liste Fiyatı",
     "perUnit": "/ adet",
     "total": "Toplam:",
-    "inStock": "Stokta mevcut",
+    "inStock": "Stokta mevcut ({count} adet)",
+    "lowStock": "Az stok kaldı ({count} adet)",
+    "outOfStock": "Stokta yok",
+    "insufficientStock": "Mevcut stok, minimum sipariş adedinin altında",
+    "maxQuantity": "Stokta {count} adet mevcut",
     "bulkDiscount": "Toplu Alım İndirimleri",
     "minUnitsWithSeller": "Min. {count} adet · {seller}",
     "nextTierHint": "{count} adet daha ekleyin → {price}/adet",
@@ -122,12 +126,13 @@
       "perUnit": "/ adet",
       "stock": {
         "in_stock": "STOKTA",
-        "low_stock": "AZ STOK"
+        "low_stock": "AZ STOK",
+        "out_of_stock": "STOKTA YOK"
       }
     },
     "promo": {
       "heading": "Toplu İndirim Fırsatı",
-      "subtext": "{name} için {count} adet daha ekleyerek Tier 3 fiyatına ulaşın.",
+      "subtext": "{name} için {count} adet daha ekleyerek Tier {tier} fiyatına ulaşın.",
       "cta": "Hemen Ekle"
     },
     "summary": {
@@ -154,6 +159,15 @@
     "heading": "Sipariş Geçmişi",
     "subHeading": "Geçmiş toptan alımlarınızı takip edin, yönetin ve tekrar sipariş verin.",
     "filter": "Filtrele",
+    "filterStatus": "Durum",
+    "filterDate": "Tarih",
+    "clearFilters": "Filtreleri Temizle",
+    "dateFilter": {
+      "all": "Tüm Zamanlar",
+      "last7": "Son 7 Gün",
+      "last30": "Son 30 Gün",
+      "thisMonth": "Bu Ay"
+    },
     "csvDownload": "CSV İndir",
     "csvFilename": "siparisler",
     "csvHeaders": {
@@ -186,9 +200,16 @@
     "heading": "Onay Bekleyenler",
     "subHeading": "Harcama limitini aşan personel siparişlerini inceleyin ve onaylayın.",
     "filter": "Filtrele",
+    "filterBySeller": "Tedarikçiye Göre",
+    "filterByRequester": "Talep Edene Göre",
+    "clearFilters": "Filtreleri Temizle",
     "empty": {
       "heading": "Hepsi tamamlandı!",
       "subtext": "Şu anda onayınızı bekleyen sipariş yok."
+    },
+    "noFilterResults": {
+      "heading": "Sonuç bulunamadı",
+      "subtext": "Seçili filtrelerle eşleşen onay bekleyen sipariş yok."
     },
     "stats": {
       "awaiting": "Onay Bekliyor",
