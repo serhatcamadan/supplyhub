@@ -2,18 +2,25 @@
 
 import { useTranslations } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
-import type { Product } from '@/types'
-import { IconPackage } from '@tabler/icons-react'
+import { IconPackage, IconTrendingUp } from '@tabler/icons-react'
+
+export interface ProductSalesStat {
+  id: string
+  name: string
+  category: string
+  unitsSold: number
+  revenue: number
+}
 
 interface TopProductsProps {
-  products: Product[]
+  products: ProductSalesStat[]
+  topCategoryPct: number
+  secondCategoryPct: number
+  topCategoryName: string | null
   locale: string
 }
 
-const MOCK_UNITS = [450, 320, 185]
-const MOCK_REVENUE = [12000, 8500, 5200]
-
-export function TopProducts({ products, locale }: TopProductsProps) {
+export function TopProducts({ products, topCategoryPct, secondCategoryPct, topCategoryName, locale }: TopProductsProps) {
   const t = useTranslations('seller')
 
   return (
@@ -25,29 +32,36 @@ export function TopProducts({ products, locale }: TopProductsProps) {
         </a>
       </div>
 
-      <div className="flex-1 flex flex-col gap-1">
-        {products.map((product, i) => (
-          <div
-            key={product.id}
-            className="flex items-center gap-3 p-2 hover:bg-surface-container-high rounded-lg transition-colors cursor-pointer"
-          >
-            <div className="w-11 h-11 rounded-lg bg-surface-container-low flex items-center justify-center shrink-0">
-              <IconPackage size={22} className="text-primary-container" />
+      {products.length === 0 ? (
+        <div className="flex-1 flex flex-col items-center justify-center text-center py-8 gap-2">
+          <IconTrendingUp size={28} className="text-outline-variant" />
+          <p className="text-sm text-on-surface-variant">{t('dashboard.topProducts.empty')}</p>
+        </div>
+      ) : (
+        <div className="flex-1 flex flex-col gap-1">
+          {products.map((product) => (
+            <div
+              key={product.id}
+              className="flex items-center gap-3 p-2 hover:bg-surface-container-high rounded-lg transition-colors"
+            >
+              <div className="w-11 h-11 rounded-lg bg-surface-container-low flex items-center justify-center shrink-0">
+                <IconPackage size={22} className="text-primary-container" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-semibold text-on-surface truncate">{product.name}</p>
+                <p className="text-xs text-on-surface-variant">{product.category}</p>
+              </div>
+              <div className="text-right shrink-0">
+                <p className="font-mono text-xs font-semibold text-on-surface">
+                  {product.unitsSold}{' '}
+                  <span className="text-on-surface-variant font-normal">{t('dashboard.topProducts.units')}</span>
+                </p>
+                <p className="text-xs text-secondary">+{formatCurrency(product.revenue, locale)}</p>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-on-surface truncate">{product.name}</p>
-              <p className="text-xs text-on-surface-variant">{product.category}</p>
-            </div>
-            <div className="text-right shrink-0">
-              <p className="font-mono text-xs font-semibold text-on-surface">
-                {MOCK_UNITS[i]}{' '}
-                <span className="text-on-surface-variant font-normal">{t('dashboard.topProducts.units')}</span>
-              </p>
-              <p className="text-xs text-secondary">+{formatCurrency(MOCK_REVENUE[i] ?? 0)}</p>
-            </div>
-          </div>
-        ))}
-      </div>
+          ))}
+        </div>
+      )}
 
       {/* Category donut */}
       <div className="mt-6 pt-6 border-t border-surface-container-high flex items-center justify-center gap-6">
@@ -65,7 +79,7 @@ export function TopProducts({ products, locale }: TopProductsProps) {
               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
               fill="none"
               stroke="currentColor"
-              strokeDasharray="60, 100"
+              strokeDasharray={`${topCategoryPct}, 100`}
               strokeWidth="4"
             />
             <path
@@ -73,8 +87,8 @@ export function TopProducts({ products, locale }: TopProductsProps) {
               d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831"
               fill="none"
               stroke="currentColor"
-              strokeDasharray="25, 100"
-              strokeDashoffset="-60"
+              strokeDasharray={`${secondCategoryPct}, 100`}
+              strokeDashoffset={-topCategoryPct}
               strokeWidth="4"
             />
           </svg>
@@ -84,8 +98,10 @@ export function TopProducts({ products, locale }: TopProductsProps) {
             {t('dashboard.topProducts.topCategory')}
           </p>
           <p className="text-base font-semibold text-on-surface">
-            {products[0]?.category ?? '—'}{' '}
-            <span className="text-on-surface-variant text-xs font-normal">(60%)</span>
+            {topCategoryName ?? '—'}{' '}
+            {topCategoryName && (
+              <span className="text-on-surface-variant text-xs font-normal">({topCategoryPct}%)</span>
+            )}
           </p>
         </div>
       </div>

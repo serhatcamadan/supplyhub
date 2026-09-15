@@ -285,7 +285,8 @@
       "heading": "Top Selling",
       "viewReport": "View Report",
       "units": "units",
-      "topCategory": "Top Category"
+      "topCategory": "Top Category",
+      "empty": "No delivered orders in this period."
     },
     "chart": {
       "revenue": "Revenue"

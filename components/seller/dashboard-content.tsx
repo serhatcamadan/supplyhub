@@ -6,9 +6,9 @@ import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { StatCards } from './stat-cards'
 import { RevenueChartCard } from './revenue-chart-card'
-import { TopProducts } from './top-products'
+import { TopProducts, type ProductSalesStat } from './top-products'
 import { ActivityFeed } from './activity-feed'
-import type { Product, OrderWithDetails, QuoteRequestWithDetails } from '@/types'
+import type { OrderWithDetails, QuoteRequestWithDetails } from '@/types'
 import { IconCalendar, IconChevronDown } from '@tabler/icons-react'
 
 type DateFilter = 'last7' | 'last30' | 'last90' | 'all'
@@ -29,7 +29,6 @@ interface DashboardContentProps {
   processingCount: number
   activeProductsCount: number
   draftProductsCount: number
-  topProducts: Product[]
   buyerNames: Record<string, string>
   locale: string
   monthlyRevenue: { month: string; revenue: number }[]
@@ -45,7 +44,6 @@ export function DashboardContent({
   processingCount,
   activeProductsCount,
   draftProductsCount,
-  topProducts,
   buyerNames,
   locale,
   monthlyRevenue,
@@ -79,6 +77,43 @@ export function DashboardContent({
 
   const firstPendingQuote =
     allQuotes.find((q) => q.status === 'pending' && matchesDateFilter(q.created_at, dateFilter)) ?? null
+
+  const productStats = useMemo(() => {
+    const map = new Map<string, ProductSalesStat>()
+    filteredOrders
+      .filter((o) => o.status === 'delivered')
+      .forEach((o) => {
+        o.items.forEach((item) => {
+          const revenue = item.quantity * item.unit_price
+          const existing = map.get(item.product_id)
+          if (existing) {
+            existing.unitsSold += item.quantity
+            existing.revenue += revenue
+          } else {
+            map.set(item.product_id, {
+              id: item.product_id,
+              name: item.product.name,
+              category: item.product.category,
+              unitsSold: item.quantity,
+              revenue,
+            })
+          }
+        })
+      })
+    return Array.from(map.values()).sort((a, b) => b.revenue - a.revenue)
+  }, [filteredOrders])
+
+  const topProducts = productStats.slice(0, 3)
+
+  const categoryRevenue = useMemo(() => {
+    const map = new Map<string, number>()
+    productStats.forEach((p) => map.set(p.category, (map.get(p.category) ?? 0) + p.revenue))
+    const total = Array.from(map.values()).reduce((sum, v) => sum + v, 0)
+    return Array.from(map, ([category, revenue]) => ({
+      category,
+      pct: total > 0 ? Math.round((revenue / total) * 100) : 0,
+    })).sort((a, b) => b.pct - a.pct)
+  }, [productStats])
 
   return (
     <>
@@ -130,7 +165,13 @@ export function DashboardContent({
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <RevenueChartCard weeklyData={weeklyRevenue} monthlyData={monthlyRevenue} />
-        <TopProducts products={topProducts} locale={locale} />
+        <TopProducts
+          products={topProducts}
+          topCategoryPct={categoryRevenue[0]?.pct ?? 0}
+          secondCategoryPct={categoryRevenue[1]?.pct ?? 0}
+          topCategoryName={categoryRevenue[0]?.category ?? null}
+          locale={locale}
+        />
       </div>
 
       <ActivityFeed orders={recentOrders} quote={firstPendingQuote} buyerNames={buyerNames} locale={locale} />

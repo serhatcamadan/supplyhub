@@ -68,8 +68,6 @@ export default async function SellerDashboardPage() {
   const shippingOrders = allOrders.filter((o) => o.status === 'shipped')
   const processingOrders = allOrders.filter((o) => o.status === 'confirmed')
 
-  const topProducts = activeProducts.slice(0, 3)
-
   const monthNames = t.raw('dashboard.months') as string[]
   const monthlyRevenue = buildMonthlyRevenue(allOrders, monthNames)
   const weeklyRevenue = buildWeeklyRevenue(allOrders, locale)
@@ -85,7 +83,6 @@ export default async function SellerDashboardPage() {
         processingCount={processingOrders.length}
         activeProductsCount={activeProducts.length}
         draftProductsCount={draftProducts.length}
-        topProducts={topProducts}
         buyerNames={buyerNames}
         locale={locale}
         monthlyRevenue={monthlyRevenue}

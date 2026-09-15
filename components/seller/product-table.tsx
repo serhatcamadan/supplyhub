@@ -1,6 +1,7 @@
 'use client'
 
-import { useTranslations } from 'next-intl'
+import Link from 'next/link'
+import { useTranslations, useLocale } from 'next-intl'
 import { formatCurrency, getStockBucket } from '@/lib/utils'
 import { StatusBadge } from '@/components/seller/status-badge'
 import { ProductRowActions } from '@/components/seller/product-row-actions'
@@ -36,6 +37,7 @@ export function ProductTable({
   onToggleSelectAll,
 }: ProductTableProps) {
   const t = useTranslations('seller')
+  const locale = useLocale()
   const allSelected = products.length > 0 && products.every((p) => selectedIds.has(p.id))
 
   return (
@@ -99,9 +101,12 @@ export function ProductTable({
                     </div>
                   </td>
                   <td className="p-4">
-                    <span className="text-sm font-semibold text-on-surface group-hover:text-primary transition-colors cursor-pointer block">
+                    <Link
+                      href={`/${locale}/seller/products/${product.id}`}
+                      className="text-sm font-semibold text-on-surface hover:text-primary transition-colors block"
+                    >
                       {product.name}
-                    </span>
+                    </Link>
                     <span className="font-mono text-xs text-on-surface-variant mt-1 block">
                       ID: {product.id.toUpperCase()}
                     </span>
