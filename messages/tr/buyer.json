@@ -154,6 +154,15 @@
     "heading": "Sipariş Geçmişi",
     "subHeading": "Geçmiş toptan alımlarınızı takip edin, yönetin ve tekrar sipariş verin.",
     "filter": "Filtrele",
+    "filterStatus": "Durum",
+    "filterDate": "Tarih",
+    "clearFilters": "Filtreleri Temizle",
+    "dateFilter": {
+      "all": "Tüm Zamanlar",
+      "last7": "Son 7 Gün",
+      "last30": "Son 30 Gün",
+      "thisMonth": "Bu Ay"
+    },
     "csvDownload": "CSV İndir",
     "csvFilename": "siparisler",
     "csvHeaders": {
@@ -186,9 +195,16 @@
     "heading": "Onay Bekleyenler",
     "subHeading": "Harcama limitini aşan personel siparişlerini inceleyin ve onaylayın.",
     "filter": "Filtrele",
+    "filterBySeller": "Tedarikçiye Göre",
+    "filterByRequester": "Talep Edene Göre",
+    "clearFilters": "Filtreleri Temizle",
     "empty": {
       "heading": "Hepsi tamamlandı!",
       "subtext": "Şu anda onayınızı bekleyen sipariş yok."
+    },
+    "noFilterResults": {
+      "heading": "Sonuç bulunamadı",
+      "subtext": "Seçili filtrelerle eşleşen onay bekleyen sipariş yok."
     },
     "stats": {
       "awaiting": "Onay Bekliyor",

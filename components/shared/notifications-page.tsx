@@ -3,12 +3,15 @@
 import { useState, useEffect } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { Button } from '@/components/ui/button'
+import { TablePagination } from '@/components/ui/table-pagination'
 import { NotificationItem } from './notification-item'
 import { NotificationFilterSidebar, type FilterType } from './notification-filter-sidebar'
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '@/lib/api/notifications'
 import { translateNotification, timeAgo } from '@/lib/notifications'
-import { IconChecks, IconChevronLeft, IconChevronRight, IconCircleCheck, IconSettings } from '@tabler/icons-react'
+import { IconChecks, IconCircleCheck } from '@tabler/icons-react'
 import type { Notification } from '@/types'
+
+const ITEMS_PER_PAGE = 10
 
 function matches(n: Notification, filter: FilterType, search: string, title: string, message: string): boolean {
   const q = search.toLowerCase()
@@ -26,6 +29,7 @@ export function NotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([])
   const [activeFilter,  setActiveFilter]  = useState<FilterType>('all')
   const [search,        setSearch]        = useState('')
+  const [currentPage,   setCurrentPage]   = useState(1)
 
   useEffect(() => {
     getNotifications().then(setNotifications).catch(() => {})
@@ -35,6 +39,10 @@ export function NotificationsPage() {
 
   const translated = notifications.map((n) => ({ n, ...translateNotification(t, n, locale) }))
   const visible = translated.filter(({ n, title, message }) => matches(n, activeFilter, search, title, message))
+
+  const totalPages = Math.max(1, Math.ceil(visible.length / ITEMS_PER_PAGE))
+  const page = Math.min(currentPage, totalPages)
+  const paged = visible.slice((page - 1) * ITEMS_PER_PAGE, page * ITEMS_PER_PAGE)
 
   const countByFilter: Record<FilterType, number> = {
     all:    notifications.length,
@@ -80,9 +88,6 @@ export function NotificationsPage() {
             <IconChecks className="text-[20px]" />
             {t('notifications.markAllRead')}
           </Button>
-          <Button variant="ghost" className="w-10 h-10 p-0">
-            <IconSettings />
-          </Button>
         </div>
       </div>
 
@@ -109,7 +114,7 @@ export function NotificationsPage() {
                 </div>
               </div>
             ) : (
-              visible.map(({ n, title, message, actionLabel }) => (
+              paged.map(({ n, title, message, actionLabel }) => (
                 <NotificationItem
                   key={n.id}
                   n={n}
@@ -124,19 +129,12 @@ export function NotificationsPage() {
               ))
             )}
 
-            <div className="p-4 flex items-center justify-between bg-surface-container-lowest border-t border-outline-variant/10">
-              <span className="text-xs text-on-surface-variant">
-                {t('notifications.page.showing', { shown: visible.length, total: notifications.length })}
-              </span>
-              <div className="flex gap-2">
-                <button className="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/50 text-on-surface-variant opacity-50 cursor-not-allowed">
-                  <IconChevronLeft className="text-[20px]" />
-                </button>
-                <button className="w-8 h-8 flex items-center justify-center rounded border border-outline-variant/50 text-on-surface-variant opacity-50 cursor-not-allowed">
-                  <IconChevronRight className="text-[20px]" />
-                </button>
-              </div>
-            </div>
+            <TablePagination
+              label={t('notifications.page.showing', { shown: paged.length, total: visible.length })}
+              page={page}
+              totalPages={totalPages}
+              onPageChange={setCurrentPage}
+            />
           </div>
         </div>
 

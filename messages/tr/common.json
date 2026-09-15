@@ -118,9 +118,6 @@
       "noMatch": "Bu filtreyle eşleşen bildirim yok.",
       "showing": "{total} bildirimden {shown} tanesi gösteriliyor",
       "searchPlaceholder": "Ara...",
-      "settingsTitle": "Bildirim Ayarları",
-      "settingsBody": "E-posta ve SMS ile hangi uyarıları alacağınızı özelleştirin.",
-      "managePreferences": "Tercihleri Yönet",
       "filtersLabel": "Filtreler"
     }
   },

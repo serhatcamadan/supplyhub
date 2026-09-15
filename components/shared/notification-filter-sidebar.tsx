@@ -2,7 +2,7 @@
 
 import { useTranslations } from 'next-intl'
 import { cn } from '@/lib/utils'
-import { IconBell, IconSearch, IconInbox, IconMailFast, IconShoppingBag, IconFileInvoice, IconSpeakerphone } from '@tabler/icons-react'
+import { IconSearch, IconInbox, IconMailFast, IconShoppingBag, IconFileInvoice, IconSpeakerphone } from '@tabler/icons-react'
 import type { ElementType } from 'react'
 
 export type FilterType = 'all' | 'unread' | 'orders' | 'quotes' | 'system'
@@ -92,19 +92,6 @@ export function NotificationFilterSidebar({
             )
           })}
         </nav>
-      </div>
-
-      <div className="bg-secondary-container text-on-secondary-container rounded-xl p-6 shadow-sm relative overflow-hidden">
-        <div className="absolute -right-4 -bottom-4 w-32 h-32 text-on-secondary-container/10">
-          <IconBell size={120} />
-        </div>
-        <h4 className="text-sm font-semibold mb-2 relative z-10">{t('notifications.page.settingsTitle')}</h4>
-        <p className="text-xs mb-4 relative z-10 opacity-90 leading-relaxed">
-          {t('notifications.page.settingsBody')}
-        </p>
-        <button className="px-4 py-2 bg-on-secondary-container text-secondary-container rounded-lg text-xs font-semibold hover:opacity-90 transition-opacity relative z-10">
-          {t('notifications.page.managePreferences')}
-        </button>
       </div>
 
     </aside>
