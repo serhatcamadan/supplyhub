@@ -209,6 +209,12 @@
       "clear": "Clear Selection",
       "confirmDelete": "Are you sure you want to delete {count} products?"
     },
+    "rowActions": {
+      "edit": "Edit",
+      "viewDetails": "View Details",
+      "moreActions": "More actions",
+      "confirmDelete": "Are you sure you want to delete this product?"
+    },
     "status": {
       "active": "Active",
       "draft": "Draft",
@@ -237,7 +243,16 @@
       "minQty": "MIN. ORDER QUANTITY",
       "description": "DETAILED DESCRIPTION",
       "descriptionPlaceholder": "Provide technical specifications, material details, and applications...",
-      "markdownHint": "Use markdown for formatting."
+      "markdownHint": "Use markdown for formatting.",
+      "minQtyPlaceholder": "e.g. 10",
+      "categories": {
+        "oils": "Oils",
+        "grains": "Grains",
+        "natural": "Natural Products",
+        "legumesPasta": "Legumes & Pasta",
+        "equipment": "Equipment",
+        "other": "Other"
+      }
     },
     "pricing": {
       "heading": "Tiered Pricing",

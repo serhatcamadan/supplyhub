@@ -129,6 +129,7 @@
       "increment": "Increase",
       "remove": "Remove",
       "perUnit": "/ unit",
+      "tierLabel": "Tier {tier} (min {minQty} units — {discount}% discount applied)",
       "stock": {
         "in_stock": "IN STOCK",
         "low_stock": "LOW STOCK",
@@ -346,6 +347,7 @@
       "back": "Back to Quote Requests",
       "heading": "Create New Quote Request",
       "subHeading": "The more specific you are, the more accurate quotes you will receive.",
+      "submitError": "Something went wrong, please try again.",
       "basicDetails": {
         "heading": "Basic Details",
         "product": "Product / Service Name",

@@ -129,6 +129,7 @@
       "increment": "Artır",
       "remove": "Kaldır",
       "perUnit": "/ adet",
+      "tierLabel": "Tier {tier} (min {minQty} adet — %{discount} indirim uygulandı)",
       "stock": {
         "in_stock": "STOKTA",
         "low_stock": "AZ STOK",
@@ -346,6 +347,7 @@
       "back": "Teklif Taleplerine Dön",
       "heading": "Yeni Teklif Talebi Oluştur",
       "subHeading": "Ne kadar spesifik olursanız, o kadar doğru teklifler alırsınız.",
+      "submitError": "Bir hata oluştu, lütfen tekrar deneyin.",
       "basicDetails": {
         "heading": "Temel Bilgiler",
         "product": "Ürün / Hizmet Adı",

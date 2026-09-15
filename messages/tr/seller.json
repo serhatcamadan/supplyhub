@@ -209,6 +209,12 @@
       "clear": "Seçimi Temizle",
       "confirmDelete": "{count} ürünü silmek istediğinizden emin misiniz?"
     },
+    "rowActions": {
+      "edit": "Düzenle",
+      "viewDetails": "Detayları Görüntüle",
+      "moreActions": "Diğer işlemler",
+      "confirmDelete": "Bu ürünü silmek istediğinizden emin misiniz?"
+    },
     "status": {
       "active": "Aktif",
       "draft": "Taslak",
@@ -237,7 +243,16 @@
       "minQty": "MİN. SİPARİŞ ADEDİ",
       "description": "DETAYLI AÇIKLAMA",
       "descriptionPlaceholder": "Teknik özellikleri, malzeme detaylarını ve kullanım alanlarını belirtin...",
-      "markdownHint": "Biçimlendirme için markdown kullanın."
+      "markdownHint": "Biçimlendirme için markdown kullanın.",
+      "minQtyPlaceholder": "ör. 10",
+      "categories": {
+        "oils": "Yağlar",
+        "grains": "Tahıllar",
+        "natural": "Doğal Ürünler",
+        "legumesPasta": "Baklagiller & Makarna",
+        "equipment": "Ekipman",
+        "other": "Diğer"
+      }
     },
     "pricing": {
       "heading": "Kademeli Fiyatlandırma",
