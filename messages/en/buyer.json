@@ -127,7 +127,7 @@
     },
     "promo": {
       "heading": "Bulk Discount Opportunity",
-      "subtext": "Add {count} more of {name} to reach Tier 3 pricing.",
+      "subtext": "Add {count} more of {name} to reach Tier {tier} pricing.",
       "cta": "Add Now"
     },
     "summary": {

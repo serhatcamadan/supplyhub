@@ -127,7 +127,7 @@
     },
     "promo": {
       "heading": "Toplu İndirim Fırsatı",
-      "subtext": "{name} için {count} adet daha ekleyerek Tier 3 fiyatına ulaşın.",
+      "subtext": "{name} için {count} adet daha ekleyerek Tier {tier} fiyatına ulaşın.",
       "cta": "Hemen Ekle"
     },
     "summary": {

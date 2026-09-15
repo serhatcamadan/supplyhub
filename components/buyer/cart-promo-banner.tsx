@@ -12,7 +12,8 @@ interface CartPromoBannerProps {
 
 export function CartPromoBanner({ item, locale }: CartPromoBannerProps) {
   const t = useTranslations('buyer')
-  const toNextTier = Math.ceil(item.qty * 0.5)
+  if (item.nextTierMinQty === null || item.nextTierNumber === null) return null
+  const toNextTier = Math.max(0, item.nextTierMinQty - item.qty)
 
   return (
     <div className="relative bg-surface-container rounded-xl px-5 py-4 overflow-hidden">
@@ -23,16 +24,18 @@ export function CartPromoBanner({ item, locale }: CartPromoBannerProps) {
           <div>
             <p className="text-sm font-semibold text-on-surface">{t('cart.promo.heading')}</p>
             <p className="text-sm text-on-surface-variant mt-0.5">
-              {t('cart.promo.subtext', { name: item.name, count: toNextTier })}
+              {t('cart.promo.subtext', { name: item.name, count: toNextTier, tier: item.nextTierNumber })}
             </p>
           </div>
         </div>
-        <Link
-          href={`/${locale}/buyer/discover/${encodeURIComponent('product-1')}`}
-          className="text-xs font-bold uppercase tracking-wider text-primary border border-primary/30 hover:bg-primary/5 transition-colors px-3 py-2 rounded-lg whitespace-nowrap"
-        >
-          {t('cart.promo.cta')}
-        </Link>
+        {item.productId && (
+          <Link
+            href={`/${locale}/buyer/discover/${encodeURIComponent(item.productId)}`}
+            className="text-xs font-bold uppercase tracking-wider text-primary border border-primary/30 hover:bg-primary/5 transition-colors px-3 py-2 rounded-lg whitespace-nowrap"
+          >
+            {t('cart.promo.cta')}
+          </Link>
+        )}
       </div>
     </div>
   )

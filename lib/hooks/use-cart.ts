@@ -66,6 +66,8 @@ function toCartItem(s: StoredItem): CartItem {
     stockStatus: 'in_stock',
     tierPct: Math.min(100, Math.max(0, tierPct)),
     minQty: s.minQty,
+    nextTierMinQty: nextTier ? nextTier.min_qty : null,
+    nextTierNumber: nextTier ? activeIdx + 2 : null,
   }
 }
 

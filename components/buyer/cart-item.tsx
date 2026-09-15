@@ -20,6 +20,8 @@ export type CartItem = {
   stockStatus: 'in_stock' | 'low_stock'
   tierPct: number
   minQty: number
+  nextTierMinQty: number | null
+  nextTierNumber: number | null
 }
 
 const STOCK_CLASS: Record<CartItem['stockStatus'], string> = {
@@ -40,7 +42,12 @@ export function CartItemCard({ item, onQtyChange, onRemove }: CartItemCardProps)
   const originalTotal = item.originalUnitPrice * item.qty
 
   const [qtyInput, setQtyInput] = useState(String(item.qty))
-  useEffect(() => { setQtyInput(String(item.qty)) }, [item.qty])
+  useEffect(() => {
+    // Deliberate: resyncs the free-typing text buffer whenever qty changes
+    // from outside this input (stepper buttons, another tab, cart reload).
+    // eslint-disable-next-line react-hooks/set-state-in-effect
+    setQtyInput(String(item.qty))
+  }, [item.qty])
 
   function decrement() {
     onQtyChange(item.id, Math.max(item.minQty, item.qty - 1))
