@@ -159,6 +159,16 @@
       "pendingApproval": "Awaiting admin approval"
     }
   },
+  "buyers": {
+    "detail": {
+      "back": "Go Back",
+      "totalOrders": "Total Orders",
+      "totalRevenue": "Total Revenue (Delivered)",
+      "customerSince": "Customer Since",
+      "orderHistory": "Order History",
+      "noOrders": "No order history with this buyer yet."
+    }
+  },
   "products": {
     "heading": "Product Catalog",
     "subHeading": "Manage your inventory, update pricing, and monitor stock levels across all your active and draft listings.",

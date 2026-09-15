@@ -159,6 +159,16 @@
       "pendingApproval": "Yönetici onayı bekliyor"
     }
   },
+  "buyers": {
+    "detail": {
+      "back": "Geri Dön",
+      "totalOrders": "Toplam Sipariş",
+      "totalRevenue": "Toplam Gelir (Teslim Edilen)",
+      "customerSince": "Müşteri Olma Tarihi",
+      "orderHistory": "Sipariş Geçmişi",
+      "noOrders": "Bu alıcıyla henüz sipariş geçmişi yok."
+    }
+  },
   "products": {
     "heading": "Ürün Kataloğu",
     "subHeading": "Envanterinizi yönetin, fiyatlandırmayı güncelleyin ve tüm aktif ve taslak listelerinizde stok seviyelerini izleyin.",

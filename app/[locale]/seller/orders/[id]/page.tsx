@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getTranslations, getLocale } from 'next-intl/server'
 import { serverApiFetch, ApiError } from '@/lib/api/server-client'
-import { formatCurrency, formatDate } from '@/lib/utils'
+import { formatCurrency, formatDate, formatOrderId } from '@/lib/utils'
 import { Avatar } from '@/components/ui/avatar'
 import { OrderStatusActions } from '@/components/seller/order-status-actions'
 import type { OrderWithDetails, OrderStatus } from '@/types'
@@ -13,11 +13,6 @@ const STATUS_STYLE: Record<OrderStatus, string> = {
   confirmed: 'bg-primary-fixed-dim/20 text-on-primary-fixed-variant',
   shipped: 'bg-primary/10 text-primary',
   delivered: 'bg-secondary/10 text-secondary',
-}
-
-function formatOrderId(id: string) {
-  const num = id.split('-').pop() ?? id
-  return `#ORD-${num.padStart(4, '0')}`
 }
 
 export default async function SellerOrderDetailPage({

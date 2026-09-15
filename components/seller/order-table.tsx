@@ -3,13 +3,13 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
-import { formatCurrency, formatDate, cn } from '@/lib/utils'
+import { formatCurrency, formatDate, formatOrderId, cn } from '@/lib/utils'
 import type { OrderStatus, OrderWithDetails } from '@/types'
 import { Button } from '@/components/ui/button'
 import { Avatar } from '@/components/ui/avatar'
 import { TablePagination } from '@/components/ui/table-pagination'
 import { TableEmptyRow } from '@/components/ui/table-empty-row'
-import { IconCircleCheck, IconChecks, IconDotsVertical, IconShoppingBag, IconTruck } from '@tabler/icons-react'
+import { IconCircleCheck, IconChecks, IconShoppingBag, IconTruck } from '@tabler/icons-react'
 import type { ElementType } from 'react'
 
 const STATUS_STYLE: Record<
@@ -28,11 +28,6 @@ const AVATAR_COLOR_SCHEMES = [
   'bg-surface-variant text-on-surface-variant',
   'bg-tertiary-container/50 text-on-tertiary-container',
 ]
-
-function formatOrderId(id: string) {
-  const num = id.split('-').pop() ?? id
-  return `#ORD-${num.padStart(4, '0')}`
-}
 
 function OrderStatusBadge({ status, label }: { status: OrderStatus; label: string }) {
   const cfg = STATUS_STYLE[status]
@@ -67,9 +62,6 @@ function RowActions({
       {status === 'shipped' && (
         <Button variant="secondary" size="sm" onClick={() => onStatusChange(orderId, 'delivered')}>{labels.deliver}</Button>
       )}
-      <button className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container-high rounded-lg transition-colors">
-        <IconDotsVertical size={20} />
-      </button>
     </div>
   )
 }
@@ -166,9 +158,12 @@ export function OrderTable({
                         className={AVATAR_COLOR_SCHEMES[i % AVATAR_COLOR_SCHEMES.length]}
                       />
                       <div>
-                        <p className="text-sm font-semibold text-on-surface leading-tight">
+                        <Link
+                          href={`/${locale}/seller/buyers/${order.buyer.id}`}
+                          className="text-sm font-semibold text-on-surface leading-tight hover:text-primary hover:underline transition-colors block"
+                        >
                           {order.buyer.name}
-                        </p>
+                        </Link>
                         <p className="text-xs text-on-surface-variant">
                           {order.created_by_user.email}
                         </p>
