@@ -42,10 +42,10 @@ function toCartItem(s: StoredItem): CartItem {
       ? Math.round(((basePrice - activeTier.price) / basePrice) * 100)
       : 0
 
-  const tierLabel =
-    activeIdx > 0 && activeTier
-      ? `Tier ${activeIdx + 1} (min ${activeTier.min_qty} adet — %${discountPct} indirim uygulandı)`
-      : null
+  const hasDiscountTier = activeIdx > 0 && !!activeTier
+  const tierNumber = hasDiscountTier ? activeIdx + 1 : null
+  const tierMinQty = hasDiscountTier ? activeTier.min_qty : null
+  const tierDiscountPct = hasDiscountTier ? discountPct : null
 
   const sku = s.name
     .split(/\s+/)
@@ -64,7 +64,9 @@ function toCartItem(s: StoredItem): CartItem {
     qty: s.qty,
     unitPrice,
     originalUnitPrice: basePrice,
-    tierLabel,
+    tierNumber,
+    tierMinQty,
+    tierDiscountPct,
     stockStatus: getStockBucket(s.stockQuantity ?? Infinity),
     tierPct: Math.min(100, Math.max(0, tierPct)),
     minQty: s.minQty,

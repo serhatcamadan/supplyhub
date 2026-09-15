@@ -1,10 +1,11 @@
 'use client'
 
+import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { formatCurrency, formatDate } from '@/lib/utils'
 import type { Order, QuoteRequest } from '@/types'
 import { buttonVariants } from '@/components/ui/button'
-import { IconCircleCheck, IconDotsVertical, IconInbox, IconMailFast, IconShoppingBag, IconTruck } from '@tabler/icons-react'
+import { IconCircleCheck, IconInbox, IconMailFast, IconShoppingBag, IconTruck } from '@tabler/icons-react'
 import type { ElementType } from 'react'
 
 interface ActivityFeedProps {
@@ -40,9 +41,6 @@ export function ActivityFeed({ orders, quote, buyerNames, locale }: ActivityFeed
     <div className="bg-surface-container-lowest rounded-xl shadow-sm p-6">
       <div className="flex justify-between items-center mb-6">
         <h3 className="text-xl font-semibold text-on-surface">{t('dashboard.activity.heading')}</h3>
-        <button className="w-8 h-8 rounded-full hover:bg-surface-container-high flex items-center justify-center text-on-surface-variant transition-colors">
-          <IconDotsVertical />
-        </button>
       </div>
 
       {orders.length === 0 && !quote ? (
@@ -81,9 +79,9 @@ export function ActivityFeed({ orders, quote, buyerNames, locale }: ActivityFeed
               <div className="flex-1 min-w-0">
                 <p className="text-sm text-on-surface">
                   <span className="font-semibold">{title}</span>{' '}
-                  <span className="text-primary cursor-pointer hover:underline">
+                  <Link href={`/${locale}/seller/buyers/${order.buyer_id}`} className="text-primary hover:underline">
                     {getCompanyName(order.buyer_id)}
-                  </span>
+                  </Link>
                 </p>
                 <p className="text-xs text-on-surface-variant mt-1">{formatDate(order.created_at, locale)}</p>
               </div>
@@ -110,9 +108,9 @@ export function ActivityFeed({ orders, quote, buyerNames, locale }: ActivityFeed
               <p className="text-sm text-on-surface">
                 <span className="font-semibold">{t('dashboard.activity.quoteReceived')}</span>{' '}
                 {t('dashboard.activity.quoteReceivedFrom')}{' '}
-                <span className="text-primary cursor-pointer hover:underline">
+                <Link href={`/${locale}/seller/buyers/${quote.buyer_id}`} className="text-primary hover:underline">
                   {getCompanyName(quote.buyer_id)}
-                </span>
+                </Link>
               </p>
               {quote.buyer_note && (
                 <div className="bg-surface p-3 mt-2 rounded-lg border border-surface-container-high">

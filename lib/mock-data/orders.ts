@@ -78,6 +78,7 @@ export function getOrdersWithDetails(): OrderWithDetails[] {
       approved_by_user: order.approved_by
         ? (users.find((u) => u.id === order.approved_by) ?? null)
         : null,
+      reviewed_product_ids: [],
     }
   })
 }

@@ -141,6 +141,32 @@
         "ship": "Ship",
         "deliver": "Deliver"
       }
+    },
+    "detail": {
+      "back": "Orders",
+      "backToList": "Back to Orders",
+      "accessDenied": "You don't have access to this record",
+      "accessDeniedHint": "This order may belong to a different company.",
+      "product": "Product",
+      "qty": "Qty",
+      "unitPrice": "Unit Price",
+      "lineTotal": "Line Total",
+      "total": "Total",
+      "buyer": "Buyer",
+      "requestedBy": "Requested By",
+      "approval": "Approval Status",
+      "approved": "Approved",
+      "pendingApproval": "Awaiting admin approval"
+    }
+  },
+  "buyers": {
+    "detail": {
+      "back": "Go Back",
+      "totalOrders": "Total Orders",
+      "totalRevenue": "Total Revenue (Delivered)",
+      "customerSince": "Customer Since",
+      "orderHistory": "Order History",
+      "noOrders": "No order history with this buyer yet."
     }
   },
   "products": {
@@ -183,6 +209,12 @@
       "clear": "Clear Selection",
       "confirmDelete": "Are you sure you want to delete {count} products?"
     },
+    "rowActions": {
+      "edit": "Edit",
+      "viewDetails": "View Details",
+      "moreActions": "More actions",
+      "confirmDelete": "Are you sure you want to delete this product?"
+    },
     "status": {
       "active": "Active",
       "draft": "Draft",
@@ -211,7 +243,16 @@
       "minQty": "MIN. ORDER QUANTITY",
       "description": "DETAILED DESCRIPTION",
       "descriptionPlaceholder": "Provide technical specifications, material details, and applications...",
-      "markdownHint": "Use markdown for formatting."
+      "markdownHint": "Use markdown for formatting.",
+      "minQtyPlaceholder": "e.g. 10",
+      "categories": {
+        "oils": "Oils",
+        "grains": "Grains",
+        "natural": "Natural Products",
+        "legumesPasta": "Legumes & Pasta",
+        "equipment": "Equipment",
+        "other": "Other"
+      }
     },
     "pricing": {
       "heading": "Tiered Pricing",
@@ -256,7 +297,7 @@
     "exportRevenueLabel": "Revenue (TRY)",
     "stats": {
       "totalRevenue": "Total Revenue",
-      "vsLastMonth": "vs last month",
+      "vsPreviousPeriod": "vs previous period",
       "pendingQuotes": "Pending Quotes",
       "immediateAction": "{count} require immediate action",
       "viewAll": "View All",

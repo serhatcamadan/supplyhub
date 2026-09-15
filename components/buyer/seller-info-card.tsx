@@ -6,9 +6,10 @@ import { IconArrowRight } from '@tabler/icons-react'
 
 interface SellerInfoCardProps {
   sellerName: string
+  deliveryRate: number | null
 }
 
-export function SellerInfoCard({ sellerName }: SellerInfoCardProps) {
+export function SellerInfoCard({ sellerName, deliveryRate }: SellerInfoCardProps) {
   const t = useTranslations('buyer')
 
   return (
@@ -32,7 +33,9 @@ export function SellerInfoCard({ sellerName }: SellerInfoCardProps) {
         </div>
         <div>
           <p className="text-xs text-on-surface-variant">{t('sellerInfo.onTimeDelivery')}</p>
-          <p className="text-sm text-on-surface font-medium">98.5%</p>
+          <p className="text-sm text-on-surface font-medium">
+            {deliveryRate !== null ? `${deliveryRate}%` : t('sellerInfo.deliveryRateNoData')}
+          </p>
         </div>
       </div>
 

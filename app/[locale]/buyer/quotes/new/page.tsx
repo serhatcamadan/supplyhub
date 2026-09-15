@@ -123,7 +123,7 @@ export default function BuyerQuoteNewPage() {
       await createQuoteRequest({ productId, quantity, buyer_note: description.trim() || undefined, attachment_urls })
       router.push(`/${locale}/buyer/quotes`)
     } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : 'Bir hata oluştu')
+      setSubmitError(err instanceof Error ? err.message : t('quotes.form.submitError'))
       setIsSubmitting(false)
     }
   }

@@ -304,6 +304,8 @@ const server = http.createServer(async (req, res) => {
         ...p,
         companies: p.companies ?? { id: p.seller_id ?? '', name: 'FreshFarm Gıda' },
         created_at: p.created_at ?? new Date().toISOString(),
+        avg_rating: p.avg_rating ?? null,
+        review_count: p.review_count ?? 0,
       }))
       res.writeHead(200)
       res.end(JSON.stringify(result))
@@ -372,13 +374,17 @@ const server = http.createServer(async (req, res) => {
       if (SUPABASE_URL && SUPABASE_KEY) {
         const filterKey = companyType === 'buyer' ? 'buyer_id' : 'seller_id'
         orders = await sbFetch('orders', {
-          select: '*,buyer:companies!orders_buyer_id_fkey(id,name,type),seller:companies!orders_seller_id_fkey(id,name,type),created_by_user:users!orders_created_by_fkey(id,name,role),approved_by_user:users!orders_approved_by_fkey(id,name),items:order_items(id,order_id,product_id,quantity,unit_price,product:products(id,name,image_url))',
+          select: '*,buyer:companies!orders_buyer_id_fkey(id,name,type),seller:companies!orders_seller_id_fkey(id,name,type),created_by_user:users!orders_created_by_fkey(id,name,role),approved_by_user:users!orders_approved_by_fkey(id,name),items:order_items(id,order_id,product_id,quantity,unit_price,product:products(id,name,image_url)),reviews(product_id)',
           [filterKey]: `eq.${companyId}`,
           order: 'created_at.desc',
         })
       }
+      const normalizedOrders = (orders ?? []).map((o) => ({
+        ...o,
+        reviewed_product_ids: (o.reviews ?? []).map((r) => r.product_id),
+      }))
       res.writeHead(200)
-      res.end(JSON.stringify(orders ?? []))
+      res.end(JSON.stringify(normalizedOrders))
       return
     }
 

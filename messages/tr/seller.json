@@ -141,6 +141,32 @@
         "ship": "Kargoya Ver",
         "deliver": "Teslim Et"
       }
+    },
+    "detail": {
+      "back": "Siparişler",
+      "backToList": "Sipariş Listesine Dön",
+      "accessDenied": "Bu kayda erişim yetkiniz yok",
+      "accessDeniedHint": "Bu sipariş başka bir şirkete ait olabilir.",
+      "product": "Ürün",
+      "qty": "Miktar",
+      "unitPrice": "Birim Fiyat",
+      "lineTotal": "Satır Toplamı",
+      "total": "Toplam",
+      "buyer": "Alıcı",
+      "requestedBy": "Talep Eden",
+      "approval": "Onay Durumu",
+      "approved": "Onaylandı",
+      "pendingApproval": "Yönetici onayı bekliyor"
+    }
+  },
+  "buyers": {
+    "detail": {
+      "back": "Geri Dön",
+      "totalOrders": "Toplam Sipariş",
+      "totalRevenue": "Toplam Gelir (Teslim Edilen)",
+      "customerSince": "Müşteri Olma Tarihi",
+      "orderHistory": "Sipariş Geçmişi",
+      "noOrders": "Bu alıcıyla henüz sipariş geçmişi yok."
     }
   },
   "products": {
@@ -183,6 +209,12 @@
       "clear": "Seçimi Temizle",
       "confirmDelete": "{count} ürünü silmek istediğinizden emin misiniz?"
     },
+    "rowActions": {
+      "edit": "Düzenle",
+      "viewDetails": "Detayları Görüntüle",
+      "moreActions": "Diğer işlemler",
+      "confirmDelete": "Bu ürünü silmek istediğinizden emin misiniz?"
+    },
     "status": {
       "active": "Aktif",
       "draft": "Taslak",
@@ -211,7 +243,16 @@
       "minQty": "MİN. SİPARİŞ ADEDİ",
       "description": "DETAYLI AÇIKLAMA",
       "descriptionPlaceholder": "Teknik özellikleri, malzeme detaylarını ve kullanım alanlarını belirtin...",
-      "markdownHint": "Biçimlendirme için markdown kullanın."
+      "markdownHint": "Biçimlendirme için markdown kullanın.",
+      "minQtyPlaceholder": "ör. 10",
+      "categories": {
+        "oils": "Yağlar",
+        "grains": "Tahıllar",
+        "natural": "Doğal Ürünler",
+        "legumesPasta": "Baklagiller & Makarna",
+        "equipment": "Ekipman",
+        "other": "Diğer"
+      }
     },
     "pricing": {
       "heading": "Kademeli Fiyatlandırma",
@@ -256,7 +297,7 @@
     "exportRevenueLabel": "Gelir (TRY)",
     "stats": {
       "totalRevenue": "Toplam Gelir",
-      "vsLastMonth": "önceki aya kıyasla",
+      "vsPreviousPeriod": "önceki döneme kıyasla",
       "pendingQuotes": "Bekleyen Teklifler",
       "immediateAction": "{count} acil işlem gerekiyor",
       "viewAll": "Tümünü Gör",
