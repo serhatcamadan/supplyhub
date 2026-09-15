@@ -1,6 +1,8 @@
 {
   "searchPlaceholder": "Ürün veya teklif talebi ara...",
   "searchNoResults": "Sonuç bulunamadı.",
+  "loading": "Yükleniyor…",
+  "print": "Yazdır",
   "profile": {
     "sections": {
       "account": "Hesap Ayarları",

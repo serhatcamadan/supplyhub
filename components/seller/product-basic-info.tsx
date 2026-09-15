@@ -5,13 +5,13 @@ import { SectionHeading } from '@/components/ui/section-heading'
 import { IconChevronDown, IconInfoCircle } from '@tabler/icons-react'
 
 const CATEGORIES = [
-  'Yağlar',
-  'Tahıllar',
-  'Doğal Ürünler',
-  'Baklagiller & Makarna',
-  'Ekipman',
-  'Diğer',
-]
+  { value: 'Yağlar', labelKey: 'oils' },
+  { value: 'Tahıllar', labelKey: 'grains' },
+  { value: 'Doğal Ürünler', labelKey: 'natural' },
+  { value: 'Baklagiller & Makarna', labelKey: 'legumesPasta' },
+  { value: 'Ekipman', labelKey: 'equipment' },
+  { value: 'Diğer', labelKey: 'other' },
+] as const
 
 const INPUT = 'w-full px-4 py-3 bg-surface border border-outline-variant/40 rounded-lg text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all'
 
@@ -67,7 +67,11 @@ export function ProductBasicInfo({
                 className={`${INPUT} appearance-none`}
               >
                 <option value="" disabled>{t('products.basicInfo.categorySelect')}</option>
-                {CATEGORIES.map((c) => <option key={c} value={c}>{c}</option>)}
+                {CATEGORIES.map((c) => (
+                  <option key={c.value} value={c.value}>
+                    {t(`products.basicInfo.categories.${c.labelKey}`)}
+                  </option>
+                ))}
               </select>
               <IconChevronDown className="absolute right-4 top-1/2 -translate-y-1/2 text-on-surface-variant pointer-events-none" />
             </div>
@@ -80,7 +84,7 @@ export function ProductBasicInfo({
               id="min-qty"
               type="number"
               min={1}
-              placeholder="e.g. 10"
+              placeholder={t('products.basicInfo.minQtyPlaceholder')}
               value={minOrderQty}
               onChange={(e) => onMinOrderQtyChange(e.target.value)}
               className={`${INPUT} font-mono`}

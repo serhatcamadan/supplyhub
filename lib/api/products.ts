@@ -4,6 +4,8 @@ import type { Product } from '@/types'
 export interface ApiProduct extends Product {
   companies: { id: string; name: string }
   created_at: string
+  avg_rating: number | null
+  review_count: number
 }
 
 export function getProducts(): Promise<ApiProduct[]> {
@@ -12,6 +14,15 @@ export function getProducts(): Promise<ApiProduct[]> {
 
 export function getProduct(id: string): Promise<ApiProduct> {
   return apiFetch<ApiProduct>(`/products/${id}`)
+}
+
+export interface PricePoint {
+  price: number
+  recorded_at: string
+}
+
+export function getProductPriceHistory(id: string): Promise<PricePoint[]> {
+  return apiFetch<PricePoint[]>(`/products/${id}/price-history`)
 }
 
 export function getSellerProducts(): Promise<ApiProduct[]> {

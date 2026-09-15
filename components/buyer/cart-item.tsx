@@ -16,7 +16,9 @@ export type CartItem = {
   qty: number
   unitPrice: number
   originalUnitPrice: number
-  tierLabel: string | null
+  tierNumber: number | null
+  tierMinQty: number | null
+  tierDiscountPct: number | null
   stockStatus: StockBucket
   tierPct: number
   minQty: number
@@ -160,8 +162,10 @@ export function CartItemCard({ item, onQtyChange, onRemove }: CartItemCardProps)
               </div>
             )}
             <div className="text-xl font-bold text-on-surface">{formatCurrency(total)}</div>
-            {item.tierLabel ? (
-              <div className="text-xs text-secondary mt-0.5">{item.tierLabel}</div>
+            {item.tierNumber !== null && item.tierMinQty !== null && item.tierDiscountPct !== null ? (
+              <div className="text-xs text-secondary mt-0.5">
+                {t('cart.item.tierLabel', { tier: item.tierNumber, minQty: item.tierMinQty, discount: item.tierDiscountPct })}
+              </div>
             ) : (
               <div className="text-xs text-on-surface-variant mt-0.5">{formatCurrency(item.unitPrice)} {t('cart.item.perUnit')}</div>
             )}
