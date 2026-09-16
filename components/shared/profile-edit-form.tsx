@@ -25,6 +25,7 @@ import {
   IconEyeOff,
   IconCircleCheck,
   IconUser,
+  IconTruck,
 } from '@tabler/icons-react'
 
 interface Props {
@@ -46,6 +47,10 @@ export function ProfileEditForm({ profile, portal }: Props) {
   // Company fields
   const [companyName, setCompanyName] = useState(profile.companies?.name || '')
   const [industry, setIndustry]       = useState(profile.companies?.industry || '')
+
+  // Shipping fields (seller only)
+  const [freeShippingThreshold, setFreeShippingThreshold] = useState(String(profile.companies?.free_shipping_threshold ?? 10_000))
+  const [shippingFee, setShippingFee] = useState(String(profile.companies?.shipping_fee ?? 450))
 
   // Password section
   const [showPasswordSection, setShowPasswordSection] = useState(false)
@@ -72,6 +77,13 @@ export function ProfileEditForm({ profile, portal }: Props) {
     const e: Record<string, string> = {}
     if (!name.trim())        e.name        = t('errors.nameRequired')
     if (!companyName.trim()) e.companyName = t('errors.companyNameRequired')
+    if (portal === 'seller') {
+      const threshold = Number(freeShippingThreshold)
+      const fee = Number(shippingFee)
+      if (isNaN(threshold) || threshold < 0 || isNaN(fee) || fee < 0) {
+        e.shipping = t('errors.shippingInvalid')
+      }
+    }
     if (showPasswordSection && newPassword) {
       if (!currentPassword.trim())         e.currentPassword = t('password.currentRequired')
       if (newPassword.length < 8)          e.newPassword     = t('password.tooShort')
@@ -96,6 +108,10 @@ export function ProfileEditForm({ profile, portal }: Props) {
       const companyPayload: Parameters<typeof updateMyCompany>[0] = {
         name: companyName.trim(),
         industry: industry || undefined,
+      }
+      if (portal === 'seller') {
+        companyPayload.free_shipping_threshold = Number(freeShippingThreshold)
+        companyPayload.shipping_fee = Number(shippingFee)
       }
 
       await Promise.all([
@@ -244,6 +260,33 @@ export function ProfileEditForm({ profile, portal }: Props) {
               </div>
             </div>
           </section>
+
+          {/* Shipping Settings — seller only */}
+          {portal === 'seller' && (
+            <section className="bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-8 flex flex-col gap-6">
+              <SectionHeader icon={<IconTruck size={18} />} label={t('sections.shipping')} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormInput
+                  id="freeShippingThreshold"
+                  label={t('fields.freeShippingThreshold')}
+                  type="number"
+                  min={0}
+                  value={freeShippingThreshold}
+                  onChange={(e) => { setFreeShippingThreshold(e.target.value); clearError('shipping') }}
+                  error={errors.shipping}
+                />
+                <FormInput
+                  id="shippingFee"
+                  label={t('fields.shippingFee')}
+                  type="number"
+                  min={0}
+                  value={shippingFee}
+                  onChange={(e) => { setShippingFee(e.target.value); clearError('shipping') }}
+                />
+              </div>
+              <p className="text-xs text-on-surface-variant/70">{t('fields.shippingHint')}</p>
+            </section>
+          )}
 
           {/* Account Security — password change */}
           <section className="bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-8 flex flex-col gap-6">

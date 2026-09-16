@@ -29,7 +29,8 @@
       "personal": "Personal Information",
       "contact": "Contact Details",
       "account": "Account Security",
-      "company": "Company Information"
+      "company": "Company Information",
+      "shipping": "Shipping Settings"
     },
     "fields": {
       "name": "Full Name",
@@ -46,7 +47,10 @@
       "currentPassword": "Current Password",
       "newPassword": "New Password",
       "newPasswordHint": "At least 8 characters",
-      "confirmPassword": "Confirm New Password"
+      "confirmPassword": "Confirm New Password",
+      "freeShippingThreshold": "Free Shipping Threshold (₺)",
+      "shippingFee": "Shipping Fee (₺)",
+      "shippingHint": "Once the buyer's cart reaches this amount, shipping becomes free; below it, your shipping fee applies."
     },
     "industries": {
       "manufacturing": "Manufacturing",
@@ -67,6 +71,7 @@
     "errors": {
       "nameRequired": "Full name is required.",
       "companyNameRequired": "Company name is required.",
+      "shippingInvalid": "Shipping values must be 0 or a positive number.",
       "saveFailed": "Could not save, please try again."
     }
   },

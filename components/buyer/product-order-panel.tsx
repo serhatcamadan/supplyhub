@@ -16,6 +16,7 @@ interface ProductOrderPanelProps {
   sellerName: string
   avgRating: number | null
   reviewCount: number
+  freeShippingThreshold: number | null
 }
 
 export function ProductOrderPanel({
@@ -23,6 +24,7 @@ export function ProductOrderPanel({
   sellerName,
   avgRating,
   reviewCount,
+  freeShippingThreshold,
 }: ProductOrderPanelProps) {
   const t = useTranslations('buyer')
   const locale = useLocale()
@@ -235,10 +237,12 @@ export function ProductOrderPanel({
           </Button>
         </div>
 
-        <p className="text-xs text-on-surface-variant text-center flex items-center justify-center gap-1">
-          <IconTruck size={14} />
-          {t('orderPanel.freeShipping')}
-        </p>
+        {freeShippingThreshold !== null && (
+          <p className="text-xs text-on-surface-variant text-center flex items-center justify-center gap-1">
+            <IconTruck size={14} />
+            {t('orderPanel.freeShippingThreshold', { amount: formatCurrency(freeShippingThreshold, locale) })}
+          </p>
+        )}
       </div>
     </div>
   )

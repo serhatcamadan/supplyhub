@@ -4,6 +4,8 @@ import { useState, useEffect } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { Button } from '@/components/ui/button'
 import { TablePagination } from '@/components/ui/table-pagination'
+import { Skeleton } from '@/components/ui/skeleton'
+import { PageHeaderSkeleton } from '@/components/skeletons/page-header-skeleton'
 import { NotificationItem } from './notification-item'
 import { NotificationFilterSidebar, type FilterType } from './notification-filter-sidebar'
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '@/lib/api/notifications'
@@ -30,9 +32,10 @@ export function NotificationsPage() {
   const [activeFilter,  setActiveFilter]  = useState<FilterType>('all')
   const [search,        setSearch]        = useState('')
   const [currentPage,   setCurrentPage]   = useState(1)
+  const [isLoading,     setIsLoading]     = useState(true)
 
   useEffect(() => {
-    getNotifications().then(setNotifications).catch(() => {})
+    getNotifications().then(setNotifications).catch(() => {}).finally(() => setIsLoading(false))
   }, [])
 
   const unreadCount = notifications.filter((n) => !n.read).length
@@ -64,6 +67,32 @@ export function NotificationsPage() {
     if (n.read) return
     setNotifications((prev) => prev.map((x) => (x.id === n.id ? { ...x, read: true } : x)))
     markNotificationRead(n.id).catch(() => {})
+  }
+
+  if (isLoading) {
+    return (
+      <div className="px-8 py-8 max-w-360 mx-auto">
+        <div className="mb-8">
+          <PageHeaderSkeleton actionCount={1} />
+        </div>
+        <div className="flex flex-col xl:flex-row gap-6">
+          <div className="w-full xl:w-64 shrink-0">
+            <Skeleton className="h-72 w-full rounded-xl" />
+          </div>
+          <div className="flex-1 min-w-0 bg-surface-container-lowest rounded-xl shadow-sm border border-outline-variant/30 flex flex-col overflow-hidden">
+            {Array.from({ length: 5 }).map((_, i) => (
+              <div key={i} className="px-6 py-4 flex gap-4 border-b border-outline-variant/10 last:border-0">
+                <Skeleton className="h-10 w-10 rounded-full shrink-0" />
+                <div className="flex-1 space-y-2">
+                  <Skeleton className="h-4 w-1/3" />
+                  <Skeleton className="h-3 w-2/3" />
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (

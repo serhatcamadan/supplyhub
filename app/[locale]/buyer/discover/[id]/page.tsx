@@ -25,7 +25,7 @@ export default async function BuyerProductDetailPage({
   const seller = product.companies
   const images = product.images.length > 0 ? product.images : product.image_url ? [product.image_url] : []
 
-  const sellerDetail = await serverApiFetch<{ delivery_rate: number | null }>(`/companies/${product.seller_id}`).catch(() => null)
+  const sellerDetail = await serverApiFetch<{ delivery_rate: number | null; free_shipping_threshold: number }>(`/companies/${product.seller_id}`).catch(() => null)
   const priceHistory = await getProductPriceHistory(id).catch(() => [])
 
   const minPrice = product.price_tiers.length > 0
@@ -80,6 +80,7 @@ export default async function BuyerProductDetailPage({
             sellerName={seller?.name ?? fallbackSeller}
             avgRating={product.avg_rating}
             reviewCount={product.review_count}
+            freeShippingThreshold={sellerDetail?.free_shipping_threshold ?? null}
           />
 
           <SellerInfoCard sellerName={seller?.name ?? fallbackSeller} deliveryRate={sellerDetail?.delivery_rate ?? null} />

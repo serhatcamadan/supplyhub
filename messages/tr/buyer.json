@@ -85,7 +85,7 @@
     "addToCart": "Sepete Ekle",
     "addedToCart": "Sepete Eklendi",
     "requestQuote": "Özel Teklif İste",
-    "freeShipping": "500₺ üzeri siparişlerde ücretsiz kargo · 24 saat içinde kargoda",
+    "freeShippingThreshold": "{amount} üzeri siparişlerde ücretsiz kargo · 24 saat içinde kargoda",
     "noReviewsYet": "Henüz değerlendirme yok"
   },
   "sellerInfo": {

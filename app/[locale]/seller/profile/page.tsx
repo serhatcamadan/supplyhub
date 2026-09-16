@@ -15,23 +15,22 @@ export default function SellerProfilePage() {
     const jwt = getCurrentUserFromCookie()
     if (!jwt) return
 
-    // Show form immediately with JWT data; enrich with API data (phone, company name) in background
-    const base: UserProfile = {
-      id:         jwt.sub,
-      email:      jwt.email,
-      name:       jwt.name,
-      phone:      null,
-      role:       jwt.role,
-      company_id: jwt.companyId,
-      companies:  { name: '', type: jwt.companyType, industry: null },
-    }
-    // JWT cookie is only readable client-side, so this can't run during SSR/first render
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    setProfile(base)
-
     getMyProfile()
       .then((data) => setProfile(data))
-      .catch(() => {/* keep JWT-based profile */})
+      .catch(() => {
+        // API unreachable — fall back to a JWT-derived profile so the page doesn't hang forever.
+        // ProfileEditForm seeds its editable state from this once on mount, so this must be the
+        // only place we ever set a placeholder profile (never alongside a later real fetch).
+        setProfile({
+          id:         jwt.sub,
+          email:      jwt.email,
+          name:       jwt.name,
+          phone:      null,
+          role:       jwt.role,
+          company_id: jwt.companyId,
+          companies:  { name: '', type: jwt.companyType, industry: null, free_shipping_threshold: 10_000, shipping_fee: 450 },
+        })
+      })
   }, [])
 
   if (!profile) {

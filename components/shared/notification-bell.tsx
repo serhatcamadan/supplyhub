@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
 import { getNotifications, markNotificationRead, markAllNotificationsRead } from '@/lib/api/notifications'
 import { translateNotification, timeAgo, CATEGORY_STYLE } from '@/lib/notifications'
 import { IconArrowRight, IconBell } from '@tabler/icons-react'
@@ -13,6 +14,7 @@ import type { Notification } from '@/types'
 export function NotificationBell() {
   const [open,          setOpen]          = useState(false)
   const [notifications, setNotifications] = useState<Notification[]>([])
+  const [isLoading,     setIsLoading]     = useState(true)
   const containerRef = useRef<HTMLDivElement>(null)
   const pathname     = usePathname()
   const t            = useTranslations('common')
@@ -22,7 +24,7 @@ export function NotificationBell() {
   const unreadCount = notifications.filter((n) => !n.read).length
 
   useEffect(() => {
-    getNotifications().then(setNotifications).catch(() => {})
+    getNotifications().then(setNotifications).catch(() => {}).finally(() => setIsLoading(false))
   }, [])
 
   useEffect(() => {
@@ -84,7 +86,19 @@ export function NotificationBell() {
 
         {/* List */}
         <div className="flex-1 overflow-y-auto max-h-100">
-          {notifications.length === 0 ? (
+          {isLoading ? (
+            <div className="px-6 py-4 flex flex-col gap-4">
+              {Array.from({ length: 3 }).map((_, i) => (
+                <div key={i} className="flex gap-4">
+                  <Skeleton className="h-10 w-10 rounded-full shrink-0" />
+                  <div className="flex-1 space-y-2">
+                    <Skeleton className="h-3.5 w-2/3" />
+                    <Skeleton className="h-3 w-full" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : notifications.length === 0 ? (
             <div className="py-10 text-center text-sm text-on-surface-variant">{t('notifications.empty')}</div>
           ) : (
             notifications.map((n) => {
