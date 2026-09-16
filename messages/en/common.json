@@ -140,5 +140,12 @@
     "attemptedPath": "Requested path",
     "copyPath": "Copy",
     "copied": "Copied"
+  },
+  "errorPage": {
+    "eyebrow": "Unexpected Error",
+    "heading": "Something Went Wrong",
+    "description": "An unexpected error occurred while loading this page. You can try again or head back to your dashboard.",
+    "tryAgain": "Try Again",
+    "errorRef": "Error reference"
   }
 }

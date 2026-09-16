@@ -232,7 +232,9 @@
       "saveChanges": "Save Changes",
       "errorRequired": "Product name, category and minimum order quantity are required.",
       "errorNoSession": "Session not found.",
-      "errorSave": "Failed to save. Please try again."
+      "errorSave": "Failed to save. Please try again.",
+      "loadError": "Could not load the product. Please try again.",
+      "backToProducts": "Back to Products"
     },
     "basicInfo": {
       "heading": "Basic Information",

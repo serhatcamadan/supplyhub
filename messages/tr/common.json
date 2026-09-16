@@ -140,5 +140,12 @@
     "attemptedPath": "İstenen adres",
     "copyPath": "Kopyala",
     "copied": "Kopyalandı"
+  },
+  "errorPage": {
+    "eyebrow": "Beklenmeyen Hata",
+    "heading": "Bir Şeyler Ters Gitti",
+    "description": "Bu sayfa yüklenirken beklenmeyen bir hata oluştu. Tekrar deneyebilir ya da ana panele dönebilirsiniz.",
+    "tryAgain": "Tekrar Dene",
+    "errorRef": "Hata referansı"
   }
 }
