@@ -128,5 +128,17 @@
     "noQuotes": "No quote requests found.",
     "noProducts": "No products match your search.",
     "noApprovals": "No pending approvals."
+  },
+  "notFound": {
+    "eyebrow": "Error Code: 404",
+    "heading": "We Can't Find That Page",
+    "description": "The link you followed may be invalid, moved, or removed. You can continue from below.",
+    "backToPanel": "Back to Dashboard",
+    "goBack": "Go Back",
+    "goToLogin": "Back to Login",
+    "quickNav": "Quick Access",
+    "attemptedPath": "Requested path",
+    "copyPath": "Copy",
+    "copied": "Copied"
   }
 }

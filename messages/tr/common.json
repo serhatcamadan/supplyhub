@@ -128,5 +128,17 @@
     "noQuotes": "Teklif talebi bulunamadı.",
     "noProducts": "Aramanızla eşleşen ürün yok.",
     "noApprovals": "Onay bekleyen sipariş yok."
+  },
+  "notFound": {
+    "eyebrow": "Hata Kodu: 404",
+    "heading": "Aradığınız Sayfaya Ulaşılamıyor",
+    "description": "Girdiğiniz bağlantı geçersiz, taşınmış ya da kaldırılmış olabilir. Aşağıdan devam edebilirsiniz.",
+    "backToPanel": "Ana Panele Dön",
+    "goBack": "Önceki Sayfaya Dön",
+    "goToLogin": "Girişe Dön",
+    "quickNav": "Hızlı Erişim",
+    "attemptedPath": "İstenen adres",
+    "copyPath": "Kopyala",
+    "copied": "Kopyalandı"
   }
 }
