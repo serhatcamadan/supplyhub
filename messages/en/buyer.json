@@ -111,7 +111,9 @@
       "itemCount": "{count} items",
       "load": "Load into Cart",
       "delete": "Delete",
-      "confirmReplace": "This will replace the items currently in your cart with the template's items. Continue?"
+      "confirmReplaceTitle": "Replace Cart",
+      "confirmReplace": "This will replace the items currently in your cart with the template's items. Continue?",
+      "confirmReplaceAction": "Replace"
     },
     "empty": {
       "heading": "Your cart is empty",

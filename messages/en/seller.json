@@ -207,12 +207,14 @@
       "setDraft": "Set to Draft",
       "delete": "Delete",
       "clear": "Clear Selection",
+      "confirmDeleteTitle": "Delete Products",
       "confirmDelete": "Are you sure you want to delete {count} products?"
     },
     "rowActions": {
       "edit": "Edit",
       "viewDetails": "View Details",
       "moreActions": "More actions",
+      "confirmDeleteTitle": "Delete Product",
       "confirmDelete": "Are you sure you want to delete this product?"
     },
     "status": {

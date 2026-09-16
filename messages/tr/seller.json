@@ -207,12 +207,14 @@
       "setDraft": "Taslağa Al",
       "delete": "Sil",
       "clear": "Seçimi Temizle",
+      "confirmDeleteTitle": "Ürünleri Sil",
       "confirmDelete": "{count} ürünü silmek istediğinizden emin misiniz?"
     },
     "rowActions": {
       "edit": "Düzenle",
       "viewDetails": "Detayları Görüntüle",
       "moreActions": "Diğer işlemler",
+      "confirmDeleteTitle": "Ürünü Sil",
       "confirmDelete": "Bu ürünü silmek istediğinizden emin misiniz?"
     },
     "status": {

@@ -111,7 +111,9 @@
       "itemCount": "{count} ürün",
       "load": "Sepete Yükle",
       "delete": "Sil",
-      "confirmReplace": "Sepetteki mevcut ürünler şablondakilerle değiştirilecek. Devam edilsin mi?"
+      "confirmReplaceTitle": "Sepeti Değiştir",
+      "confirmReplace": "Sepetteki mevcut ürünler şablondakilerle değiştirilecek. Devam edilsin mi?",
+      "confirmReplaceAction": "Değiştir"
     },
     "empty": {
       "heading": "Sepetiniz boş",

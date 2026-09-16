@@ -12,16 +12,28 @@ import { CartItemCard } from '@/components/buyer/cart-item'
 import { OrderSummary } from '@/components/buyer/order-summary'
 import { CartPromoBanner } from '@/components/buyer/cart-promo-banner'
 import { CartTemplatesMenu } from '@/components/buyer/cart-templates-menu'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { IconCompass, IconShoppingCart, IconTrashX } from '@tabler/icons-react'
 
 export default function BuyerCartPage() {
   const router = useRouter()
   const t = useTranslations('buyer')
+  const tCommon = useTranslations('common')
   const locale = useLocale()
   const { items, storedItems, updateQty, removeItem, clearCart, replaceCart } = useCart()
   const [isCheckingOut, setIsCheckingOut] = useState(false)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
   const [shippingSettings, setShippingSettings] = useState({ freeShippingThreshold: 10_000, shippingFee: 450 })
+  const [pendingTemplate, setPendingTemplate] = useState<StoredItem[] | null>(null)
 
   const cartSellerId = items.find((i) => i.sellerId)?.sellerId ?? null
 
@@ -38,8 +50,16 @@ export default function BuyerCartPage() {
   }, [cartSellerId])
 
   function handleLoadTemplate(templateItems: StoredItem[]) {
-    if (items.length > 0 && !window.confirm(t('cart.templates.confirmReplace'))) return
+    if (items.length > 0) {
+      setPendingTemplate(templateItems)
+      return
+    }
     replaceCart(templateItems)
+  }
+
+  function confirmLoadTemplate() {
+    if (pendingTemplate) replaceCart(pendingTemplate)
+    setPendingTemplate(null)
   }
 
   async function handleCheckout() {
@@ -163,6 +183,21 @@ export default function BuyerCartPage() {
           onRequestQuote={() => router.push(`/${locale}/buyer/quotes/new`)}
         />
       </div>
+
+      <AlertDialog open={pendingTemplate !== null} onOpenChange={(open) => { if (!open) setPendingTemplate(null) }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('cart.templates.confirmReplaceTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('cart.templates.confirmReplace')}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{tCommon('dialog.cancel')}</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmLoadTemplate}>
+              {t('cart.templates.confirmReplaceAction')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }
