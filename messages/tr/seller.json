@@ -232,7 +232,9 @@
       "saveChanges": "Değişiklikleri Kaydet",
       "errorRequired": "Ürün adı, kategori ve minimum sipariş adedi zorunludur.",
       "errorNoSession": "Oturum bulunamadı.",
-      "errorSave": "Kaydedilemedi, lütfen tekrar deneyin."
+      "errorSave": "Kaydedilemedi, lütfen tekrar deneyin.",
+      "loadError": "Ürün yüklenemedi, lütfen tekrar deneyin.",
+      "backToProducts": "Ürünlere Dön"
     },
     "basicInfo": {
       "heading": "Temel Bilgiler",

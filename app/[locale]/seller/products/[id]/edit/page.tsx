@@ -1,10 +1,11 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useRouter } from 'next/navigation'
+import { useRouter, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
 import { getProduct, updateProduct } from '@/lib/api/products'
+import { ApiError } from '@/lib/api/client'
 import { uploadProductImage } from '@/lib/supabase/storage'
 import type { PriceTier } from '@/types'
 import { Button } from '@/components/ui/button'
@@ -13,7 +14,7 @@ import { ProductPricingTiers } from '@/components/seller/product-pricing-tiers'
 import { ProductMedia, type MediaItem } from '@/components/seller/product-media'
 import { ProductLogistics } from '@/components/seller/product-logistics'
 import { Skeleton } from '@/components/ui/skeleton'
-import { IconChevronRight, IconDeviceFloppy } from '@tabler/icons-react'
+import { IconAlertTriangle, IconArrowLeft, IconChevronRight, IconDeviceFloppy } from '@tabler/icons-react'
 
 export default function EditProductPage({ params }: { params: Promise<{ id: string }> }) {
   const router = useRouter()
@@ -33,6 +34,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
   const [weight, setWeight]           = useState('')
   const [leadTimeDays, setLeadTimeDays] = useState('')
   const [isLoading, setIsLoading]     = useState(true)
+  const [loadFailed, setLoadFailed]   = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [error, setError]             = useState<string | null>(null)
 
@@ -54,8 +56,12 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
         setIsActive(data.status === 'active')
         setWeight(data.weight != null ? String(data.weight) : '')
         setLeadTimeDays(data.lead_time_days != null ? String(data.lead_time_days) : '')
-      } catch {
-        setError(t('products.form.errorRequired'))
+      } catch (err) {
+        if (err instanceof ApiError && err.status === 404) {
+          notFound()
+          return
+        }
+        setLoadFailed(true)
       } finally {
         setIsLoading(false)
       }
@@ -152,6 +158,24 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
             </div>
           </div>
         </div>
+      </div>
+    )
+  }
+
+  if (loadFailed) {
+    return (
+      <div className="h-full flex flex-col items-center justify-center gap-4 text-center px-8 py-24">
+        <div className="w-16 h-16 rounded-full bg-error-container/20 flex items-center justify-center">
+          <IconAlertTriangle size={28} className="text-error" />
+        </div>
+        <p className="font-semibold text-on-surface text-lg">{t('products.form.loadError')}</p>
+        <Link
+          href={`/${locale}/seller/products`}
+          className="text-sm font-semibold text-primary hover:text-primary/80 transition-colors flex items-center gap-1.5"
+        >
+          <IconArrowLeft size={16} />
+          {t('products.form.backToProducts')}
+        </Link>
       </div>
     )
   }

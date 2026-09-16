@@ -10,13 +10,14 @@ interface OrderSummaryProps {
   subtotal: number
   volumeDiscount: number
   itemCount: number
+  freeShippingThreshold: number
+  shippingFee: number
   onCheckout: () => void
   onRequestQuote: () => void
   isCheckingOut?: boolean
 }
 
 const TAX_RATE = 0.20
-const SHIPPING_THRESHOLD = 10_000
 
 function SummaryRow({
   label,
@@ -50,6 +51,8 @@ export function OrderSummary({
   subtotal,
   volumeDiscount,
   itemCount,
+  freeShippingThreshold,
+  shippingFee,
   onCheckout,
   onRequestQuote,
   isCheckingOut = false,
@@ -57,7 +60,7 @@ export function OrderSummary({
   const t = useTranslations('buyer')
   const locale = useLocale()
 
-  const shipping = subtotal >= SHIPPING_THRESHOLD ? 0 : 450
+  const shipping = subtotal >= freeShippingThreshold ? 0 : shippingFee
   const taxable = subtotal - volumeDiscount
   const tax = Math.round(taxable * TAX_RATE)
   const total = taxable + shipping + tax
@@ -90,7 +93,7 @@ export function OrderSummary({
             value={shipping === 0 ? t('cart.summary.shippingFree') : formatCurrency(shipping, locale)}
             subtext={
               shipping > 0
-                ? t('cart.summary.shippingNudge', { amount: formatCurrency(SHIPPING_THRESHOLD - subtotal, locale) })
+                ? t('cart.summary.shippingNudge', { amount: formatCurrency(freeShippingThreshold - subtotal, locale) })
                 : undefined
             }
           />
