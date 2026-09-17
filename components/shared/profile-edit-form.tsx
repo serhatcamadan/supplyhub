@@ -21,8 +21,6 @@ import {
   IconPhone,
   IconBuildingSkyscraper,
   IconShieldLock,
-  IconEye,
-  IconEyeOff,
   IconCircleCheck,
   IconUser,
   IconTruck,
@@ -57,8 +55,6 @@ export function ProfileEditForm({ profile, portal }: Props) {
   const [currentPassword, setCurrentPassword]         = useState('')
   const [newPassword, setNewPassword]                 = useState('')
   const [confirmPassword, setConfirmPassword]         = useState('')
-  const [showNewPw, setShowNewPw]                     = useState(false)
-  const [showConfirmPw, setShowConfirmPw]             = useState(false)
 
   // Status
   const [saving, setSaving]   = useState(false)
@@ -311,23 +307,21 @@ export function ProfileEditForm({ profile, portal }: Props) {
                   onChange={(e) => { setCurrentPassword(e.target.value); clearError('currentPassword') }}
                   error={errors.currentPassword}
                 />
-                <PasswordField
+                <FormInput
                   id="newPassword"
                   label={t('fields.newPassword')}
-                  hint={t('fields.newPasswordHint')}
+                  type="password"
+                  helperText={t('fields.newPasswordHint')}
                   value={newPassword}
-                  show={showNewPw}
-                  onToggle={() => setShowNewPw((p) => !p)}
-                  onChange={(v) => { setNewPassword(v); clearError('newPassword') }}
+                  onChange={(e) => { setNewPassword(e.target.value); clearError('newPassword') }}
                   error={errors.newPassword}
                 />
-                <PasswordField
+                <FormInput
                   id="confirmPassword"
                   label={t('fields.confirmPassword')}
+                  type="password"
                   value={confirmPassword}
-                  show={showConfirmPw}
-                  onToggle={() => setShowConfirmPw((p) => !p)}
-                  onChange={(v) => { setConfirmPassword(v); clearError('confirmPassword') }}
+                  onChange={(e) => { setConfirmPassword(e.target.value); clearError('confirmPassword') }}
                   error={errors.confirmPassword}
                 />
               </div>
@@ -355,35 +349,6 @@ function SectionHeader({ icon, label, noBorder }: { icon: React.ReactNode; label
         {icon}
       </span>
       <h2 className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">{label}</h2>
-    </div>
-  )
-}
-
-function PasswordField({
-  id, label, hint, value, show, onToggle, onChange, error,
-}: {
-  id: string; label: string; hint?: string; value: string
-  show: boolean; onToggle: () => void; onChange: (v: string) => void; error?: string
-}) {
-  return (
-    <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="text-xs font-semibold tracking-wider text-on-surface-variant">
-        {label}
-      </label>
-      <div className="relative">
-        <input
-          id={id}
-          type={show ? 'text' : 'password'}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className={`w-full pl-4 pr-10 py-3 rounded-lg text-sm text-on-surface outline-none transition-all bg-surface focus:bg-surface-container ${error ? 'ring-2 ring-error/60 border border-error/40' : ''}`}
-        />
-        <button type="button" onClick={onToggle} className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary">
-          {show ? <IconEyeOff size={18} /> : <IconEye size={18} />}
-        </button>
-      </div>
-      {error && <FormError message={error} />}
-      {hint && !error && <p className="text-xs text-on-surface-variant/60">{hint}</p>}
     </div>
   )
 }
