@@ -6,7 +6,7 @@ import { useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { login } from '@/lib/api/auth'
 import { Button } from '@/components/ui/button'
-import { IconCircleCheck, IconDatabase } from '@tabler/icons-react'
+import { IconCircleCheck, IconDatabase, IconEye, IconEyeOff } from '@tabler/icons-react'
 
 const DEMO_ACCOUNTS = [
   { email: 'ali@freshfarm.com',    name: 'Ali Yılmaz',   sub: 'FreshFarm Gıda A.Ş.',  badge: 'bg-primary/10 text-primary',     labelKey: 'login.demoLabels.sellerAdmin' },
@@ -28,6 +28,7 @@ export default function LoginPage() {
   const [error, setError] = useState<string | null>(null)
   const [seedState, setSeedState] = useState<SeedState>('idle')
   const [seedMsg, setSeedMsg] = useState<string | null>(null)
+  const [showPassword, setShowPassword] = useState(false)
 
   async function handleSeed() {
     setSeedState('loading')
@@ -100,8 +101,19 @@ export default function LoginPage() {
               <label htmlFor="password" className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
                 {t('login.password')}
               </label>
-              <input id="password" name="password" type="password" required autoComplete="current-password" data-testid="password"
-                className="w-full px-4 py-2.5 bg-surface border border-outline-variant/50 rounded-lg text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
+              <div className="relative">
+                <input id="password" name="password" type={showPassword ? 'text' : 'password'} required autoComplete="current-password" data-testid="password"
+                  className="w-full px-4 py-2.5 pr-10 bg-surface border border-outline-variant/50 rounded-lg text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all" />
+                <button
+                  type="button"
+                  onClick={() => setShowPassword((p) => !p)}
+                  tabIndex={-1}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors"
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? <IconEyeOff size={18} /> : <IconEye size={18} />}
+                </button>
+              </div>
             </div>
             {error && <p className="text-xs text-error" data-testid="error-msg">{error}</p>}
             <Button type="submit" variant="primary" disabled={loading} className="w-full" data-testid="submit">

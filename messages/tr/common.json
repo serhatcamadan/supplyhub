@@ -2,6 +2,9 @@
   "searchPlaceholder": "Ürün veya teklif talebi ara...",
   "searchNoResults": "Sonuç bulunamadı.",
   "loading": "Yükleniyor…",
+  "dialog": {
+    "cancel": "Vazgeç"
+  },
   "print": "Yazdır",
   "profile": {
     "sections": {

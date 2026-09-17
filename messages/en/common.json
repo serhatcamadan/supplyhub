@@ -2,6 +2,9 @@
   "searchPlaceholder": "Search products or quote requests...",
   "searchNoResults": "No results found.",
   "loading": "Loading…",
+  "dialog": {
+    "cancel": "Cancel"
+  },
   "print": "Print",
   "profile": {
     "sections": {
