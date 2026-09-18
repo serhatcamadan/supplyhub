@@ -2,9 +2,19 @@
 
 import { useState, useRef, useEffect } from 'react'
 import Link from 'next/link'
-import { useLocale } from 'next-intl'
+import { useLocale, useTranslations } from 'next-intl'
 import { IconDotsVertical, IconEye, IconPencil, IconToggleLeft, IconToggleRight, IconTrash } from '@tabler/icons-react'
 import { deleteProduct, updateProductStatus } from '@/lib/api/products'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import type { Product } from '@/types'
 
 interface ProductRowActionsProps {
@@ -16,7 +26,10 @@ interface ProductRowActionsProps {
 
 export function ProductRowActions({ productId, status, onDelete, onStatusChange }: ProductRowActionsProps) {
   const locale = useLocale()
+  const t = useTranslations('seller')
+  const tCommon = useTranslations('common')
   const [isOpen, setIsOpen] = useState(false)
+  const [confirmOpen, setConfirmOpen] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -38,9 +51,8 @@ export function ProductRowActions({ productId, status, onDelete, onStatusChange 
     } catch {}
   }
 
-  async function handleDelete() {
-    setIsOpen(false)
-    if (!window.confirm('Bu ürünü silmek istediğinizden emin misiniz?')) return
+  async function performDelete() {
+    setConfirmOpen(false)
     try {
       await deleteProduct(productId)
       onDelete()
@@ -52,21 +64,21 @@ export function ProductRowActions({ productId, status, onDelete, onStatusChange 
       <Link
         href={`/${locale}/seller/products/${productId}/edit`}
         className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-md transition-colors"
-        title="Edit"
+        title={t('products.rowActions.edit')}
       >
         <IconPencil size={20} />
       </Link>
       <Link
         href={`/${locale}/seller/products/${productId}`}
         className="p-1.5 text-on-surface-variant hover:text-primary hover:bg-surface-container rounded-md transition-colors"
-        title="View Details"
+        title={t('products.rowActions.viewDetails')}
       >
         <IconEye size={20} />
       </Link>
       <div className="relative" ref={ref}>
         <button
           className="p-1.5 text-on-surface-variant hover:text-on-surface hover:bg-surface-container rounded-md transition-colors"
-          title="More actions"
+          title={t('products.rowActions.moreActions')}
           onClick={() => setIsOpen((v) => !v)}
         >
           <IconDotsVertical size={20} />
@@ -80,18 +92,33 @@ export function ProductRowActions({ productId, status, onDelete, onStatusChange 
               {status === 'active'
                 ? <IconToggleLeft size={16} className="text-on-surface-variant" />
                 : <IconToggleRight size={16} className="text-secondary" />}
-              {status === 'active' ? 'Taslağa Al' : 'Yayına Al'}
+              {status === 'active' ? t('products.bulk.setDraft') : t('products.bulk.setActive')}
             </button>
             <button
-              onClick={handleDelete}
+              onClick={() => { setIsOpen(false); setConfirmOpen(true) }}
               className="w-full flex items-center gap-3 px-4 py-2.5 text-sm text-error hover:bg-error-container/20 transition-colors"
             >
               <IconTrash size={16} />
-              Ürünü Sil
+              {t('products.bulk.delete')}
             </button>
           </div>
         )}
       </div>
+
+      <AlertDialog open={confirmOpen} onOpenChange={setConfirmOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('products.rowActions.confirmDeleteTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('products.rowActions.confirmDelete')}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{tCommon('dialog.cancel')}</AlertDialogCancel>
+            <AlertDialogAction variant="destructive" onClick={performDelete}>
+              {t('products.bulk.delete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

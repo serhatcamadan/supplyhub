@@ -1,36 +1,72 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { createOrder } from '@/lib/api/orders'
+import { getCompany } from '@/lib/api/companies'
 import { useCart, type StoredItem } from '@/lib/hooks/use-cart'
 import { CartItemCard } from '@/components/buyer/cart-item'
 import { OrderSummary } from '@/components/buyer/order-summary'
 import { CartPromoBanner } from '@/components/buyer/cart-promo-banner'
 import { CartTemplatesMenu } from '@/components/buyer/cart-templates-menu'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { IconCompass, IconShoppingCart, IconTrashX } from '@tabler/icons-react'
 
 export default function BuyerCartPage() {
   const router = useRouter()
   const t = useTranslations('buyer')
+  const tCommon = useTranslations('common')
   const locale = useLocale()
   const { items, storedItems, updateQty, removeItem, clearCart, replaceCart } = useCart()
   const [isCheckingOut, setIsCheckingOut] = useState(false)
   const [checkoutError, setCheckoutError] = useState<string | null>(null)
+  const [shippingSettings, setShippingSettings] = useState({ freeShippingThreshold: 10_000, shippingFee: 450 })
+  const [pendingTemplate, setPendingTemplate] = useState<StoredItem[] | null>(null)
+
+  const cartSellerId = items.find((i) => i.sellerId)?.sellerId ?? null
+
+  useEffect(() => {
+    if (!cartSellerId) return
+    getCompany(cartSellerId)
+      .then((company) => {
+        setShippingSettings({
+          freeShippingThreshold: company.free_shipping_threshold,
+          shippingFee: company.shipping_fee,
+        })
+      })
+      .catch(() => {})
+  }, [cartSellerId])
 
   function handleLoadTemplate(templateItems: StoredItem[]) {
-    if (items.length > 0 && !window.confirm(t('cart.templates.confirmReplace'))) return
+    if (items.length > 0) {
+      setPendingTemplate(templateItems)
+      return
+    }
     replaceCart(templateItems)
+  }
+
+  function confirmLoadTemplate() {
+    if (pendingTemplate) replaceCart(pendingTemplate)
+    setPendingTemplate(null)
   }
 
   async function handleCheckout() {
     setIsCheckingOut(true)
     setCheckoutError(null)
 
-    const sellerId = items.find((i) => i.sellerId)?.sellerId
+    const sellerId = cartSellerId
     if (!sellerId) {
       setCheckoutError(t('cart.checkoutError.noSeller'))
       setIsCheckingOut(false)
@@ -140,11 +176,28 @@ export default function BuyerCartPage() {
           subtotal={subtotal}
           volumeDiscount={volumeDiscount}
           itemCount={items.length}
+          freeShippingThreshold={shippingSettings.freeShippingThreshold}
+          shippingFee={shippingSettings.shippingFee}
           onCheckout={handleCheckout}
           isCheckingOut={isCheckingOut}
           onRequestQuote={() => router.push(`/${locale}/buyer/quotes/new`)}
         />
       </div>
+
+      <AlertDialog open={pendingTemplate !== null} onOpenChange={(open) => { if (!open) setPendingTemplate(null) }}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('cart.templates.confirmReplaceTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>{t('cart.templates.confirmReplace')}</AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{tCommon('dialog.cancel')}</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmLoadTemplate}>
+              {t('cart.templates.confirmReplaceAction')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   )
 }

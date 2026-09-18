@@ -21,10 +21,9 @@ import {
   IconPhone,
   IconBuildingSkyscraper,
   IconShieldLock,
-  IconEye,
-  IconEyeOff,
   IconCircleCheck,
   IconUser,
+  IconTruck,
 } from '@tabler/icons-react'
 
 interface Props {
@@ -47,13 +46,15 @@ export function ProfileEditForm({ profile, portal }: Props) {
   const [companyName, setCompanyName] = useState(profile.companies?.name || '')
   const [industry, setIndustry]       = useState(profile.companies?.industry || '')
 
+  // Shipping fields (seller only)
+  const [freeShippingThreshold, setFreeShippingThreshold] = useState(String(profile.companies?.free_shipping_threshold ?? 10_000))
+  const [shippingFee, setShippingFee] = useState(String(profile.companies?.shipping_fee ?? 450))
+
   // Password section
   const [showPasswordSection, setShowPasswordSection] = useState(false)
   const [currentPassword, setCurrentPassword]         = useState('')
   const [newPassword, setNewPassword]                 = useState('')
   const [confirmPassword, setConfirmPassword]         = useState('')
-  const [showNewPw, setShowNewPw]                     = useState(false)
-  const [showConfirmPw, setShowConfirmPw]             = useState(false)
 
   // Status
   const [saving, setSaving]   = useState(false)
@@ -72,6 +73,13 @@ export function ProfileEditForm({ profile, portal }: Props) {
     const e: Record<string, string> = {}
     if (!name.trim())        e.name        = t('errors.nameRequired')
     if (!companyName.trim()) e.companyName = t('errors.companyNameRequired')
+    if (portal === 'seller') {
+      const threshold = Number(freeShippingThreshold)
+      const fee = Number(shippingFee)
+      if (isNaN(threshold) || threshold < 0 || isNaN(fee) || fee < 0) {
+        e.shipping = t('errors.shippingInvalid')
+      }
+    }
     if (showPasswordSection && newPassword) {
       if (!currentPassword.trim())         e.currentPassword = t('password.currentRequired')
       if (newPassword.length < 8)          e.newPassword     = t('password.tooShort')
@@ -96,6 +104,10 @@ export function ProfileEditForm({ profile, portal }: Props) {
       const companyPayload: Parameters<typeof updateMyCompany>[0] = {
         name: companyName.trim(),
         industry: industry || undefined,
+      }
+      if (portal === 'seller') {
+        companyPayload.free_shipping_threshold = Number(freeShippingThreshold)
+        companyPayload.shipping_fee = Number(shippingFee)
       }
 
       await Promise.all([
@@ -245,6 +257,33 @@ export function ProfileEditForm({ profile, portal }: Props) {
             </div>
           </section>
 
+          {/* Shipping Settings — seller only */}
+          {portal === 'seller' && (
+            <section className="bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-8 flex flex-col gap-6">
+              <SectionHeader icon={<IconTruck size={18} />} label={t('sections.shipping')} />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <FormInput
+                  id="freeShippingThreshold"
+                  label={t('fields.freeShippingThreshold')}
+                  type="number"
+                  min={0}
+                  value={freeShippingThreshold}
+                  onChange={(e) => { setFreeShippingThreshold(e.target.value); clearError('shipping') }}
+                  error={errors.shipping}
+                />
+                <FormInput
+                  id="shippingFee"
+                  label={t('fields.shippingFee')}
+                  type="number"
+                  min={0}
+                  value={shippingFee}
+                  onChange={(e) => { setShippingFee(e.target.value); clearError('shipping') }}
+                />
+              </div>
+              <p className="text-xs text-on-surface-variant/70">{t('fields.shippingHint')}</p>
+            </section>
+          )}
+
           {/* Account Security — password change */}
           <section className="bg-surface-container-lowest rounded-xl border border-outline-variant/20 p-8 flex flex-col gap-6">
             <div className="flex items-center justify-between pb-4 border-b border-outline-variant/20">
@@ -268,23 +307,21 @@ export function ProfileEditForm({ profile, portal }: Props) {
                   onChange={(e) => { setCurrentPassword(e.target.value); clearError('currentPassword') }}
                   error={errors.currentPassword}
                 />
-                <PasswordField
+                <FormInput
                   id="newPassword"
                   label={t('fields.newPassword')}
-                  hint={t('fields.newPasswordHint')}
+                  type="password"
+                  helperText={t('fields.newPasswordHint')}
                   value={newPassword}
-                  show={showNewPw}
-                  onToggle={() => setShowNewPw((p) => !p)}
-                  onChange={(v) => { setNewPassword(v); clearError('newPassword') }}
+                  onChange={(e) => { setNewPassword(e.target.value); clearError('newPassword') }}
                   error={errors.newPassword}
                 />
-                <PasswordField
+                <FormInput
                   id="confirmPassword"
                   label={t('fields.confirmPassword')}
+                  type="password"
                   value={confirmPassword}
-                  show={showConfirmPw}
-                  onToggle={() => setShowConfirmPw((p) => !p)}
-                  onChange={(v) => { setConfirmPassword(v); clearError('confirmPassword') }}
+                  onChange={(e) => { setConfirmPassword(e.target.value); clearError('confirmPassword') }}
                   error={errors.confirmPassword}
                 />
               </div>
@@ -312,35 +349,6 @@ function SectionHeader({ icon, label, noBorder }: { icon: React.ReactNode; label
         {icon}
       </span>
       <h2 className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">{label}</h2>
-    </div>
-  )
-}
-
-function PasswordField({
-  id, label, hint, value, show, onToggle, onChange, error,
-}: {
-  id: string; label: string; hint?: string; value: string
-  show: boolean; onToggle: () => void; onChange: (v: string) => void; error?: string
-}) {
-  return (
-    <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="text-xs font-semibold tracking-wider text-on-surface-variant">
-        {label}
-      </label>
-      <div className="relative">
-        <input
-          id={id}
-          type={show ? 'text' : 'password'}
-          value={value}
-          onChange={(e) => onChange(e.target.value)}
-          className={`w-full pl-4 pr-10 py-3 rounded-lg text-sm text-on-surface outline-none transition-all bg-surface focus:bg-surface-container ${error ? 'ring-2 ring-error/60 border border-error/40' : ''}`}
-        />
-        <button type="button" onClick={onToggle} className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary">
-          {show ? <IconEyeOff size={18} /> : <IconEye size={18} />}
-        </button>
-      </div>
-      {error && <FormError message={error} />}
-      {hint && !error && <p className="text-xs text-on-surface-variant/60">{hint}</p>}
     </div>
   )
 }

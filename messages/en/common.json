@@ -1,6 +1,11 @@
 {
   "searchPlaceholder": "Search products or quote requests...",
   "searchNoResults": "No results found.",
+  "loading": "Loading…",
+  "dialog": {
+    "cancel": "Cancel"
+  },
+  "print": "Print",
   "profile": {
     "sections": {
       "account": "Account Settings",
@@ -27,7 +32,8 @@
       "personal": "Personal Information",
       "contact": "Contact Details",
       "account": "Account Security",
-      "company": "Company Information"
+      "company": "Company Information",
+      "shipping": "Shipping Settings"
     },
     "fields": {
       "name": "Full Name",
@@ -44,7 +50,10 @@
       "currentPassword": "Current Password",
       "newPassword": "New Password",
       "newPasswordHint": "At least 8 characters",
-      "confirmPassword": "Confirm New Password"
+      "confirmPassword": "Confirm New Password",
+      "freeShippingThreshold": "Free Shipping Threshold (₺)",
+      "shippingFee": "Shipping Fee (₺)",
+      "shippingHint": "Once the buyer's cart reaches this amount, shipping becomes free; below it, your shipping fee applies."
     },
     "industries": {
       "manufacturing": "Manufacturing",
@@ -65,6 +74,7 @@
     "errors": {
       "nameRequired": "Full name is required.",
       "companyNameRequired": "Company name is required.",
+      "shippingInvalid": "Shipping values must be 0 or a positive number.",
       "saveFailed": "Could not save, please try again."
     }
   },
@@ -126,5 +136,24 @@
     "noQuotes": "No quote requests found.",
     "noProducts": "No products match your search.",
     "noApprovals": "No pending approvals."
+  },
+  "notFound": {
+    "eyebrow": "Error Code: 404",
+    "heading": "We Can't Find That Page",
+    "description": "The link you followed may be invalid, moved, or removed. You can continue from below.",
+    "backToPanel": "Back to Dashboard",
+    "goBack": "Go Back",
+    "goToLogin": "Back to Login",
+    "quickNav": "Quick Access",
+    "attemptedPath": "Requested path",
+    "copyPath": "Copy",
+    "copied": "Copied"
+  },
+  "errorPage": {
+    "eyebrow": "Unexpected Error",
+    "heading": "Something Went Wrong",
+    "description": "An unexpected error occurred while loading this page. You can try again or head back to your dashboard.",
+    "tryAgain": "Try Again",
+    "errorRef": "Error reference"
   }
 }

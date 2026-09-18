@@ -1,15 +1,15 @@
 import { notFound } from 'next/navigation'
 import Link from 'next/link'
 import { getTranslations, getLocale } from 'next-intl/server'
-import { getProduct } from '@/lib/api/products'
+import { getProduct, getProductPriceHistory } from '@/lib/api/products'
+import { serverApiFetch } from '@/lib/api/server-client'
 import { formatCurrency } from '@/lib/utils'
 import { ProductImageGallery } from '@/components/buyer/product-image-gallery'
 import { ProductTabs } from '@/components/buyer/product-tabs'
 import { ProductOrderPanel } from '@/components/buyer/product-order-panel'
 import { SellerInfoCard } from '@/components/buyer/seller-info-card'
+import { PriceTrendChart } from '@/components/buyer/price-trend-chart'
 import { IconChevronRight } from '@tabler/icons-react'
-
-const SPARKLINE = 'M0,25 L10,22 L20,24 L30,15 L40,18 L50,12 L60,14 L70,8 L80,10 L90,5 L100,5'
 
 export default async function BuyerProductDetailPage({
   params,
@@ -24,6 +24,9 @@ export default async function BuyerProductDetailPage({
 
   const seller = product.companies
   const images = product.images.length > 0 ? product.images : product.image_url ? [product.image_url] : []
+
+  const sellerDetail = await serverApiFetch<{ delivery_rate: number | null; free_shipping_threshold: number }>(`/companies/${product.seller_id}`).catch(() => null)
+  const priceHistory = await getProductPriceHistory(id).catch(() => [])
 
   const minPrice = product.price_tiers.length > 0
     ? Math.min(...product.price_tiers.map((tier) => tier.price))
@@ -72,9 +75,15 @@ export default async function BuyerProductDetailPage({
 
         <div className="lg:col-span-4 flex flex-col gap-6 sticky top-24">
 
-          <ProductOrderPanel product={product} sellerName={seller?.name ?? fallbackSeller} rating={4.7} />
+          <ProductOrderPanel
+            product={product}
+            sellerName={seller?.name ?? fallbackSeller}
+            avgRating={product.avg_rating}
+            reviewCount={product.review_count}
+            freeShippingThreshold={sellerDetail?.free_shipping_threshold ?? null}
+          />
 
-          <SellerInfoCard sellerName={seller?.name ?? fallbackSeller} />
+          <SellerInfoCard sellerName={seller?.name ?? fallbackSeller} deliveryRate={sellerDetail?.delivery_rate ?? null} />
 
           <div className="bg-surface-container-lowest rounded-xl shadow-sm p-6 relative overflow-hidden">
             <div className="absolute inset-0 bg-linear-to-br from-surface via-primary-container/5 to-surface-container" />
@@ -83,21 +92,13 @@ export default async function BuyerProductDetailPage({
                 <p className="text-xs font-semibold text-on-surface-variant uppercase tracking-wider mb-0.5">
                   {t('discover.priceTrend')}
                 </p>
-                <p className="text-sm font-semibold text-on-surface">{t('discover.priceTrendStable')}</p>
-              </div>
-              <div className="h-20 w-full">
-                <svg viewBox="0 0 100 30" preserveAspectRatio="none" className="w-full h-full">
-                  <path
-                    d={SPARKLINE}
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-primary opacity-50"
-                  />
-                  <circle cx="100" cy="5" r="2" fill="currentColor" className="text-primary" />
-                </svg>
+                <PriceTrendChart
+                  history={priceHistory}
+                  noDataLabel={t('discover.priceTrendNoData')}
+                  upLabel={t('discover.priceTrendUp')}
+                  downLabel={t('discover.priceTrendDown')}
+                  stableLabel={t('discover.priceTrendStable')}
+                />
               </div>
             </div>
           </div>

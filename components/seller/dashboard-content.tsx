@@ -20,6 +20,15 @@ function matchesDateFilter(createdAt: string, filter: DateFilter): boolean {
   return Date.now() - new Date(createdAt).getTime() <= days * 86_400_000
 }
 
+// The period immediately preceding the selected window (e.g. days 8-14 ago for "last7"),
+// used to compute a genuine period-over-period revenue comparison.
+function matchesPreviousPeriod(createdAt: string, filter: DateFilter): boolean {
+  if (filter === 'all') return false
+  const days = filter === 'last7' ? 7 : filter === 'last30' ? 30 : 90
+  const ageMs = Date.now() - new Date(createdAt).getTime()
+  return ageMs > days * 86_400_000 && ageMs <= days * 2 * 86_400_000
+}
+
 interface DashboardContentProps {
   allOrders: OrderWithDetails[]
   allQuotes: QuoteRequestWithDetails[]
@@ -70,6 +79,13 @@ export function DashboardContent({
   const totalRevenue = filteredOrders
     .filter((o) => o.status === 'delivered')
     .reduce((sum, o) => sum + o.total, 0)
+
+  const previousRevenue = allOrders
+    .filter((o) => o.status === 'delivered' && matchesPreviousPeriod(o.created_at, dateFilter))
+    .reduce((sum, o) => sum + o.total, 0)
+
+  const revenueChangePct =
+    previousRevenue > 0 ? Math.round(((totalRevenue - previousRevenue) / previousRevenue) * 100) : null
 
   const recentOrders = [...filteredOrders]
     .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
@@ -154,6 +170,7 @@ export function DashboardContent({
 
       <StatCards
         totalRevenue={totalRevenue}
+        revenueChangePct={revenueChangePct}
         pendingQuotesCount={pendingQuotesCount}
         activeOrdersCount={activeOrdersCount}
         shippingCount={shippingCount}

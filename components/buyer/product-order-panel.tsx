@@ -14,13 +14,17 @@ import { IconCheck, IconFileInvoice, IconMinus, IconPackage, IconPlus, IconShopp
 interface ProductOrderPanelProps {
   product: Product
   sellerName: string
-  rating?: number
+  avgRating: number | null
+  reviewCount: number
+  freeShippingThreshold: number | null
 }
 
 export function ProductOrderPanel({
   product,
   sellerName,
-  rating = 4.8,
+  avgRating,
+  reviewCount,
+  freeShippingThreshold,
 }: ProductOrderPanelProps) {
   const t = useTranslations('buyer')
   const locale = useLocale()
@@ -93,11 +97,15 @@ export function ProductOrderPanel({
         <span className="inline-flex items-center px-2 py-1 bg-surface-container-high text-on-surface-variant text-xs font-semibold rounded-md uppercase tracking-wider">
           {product.category}
         </span>
-        <div className="flex items-center gap-1">
-          <IconStarFilled size={16} className="text-tertiary-container" />
-          <span className="text-sm font-semibold text-on-surface">{rating.toFixed(1)}</span>
-          <span className="text-xs text-on-surface-variant ml-0.5">(24)</span>
-        </div>
+        {avgRating !== null ? (
+          <div className="flex items-center gap-1">
+            <IconStarFilled size={16} className="text-tertiary-container" />
+            <span className="text-sm font-semibold text-on-surface">{avgRating.toFixed(1)}</span>
+            <span className="text-xs text-on-surface-variant ml-0.5">({reviewCount})</span>
+          </div>
+        ) : (
+          <span className="text-xs text-on-surface-variant">{t('orderPanel.noReviewsYet')}</span>
+        )}
       </div>
 
       <div>
@@ -229,10 +237,12 @@ export function ProductOrderPanel({
           </Button>
         </div>
 
-        <p className="text-xs text-on-surface-variant text-center flex items-center justify-center gap-1">
-          <IconTruck size={14} />
-          {t('orderPanel.freeShipping')}
-        </p>
+        {freeShippingThreshold !== null && (
+          <p className="text-xs text-on-surface-variant text-center flex items-center justify-center gap-1">
+            <IconTruck size={14} />
+            {t('orderPanel.freeShippingThreshold', { amount: formatCurrency(freeShippingThreshold, locale) })}
+          </p>
+        )}
       </div>
     </div>
   )

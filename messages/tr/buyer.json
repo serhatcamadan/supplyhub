@@ -15,8 +15,11 @@
     "unknownSupplier": "Bilinmeyen Tedarikçi",
     "noProducts": "Bu kategoride ürün bulunamadı.",
     "breadcrumb": "Keşfet",
-    "priceTrend": "Fiyat Trendi (30 Gün)",
+    "priceTrend": "Fiyat Trendi",
     "priceTrendStable": "Stabil",
+    "priceTrendUp": "Yükseliyor",
+    "priceTrendDown": "Düşüyor",
+    "priceTrendNoData": "Henüz yeterli fiyat geçmişi yok",
     "gallery": {
       "noImage": "Görsel yok"
     },
@@ -82,14 +85,16 @@
     "addToCart": "Sepete Ekle",
     "addedToCart": "Sepete Eklendi",
     "requestQuote": "Özel Teklif İste",
-    "freeShipping": "500₺ üzeri siparişlerde ücretsiz kargo · 24 saat içinde kargoda"
+    "freeShippingThreshold": "{amount} üzeri siparişlerde ücretsiz kargo · 24 saat içinde kargoda",
+    "noReviewsYet": "Henüz değerlendirme yok"
   },
   "sellerInfo": {
     "heading": "Tedarikçi Bilgileri",
     "verifiedSupplier": "Onaylı Tedarikçi",
     "responseTime": "Yanıt Süresi",
     "responseTimeValue": "< 2 saat",
-    "onTimeDelivery": "Zamanında Teslimat",
+    "onTimeDelivery": "Teslimat Oranı",
+    "deliveryRateNoData": "Henüz veri yok",
     "viewProfile": "Tedarikçi Profilini Gör"
   },
   "cart": {
@@ -106,7 +111,9 @@
       "itemCount": "{count} ürün",
       "load": "Sepete Yükle",
       "delete": "Sil",
-      "confirmReplace": "Sepetteki mevcut ürünler şablondakilerle değiştirilecek. Devam edilsin mi?"
+      "confirmReplaceTitle": "Sepeti Değiştir",
+      "confirmReplace": "Sepetteki mevcut ürünler şablondakilerle değiştirilecek. Devam edilsin mi?",
+      "confirmReplaceAction": "Değiştir"
     },
     "empty": {
       "heading": "Sepetiniz boş",
@@ -124,6 +131,7 @@
       "increment": "Artır",
       "remove": "Kaldır",
       "perUnit": "/ adet",
+      "tierLabel": "Tier {tier} (min {minQty} adet — %{discount} indirim uygulandı)",
       "stock": {
         "in_stock": "STOKTA",
         "low_stock": "AZ STOK",
@@ -193,7 +201,18 @@
       "empty": "Sipariş bulunamadı.",
       "reorder": "Tekrar Sipariş",
       "reordering": "İşleniyor…",
+      "review": "Değerlendir",
+      "reviewed": "Değerlendirildi",
       "paginationShowing": "{total} siparişten {shown} tanesi gösteriliyor"
+    },
+    "review": {
+      "heading": "Ürünleri Değerlendir",
+      "allReviewed": "Bu siparişteki tüm ürünler değerlendirildi.",
+      "cancel": "Vazgeç",
+      "submit": "Gönder",
+      "submitting": "Gönderiliyor…",
+      "error": "Değerlendirme gönderilemedi, lütfen tekrar deneyin.",
+      "starLabel": "{count} yıldız"
     }
   },
   "approvals": {
@@ -330,6 +349,7 @@
       "back": "Teklif Taleplerine Dön",
       "heading": "Yeni Teklif Talebi Oluştur",
       "subHeading": "Ne kadar spesifik olursanız, o kadar doğru teklifler alırsınız.",
+      "submitError": "Bir hata oluştu, lütfen tekrar deneyin.",
       "basicDetails": {
         "heading": "Temel Bilgiler",
         "product": "Ürün / Hizmet Adı",

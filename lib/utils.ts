@@ -44,3 +44,8 @@ export function getStockBucket(qty: number): StockBucket {
   if (qty < 10) return 'low_stock'
   return 'in_stock'
 }
+
+export function formatOrderId(id: string): string {
+  const num = id.split('-').pop() ?? id
+  return `#ORD-${num.padStart(4, '0')}`
+}

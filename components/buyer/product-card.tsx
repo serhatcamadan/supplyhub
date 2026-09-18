@@ -15,7 +15,7 @@ interface ProductCardProps {
   product: Product
   locale?: string
   sellerName: string
-  rating: number
+  rating: number | null
   unit?: string
   badge?: ProductBadge
   favorited?: boolean
@@ -97,10 +97,12 @@ export function ProductCard({
               <span className="text-xs text-on-surface-variant bg-surface-container px-2 py-1 rounded-lg">
                 {t('productCard.min')} {product.min_order_qty} {t('productCard.pieces')}
               </span>
-              <div className="flex items-center gap-1">
-                <IconStarFilled size={16} className="text-tertiary-container" />
-                <span className="text-xs font-semibold text-on-surface">{rating.toFixed(1)}</span>
-              </div>
+              {rating !== null && (
+                <div className="flex items-center gap-1">
+                  <IconStarFilled size={16} className="text-tertiary-container" />
+                  <span className="text-xs font-semibold text-on-surface">{rating.toFixed(1)}</span>
+                </div>
+              )}
             </div>
           </div>
         </div>

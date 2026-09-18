@@ -15,6 +15,16 @@ import { ProductBulkActionBar } from '@/components/seller/product-bulk-action-ba
 import { PageHeaderSkeleton } from '@/components/skeletons/page-header-skeleton'
 import { TableSkeleton } from '@/components/skeletons/table-skeleton'
 import { Skeleton } from '@/components/ui/skeleton'
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog'
 import { IconPlus } from '@tabler/icons-react'
 
 const ITEMS_PER_PAGE = 10
@@ -27,7 +37,9 @@ export default function SellerProductsPage() {
   const [selectedIds, setSelectedIds] = useState<Set<string>>(new Set())
   const [products, setProducts] = useState<Product[]>([])
   const [isLoading, setIsLoading] = useState(true)
+  const [confirmBulkDeleteOpen, setConfirmBulkDeleteOpen] = useState(false)
   const t = useTranslations('seller')
+  const tCommon = useTranslations('common')
   const locale = useLocale()
 
   useEffect(() => {
@@ -106,9 +118,9 @@ export default function SellerProductsPage() {
     setSelectedIds(new Set())
   }
 
-  async function handleBulkDelete() {
+  async function performBulkDelete() {
+    setConfirmBulkDeleteOpen(false)
     const ids = Array.from(selectedIds)
-    if (!window.confirm(t('products.bulk.confirmDelete', { count: ids.length }))) return
     const results = await Promise.allSettled(ids.map((id) => deleteProduct(id)))
     const succeeded = new Set(ids.filter((_, i) => results[i].status === 'fulfilled'))
     setProducts((prev) => prev.filter((p) => !succeeded.has(p.id)))
@@ -167,10 +179,27 @@ export default function SellerProductsPage() {
           count={selectedIds.size}
           onSetActive={() => handleBulkStatus('active')}
           onSetDraft={() => handleBulkStatus('draft')}
-          onDelete={handleBulkDelete}
+          onDelete={() => setConfirmBulkDeleteOpen(true)}
           onClear={clearSelection}
         />
       )}
+
+      <AlertDialog open={confirmBulkDeleteOpen} onOpenChange={setConfirmBulkDeleteOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>{t('products.bulk.confirmDeleteTitle')}</AlertDialogTitle>
+            <AlertDialogDescription>
+              {t('products.bulk.confirmDelete', { count: selectedIds.size })}
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>{tCommon('dialog.cancel')}</AlertDialogCancel>
+            <AlertDialogAction variant="destructive" onClick={performBulkDelete}>
+              {t('products.bulk.delete')}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
 
       <div className="bg-surface-container-lowest rounded-xl shadow-md overflow-hidden">
         {view === 'list' ? (

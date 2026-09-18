@@ -3,10 +3,11 @@
 import Link from 'next/link'
 import { useTranslations } from 'next-intl'
 import { formatCurrency } from '@/lib/utils'
-import { IconAlertTriangle, IconArrowRight, IconArrowUp, IconCreditCard, IconFileInvoice, IconPackage, IconTruck } from '@tabler/icons-react'
+import { IconAlertTriangle, IconArrowDown, IconArrowRight, IconArrowUp, IconCreditCard, IconFileInvoice, IconPackage, IconTruck } from '@tabler/icons-react'
 
 interface StatCardsProps {
   totalRevenue: number
+  revenueChangePct: number | null
   pendingQuotesCount: number
   activeOrdersCount: number
   shippingCount: number
@@ -18,6 +19,7 @@ interface StatCardsProps {
 
 export function StatCards({
   totalRevenue,
+  revenueChangePct,
   pendingQuotesCount,
   activeOrdersCount,
   shippingCount,
@@ -48,13 +50,21 @@ export function StatCards({
             <IconCreditCard />
           </div>
         </div>
-        <div className="flex items-center gap-2 relative z-10">
-          <span className="px-2 py-1 bg-secondary-container/30 text-secondary text-xs font-semibold rounded flex items-center gap-0.5">
-            <IconArrowUp size={14} />
-            12%
-          </span>
-          <span className="text-xs text-on-surface-variant">{t('dashboard.stats.vsLastMonth')}</span>
-        </div>
+        {revenueChangePct !== null && (
+          <div className="flex items-center gap-2 relative z-10">
+            <span
+              className={`px-2 py-1 text-xs font-semibold rounded flex items-center gap-0.5 ${
+                revenueChangePct >= 0
+                  ? 'bg-secondary-container/30 text-secondary'
+                  : 'bg-error-container/30 text-error'
+              }`}
+            >
+              {revenueChangePct >= 0 ? <IconArrowUp size={14} /> : <IconArrowDown size={14} />}
+              {Math.abs(revenueChangePct)}%
+            </span>
+            <span className="text-xs text-on-surface-variant">{t('dashboard.stats.vsPreviousPeriod')}</span>
+          </div>
+        )}
         <svg
           className="absolute bottom-0 left-0 w-full h-16 text-secondary-fixed opacity-20 group-hover:opacity-40 transition-opacity"
           preserveAspectRatio="none"

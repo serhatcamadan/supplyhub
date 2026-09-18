@@ -7,15 +7,32 @@ export interface UserProfile {
   phone: string | null
   role: string
   company_id: string
-  companies: { name: string; type: string; industry: string | null }
+  companies: {
+    name: string
+    type: string
+    industry: string | null
+    free_shipping_threshold: number
+    shipping_fee: number
+  }
 }
 
 export interface UpdateCompanyPayload {
   name?: string
   industry?: string
+  free_shipping_threshold?: number
+  shipping_fee?: number
 }
 
-export function updateMyCompany(payload: UpdateCompanyPayload): Promise<{ id: string; name: string; type: string; industry: string | null }> {
+export interface CompanyResponse {
+  id: string
+  name: string
+  type: string
+  industry: string | null
+  free_shipping_threshold: number
+  shipping_fee: number
+}
+
+export function updateMyCompany(payload: UpdateCompanyPayload): Promise<CompanyResponse> {
   return apiFetch('/companies/my', {
     method: 'PATCH',
     body: JSON.stringify(payload),

@@ -15,8 +15,11 @@
     "unknownSupplier": "Unknown Supplier",
     "noProducts": "No products found in this category.",
     "breadcrumb": "Discover",
-    "priceTrend": "Price Trend (30 Days)",
+    "priceTrend": "Price Trend",
     "priceTrendStable": "Stable",
+    "priceTrendUp": "Rising",
+    "priceTrendDown": "Falling",
+    "priceTrendNoData": "Not enough price history yet",
     "gallery": {
       "noImage": "No image"
     },
@@ -82,14 +85,16 @@
     "addToCart": "Add to Cart",
     "addedToCart": "Added to Cart",
     "requestQuote": "Request Custom Quote",
-    "freeShipping": "Free shipping on orders over ₺500 · Dispatched within 24 hours"
+    "freeShippingThreshold": "Free shipping on orders over {amount} · Dispatched within 24 hours",
+    "noReviewsYet": "No reviews yet"
   },
   "sellerInfo": {
     "heading": "Supplier Information",
     "verifiedSupplier": "Verified Supplier",
     "responseTime": "Response Time",
     "responseTimeValue": "< 2 hours",
-    "onTimeDelivery": "On-Time Delivery",
+    "onTimeDelivery": "Delivery Rate",
+    "deliveryRateNoData": "No data yet",
     "viewProfile": "View Supplier Profile"
   },
   "cart": {
@@ -106,7 +111,9 @@
       "itemCount": "{count} items",
       "load": "Load into Cart",
       "delete": "Delete",
-      "confirmReplace": "This will replace the items currently in your cart with the template's items. Continue?"
+      "confirmReplaceTitle": "Replace Cart",
+      "confirmReplace": "This will replace the items currently in your cart with the template's items. Continue?",
+      "confirmReplaceAction": "Replace"
     },
     "empty": {
       "heading": "Your cart is empty",
@@ -124,6 +131,7 @@
       "increment": "Increase",
       "remove": "Remove",
       "perUnit": "/ unit",
+      "tierLabel": "Tier {tier} (min {minQty} units — {discount}% discount applied)",
       "stock": {
         "in_stock": "IN STOCK",
         "low_stock": "LOW STOCK",
@@ -193,7 +201,18 @@
       "empty": "No orders found.",
       "reorder": "Reorder",
       "reordering": "Processing…",
+      "review": "Rate",
+      "reviewed": "Rated",
       "paginationShowing": "Showing {shown} of {total} orders"
+    },
+    "review": {
+      "heading": "Rate Products",
+      "allReviewed": "All products in this order have been rated.",
+      "cancel": "Cancel",
+      "submit": "Submit",
+      "submitting": "Submitting…",
+      "error": "Could not submit the rating, please try again.",
+      "starLabel": "{count} stars"
     }
   },
   "approvals": {
@@ -330,6 +349,7 @@
       "back": "Back to Quote Requests",
       "heading": "Create New Quote Request",
       "subHeading": "The more specific you are, the more accurate quotes you will receive.",
+      "submitError": "Something went wrong, please try again.",
       "basicDetails": {
         "heading": "Basic Details",
         "product": "Product / Service Name",

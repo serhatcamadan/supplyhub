@@ -9,7 +9,8 @@ import type { OrderWithDetails } from '@/types'
 import { Avatar } from '@/components/ui/avatar'
 import { TablePagination } from '@/components/ui/table-pagination'
 import { TableEmptyRow } from '@/components/ui/table-empty-row'
-import { IconRefresh, IconShoppingBag } from '@tabler/icons-react'
+import { ReviewModal } from '@/components/buyer/review-modal'
+import { IconCircleCheck, IconRefresh, IconShoppingBag, IconStar } from '@tabler/icons-react'
 
 type OrderStatus = 'pending' | 'confirmed' | 'shipped' | 'delivered'
 
@@ -36,6 +37,7 @@ export function OrderHistoryTable({ orders }: { orders: OrderWithDetails[] }) {
   const locale = useLocale()
   const router = useRouter()
   const [reorderingId, setReorderingId] = useState<string | null>(null)
+  const [reviewingOrder, setReviewingOrder] = useState<OrderWithDetails | null>(null)
 
   const ITEMS_PER_PAGE = 5
   const [currentPage, setCurrentPage] = useState(1)
@@ -78,6 +80,7 @@ export function OrderHistoryTable({ orders }: { orders: OrderWithDetails[] }) {
   }
 
   return (
+    <>
     <div className="bg-surface-container-lowest rounded-2xl shadow-sm border border-outline-variant/20 overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse min-w-180">
@@ -136,14 +139,32 @@ export function OrderHistoryTable({ orders }: { orders: OrderWithDetails[] }) {
                   </td>
 
                   <td className="px-6 py-4 whitespace-nowrap text-right">
-                    <button
-                      onClick={() => handleReorder(order)}
-                      disabled={reorderingId === order.id}
-                      className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-low hover:bg-primary hover:text-on-primary text-primary rounded-lg text-xs font-semibold uppercase tracking-wider transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 disabled:opacity-50"
-                    >
-                      <IconRefresh size={16} />
-                      {reorderingId === order.id ? t('orders.table.reordering') : t('orders.table.reorder')}
-                    </button>
+                    <div className="flex items-center justify-end gap-2">
+                      {order.status === 'delivered' && (
+                        order.items.every((item) => order.reviewed_product_ids.includes(item.product_id)) ? (
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1.5 text-secondary text-xs font-semibold uppercase tracking-wider">
+                            <IconCircleCheck size={16} />
+                            {t('orders.table.reviewed')}
+                          </span>
+                        ) : (
+                          <button
+                            onClick={() => setReviewingOrder(order)}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-low hover:bg-tertiary hover:text-on-tertiary text-tertiary rounded-lg text-xs font-semibold uppercase tracking-wider transition-all opacity-0 group-hover:opacity-100 focus:opacity-100"
+                          >
+                            <IconStar size={16} />
+                            {t('orders.table.review')}
+                          </button>
+                        )
+                      )}
+                      <button
+                        onClick={() => handleReorder(order)}
+                        disabled={reorderingId === order.id}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-surface-container-low hover:bg-primary hover:text-on-primary text-primary rounded-lg text-xs font-semibold uppercase tracking-wider transition-all opacity-0 group-hover:opacity-100 focus:opacity-100 disabled:opacity-50"
+                      >
+                        <IconRefresh size={16} />
+                        {reorderingId === order.id ? t('orders.table.reordering') : t('orders.table.reorder')}
+                      </button>
+                    </div>
                   </td>
                 </tr>
               ))
@@ -162,5 +183,17 @@ export function OrderHistoryTable({ orders }: { orders: OrderWithDetails[] }) {
         onPageChange={setCurrentPage}
       />
     </div>
+
+    {reviewingOrder && (
+      <ReviewModal
+        order={reviewingOrder}
+        onClose={() => setReviewingOrder(null)}
+        onSubmitted={() => {
+          setReviewingOrder(null)
+          router.refresh()
+        }}
+      />
+    )}
+    </>
   )
 }

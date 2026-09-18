@@ -5,7 +5,7 @@ import Link from 'next/link'
 import { useSearchParams, useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { Button } from '@/components/ui/button'
-import { IconCircleCheck, IconAlertCircle } from '@tabler/icons-react'
+import { IconCircleCheck, IconAlertCircle, IconEye, IconEyeOff } from '@tabler/icons-react'
 
 function ResetPasswordForm() {
   const t = useTranslations('auth')
@@ -17,6 +17,8 @@ function ResetPasswordForm() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+  const [showNewPassword, setShowNewPassword] = useState(false)
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault()
@@ -97,29 +99,51 @@ function ResetPasswordForm() {
           <label htmlFor="newPassword" className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
             {t('resetPassword.newPassword')}
           </label>
-          <input
-            id="newPassword"
-            name="newPassword"
-            type="password"
-            required
-            minLength={8}
-            autoComplete="new-password"
-            className="w-full px-4 py-2.5 bg-surface border border-outline-variant/50 rounded-lg text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-          />
+          <div className="relative">
+            <input
+              id="newPassword"
+              name="newPassword"
+              type={showNewPassword ? 'text' : 'password'}
+              required
+              minLength={8}
+              autoComplete="new-password"
+              className="w-full px-4 py-2.5 pr-10 bg-surface border border-outline-variant/50 rounded-lg text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+            />
+            <button
+              type="button"
+              onClick={() => setShowNewPassword((p) => !p)}
+              tabIndex={-1}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors"
+              aria-label={showNewPassword ? 'Hide password' : 'Show password'}
+            >
+              {showNewPassword ? <IconEyeOff size={18} /> : <IconEye size={18} />}
+            </button>
+          </div>
         </div>
         <div className="flex flex-col gap-1.5">
           <label htmlFor="confirmPassword" className="text-xs font-semibold uppercase tracking-wider text-on-surface-variant">
             {t('resetPassword.confirmPassword')}
           </label>
-          <input
-            id="confirmPassword"
-            name="confirmPassword"
-            type="password"
-            required
-            minLength={8}
-            autoComplete="new-password"
-            className="w-full px-4 py-2.5 bg-surface border border-outline-variant/50 rounded-lg text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-          />
+          <div className="relative">
+            <input
+              id="confirmPassword"
+              name="confirmPassword"
+              type={showConfirmPassword ? 'text' : 'password'}
+              required
+              minLength={8}
+              autoComplete="new-password"
+              className="w-full px-4 py-2.5 pr-10 bg-surface border border-outline-variant/50 rounded-lg text-sm text-on-surface focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword((p) => !p)}
+              tabIndex={-1}
+              className="absolute right-3 top-1/2 -translate-y-1/2 text-on-surface-variant hover:text-primary transition-colors"
+              aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
+            >
+              {showConfirmPassword ? <IconEyeOff size={18} /> : <IconEye size={18} />}
+            </button>
+          </div>
         </div>
         {error && <p className="text-xs text-error">{error}</p>}
         <Button type="submit" variant="primary" disabled={loading} className="w-full">

@@ -1,6 +1,11 @@
 {
   "searchPlaceholder": "Ürün veya teklif talebi ara...",
   "searchNoResults": "Sonuç bulunamadı.",
+  "loading": "Yükleniyor…",
+  "dialog": {
+    "cancel": "Vazgeç"
+  },
+  "print": "Yazdır",
   "profile": {
     "sections": {
       "account": "Hesap Ayarları",
@@ -27,7 +32,8 @@
       "personal": "Kişisel Bilgiler",
       "contact": "İletişim Bilgileri",
       "account": "Hesap Güvenliği",
-      "company": "Şirket Bilgileri"
+      "company": "Şirket Bilgileri",
+      "shipping": "Kargo Ayarları"
     },
     "fields": {
       "name": "Ad Soyad",
@@ -44,7 +50,10 @@
       "currentPassword": "Mevcut Şifre",
       "newPassword": "Yeni Şifre",
       "newPasswordHint": "En az 8 karakter",
-      "confirmPassword": "Yeni Şifre (Tekrar)"
+      "confirmPassword": "Yeni Şifre (Tekrar)",
+      "freeShippingThreshold": "Ücretsiz Kargo Eşiği (₺)",
+      "shippingFee": "Kargo Ücreti (₺)",
+      "shippingHint": "Alıcının sepet tutarı bu eşiğe ulaştığında kargo ücretsiz olur; altındaysa belirlediğiniz kargo ücreti uygulanır."
     },
     "industries": {
       "manufacturing": "Üretim & İmalat",
@@ -65,6 +74,7 @@
     "errors": {
       "nameRequired": "Ad Soyad zorunludur.",
       "companyNameRequired": "Şirket adı zorunludur.",
+      "shippingInvalid": "Kargo değerleri 0 veya üzeri bir sayı olmalıdır.",
       "saveFailed": "Kaydedilemedi, lütfen tekrar deneyin."
     }
   },
@@ -126,5 +136,24 @@
     "noQuotes": "Teklif talebi bulunamadı.",
     "noProducts": "Aramanızla eşleşen ürün yok.",
     "noApprovals": "Onay bekleyen sipariş yok."
+  },
+  "notFound": {
+    "eyebrow": "Hata Kodu: 404",
+    "heading": "Aradığınız Sayfaya Ulaşılamıyor",
+    "description": "Girdiğiniz bağlantı geçersiz, taşınmış ya da kaldırılmış olabilir. Aşağıdan devam edebilirsiniz.",
+    "backToPanel": "Ana Panele Dön",
+    "goBack": "Önceki Sayfaya Dön",
+    "goToLogin": "Girişe Dön",
+    "quickNav": "Hızlı Erişim",
+    "attemptedPath": "İstenen adres",
+    "copyPath": "Kopyala",
+    "copied": "Kopyalandı"
+  },
+  "errorPage": {
+    "eyebrow": "Beklenmeyen Hata",
+    "heading": "Bir Şeyler Ters Gitti",
+    "description": "Bu sayfa yüklenirken beklenmeyen bir hata oluştu. Tekrar deneyebilir ya da ana panele dönebilirsiniz.",
+    "tryAgain": "Tekrar Dene",
+    "errorRef": "Hata referansı"
   }
 }
