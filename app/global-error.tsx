@@ -16,9 +16,10 @@ export default function GlobalError({
       <body style={{ margin: 0, fontFamily: 'system-ui, -apple-system, sans-serif', background: '#f8f9ff', color: '#0b1c30' }}>
         <div style={{ minHeight: '100vh', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
           <div style={{ textAlign: 'center', maxWidth: '28rem' }}>
-            <p style={{ fontSize: '1.375rem', fontWeight: 700, color: '#022448', marginBottom: '1.25rem' }}>
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages -- plain <a>, not next/link: this boundary must survive even if the router itself is what crashed */}
+            <a href="/" style={{ fontSize: '1.375rem', fontWeight: 700, color: '#022448', marginBottom: '1.25rem', textDecoration: 'none', display: 'block' }}>
               SupplyHub
-            </p>
+            </a>
             <h1 style={{ fontSize: '1.5rem', fontWeight: 700, marginBottom: '0.5rem' }}>
               Beklenmeyen bir hata oluştu
             </h1>

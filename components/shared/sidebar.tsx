@@ -39,6 +39,7 @@ export function Sidebar({ portal }: SidebarProps) {
   const locale   = useLocale()
 
   const navItems = portal === 'seller' ? SELLER_NAV : BUYER_NAV
+  const homeHref = portal === 'seller' ? `/${locale}/seller/dashboard` : `/${locale}/buyer/discover`
 
   async function handleLogout() {
     await logout()
@@ -68,7 +69,11 @@ export function Sidebar({ portal }: SidebarProps) {
   return (
     <aside className="fixed left-0 top-0 h-screen w-72 bg-primary text-on-primary flex flex-col z-40">
       <div className="p-6 border-b border-primary-container/30">
-        <h1 className="text-xl font-bold tracking-tight">SupplyHub</h1>
+        <h1 className="text-xl font-bold tracking-tight">
+          <Link href={homeHref} className="hover:text-on-primary/80 transition-colors">
+            SupplyHub
+          </Link>
+        </h1>
         <p className="text-xs text-on-primary/50 mt-0.5 capitalize">{portal} Portal</p>
       </div>
 
