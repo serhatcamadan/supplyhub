@@ -29,6 +29,11 @@ export function getSellerProducts(): Promise<ApiProduct[]> {
   return apiFetch<ApiProduct[]>('/seller/products')
 }
 
+// Unlike getProduct(), this includes draft products — for the seller's own edit page only.
+export function getOwnProduct(id: string): Promise<ApiProduct> {
+  return apiFetch<ApiProduct>(`/seller/products/${id}`)
+}
+
 export function createProduct(payload: Omit<Product, 'id' | 'seller_id'>): Promise<ApiProduct> {
   return apiFetch<ApiProduct>('/seller/products', {
     method: 'POST',

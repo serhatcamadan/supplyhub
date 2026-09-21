@@ -1,6 +1,13 @@
 import { createServiceClient } from '@/lib/supabase/server'
 
 export async function POST() {
+  // Playwright's beforeEach calls this to reset the demo companies' orders/quotes before
+  // every test. It must never be reachable in production — `next build` fixes NODE_ENV to
+  // 'production' at build time, so this check holds regardless of platform env-var config.
+  if (process.env.NODE_ENV === 'production') {
+    return Response.json({ error: 'Not available in production' }, { status: 403 })
+  }
+
   const sb = createServiceClient()
 
   // Find demo users by email (order-independent, immune to extra signup companies)
