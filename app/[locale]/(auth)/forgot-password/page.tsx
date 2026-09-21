@@ -25,8 +25,7 @@ export default function ForgotPasswordPage() {
         body: JSON.stringify({ email }),
       })
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        setError(data.message ?? t('forgotPassword.errorGeneric'))
+        setError(t('forgotPassword.errorGeneric'))
       } else {
         setSent(true)
       }

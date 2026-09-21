@@ -34,9 +34,7 @@ export async function POST(req: Request) {
 
     return response
   } catch {
-    return NextResponse.json(
-      { message: 'Sunucuya bağlanılamadı. Lütfen tekrar deneyin.' },
-      { status: 503 }
-    )
+    // No message here — the UI is locale-aware and picks its own copy for a 503 status.
+    return NextResponse.json({}, { status: 503 })
   }
 }

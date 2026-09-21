@@ -17,6 +17,7 @@ function ResetPasswordForm() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
   const [success, setSuccess] = useState(false)
+  const [tokenInvalid, setTokenInvalid] = useState(false)
   const [showNewPassword, setShowNewPassword] = useState(false)
   const [showConfirmPassword, setShowConfirmPassword] = useState(false)
 
@@ -40,8 +41,11 @@ function ResetPasswordForm() {
         body: JSON.stringify({ token, newPassword }),
       })
       if (!res.ok) {
-        const data = await res.json().catch(() => ({}))
-        setError(data.message ?? t('resetPassword.errorGeneric'))
+        if (res.status === 400) {
+          setTokenInvalid(true)
+        } else {
+          setError(t('resetPassword.errorGeneric'))
+        }
       } else {
         setSuccess(true)
         setTimeout(() => router.push(`/${locale}/login`), 2500)
@@ -53,7 +57,7 @@ function ResetPasswordForm() {
     }
   }
 
-  if (!token) {
+  if (!token || tokenInvalid) {
     return (
       <div className="flex flex-col items-center gap-4 py-4 text-center">
         <div className="w-16 h-16 rounded-full bg-error-container/30 flex items-center justify-center">

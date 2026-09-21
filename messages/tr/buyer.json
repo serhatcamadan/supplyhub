@@ -122,7 +122,8 @@
     },
     "checkoutError": {
       "noSeller": "Satıcı bilgisi bulunamadı.",
-      "orderFailed": "Sipariş oluşturulamadı."
+      "orderFailed": "Sipariş oluşturulamadı.",
+      "stockIssue": "Sepetteki bir ürün için stok yetersiz veya miktar minimum sipariş adedinin altında. Lütfen sepeti güncelleyip tekrar deneyin."
     },
     "item": {
       "supplier": "Tedarikçi",

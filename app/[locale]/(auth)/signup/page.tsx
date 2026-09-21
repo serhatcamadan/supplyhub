@@ -187,12 +187,10 @@ export default function SignupPage() {
         body: JSON.stringify({ email: step1Data.email }),
       })
 
-      const json = await res.json() as { message?: string | string[] }
-
       if (!res.ok) {
-        const msg = typeof json.message === 'string'
-          ? json.message
-          : Array.isArray(json.message) ? json.message[0] : t('signup.step3.errorGeneric')
+        const msg = res.status === 409 ? t('signup.step3.emailInUse')
+          : res.status === 429 ? t('signup.step3.rateLimited')
+          : t('signup.step3.errorGeneric')
         return { ok: false, error: msg }
       }
 
@@ -250,16 +248,15 @@ export default function SignupPage() {
         }),
       })
 
-      const json = await res.json() as { message?: string | string[]; user?: { companyType: string } }
-
       if (!res.ok) {
-        const msg = typeof json.message === 'string'
-          ? json.message
-          : Array.isArray(json.message) ? json.message[0] : t('signup.step4.errorGeneric')
+        const msg = res.status === 400 ? t('signup.step4.invalidCode')
+          : res.status === 409 ? t('signup.step4.emailInUse')
+          : t('signup.step4.errorGeneric')
         setOtpError(msg)
         return
       }
 
+      const json = await res.json() as { user?: { companyType: string } }
       const companyType = json.user?.companyType ?? role
       router.push(companyType === 'seller' ? `/${locale}/seller/dashboard` : `/${locale}/buyer/discover`)
       router.refresh()
