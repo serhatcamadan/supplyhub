@@ -411,5 +411,57 @@
         "received": "Quotes Received"
       }
     }
+  },
+  "auctions": {
+    "list": {
+      "heading": "Live Auctions",
+      "subHeading": "Place real-time bids on products sellers have put up for auction.",
+      "empty": "There are no active auctions right now."
+    },
+    "card": {
+      "currentPrice": "Current Price",
+      "startingPrice": "Starting",
+      "bidCount": "{count} bids",
+      "endsIn": "Ends In",
+      "viewAuction": "View Auction"
+    },
+    "detail": {
+      "back": "Back to Auctions",
+      "heading": "Live Auction",
+      "startingPrice": "Starting Price",
+      "currentPrice": "Current Price",
+      "bidCount": "{count} bids placed",
+      "endsIn": "Ends In",
+      "bidHistoryHeading": "Bid History",
+      "noBids": "No bids yet. Be the first to bid!",
+      "placeBidHeading": "Place a Bid",
+      "yourBid": "Your Bid",
+      "minBidHint": "You must bid at least {amount}",
+      "placeBidButton": "Place Bid",
+      "placingBid": "Placing…",
+      "bidPlaced": "Your bid was accepted!",
+      "connecting": "Connecting…",
+      "reconnecting": "Connection lost, reconnecting…",
+      "wonBanner": "You won this auction!",
+      "lostBanner": "This auction has ended — another buyer won.",
+      "cancelledBanner": "This auction was cancelled by the seller.",
+      "endedNoBidsBanner": "This auction ended with no bids.",
+      "errors": {
+        "too_low": "Your bid must exceed the current price.",
+        "stale_price": "Another buyer bid first. Current price: {amount}",
+        "not_active": "This auction is no longer active.",
+        "own_auction": "You can't bid on your own auction.",
+        "unauthorized": "You must be signed in to bid.",
+        "unknown": "Couldn't place your bid. Please try again."
+      }
+    },
+    "countdown": {
+      "ended": "Ended"
+    },
+    "status": {
+      "active": "Active",
+      "ended": "Ended",
+      "cancelled": "Cancelled"
+    }
   }
 }

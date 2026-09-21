@@ -397,5 +397,47 @@
         "fillGas": { "name": "Dolum Gazı (N₂ — 10L)", "description": "Gıda sektöründe artan MAP ambalaj talebi." }
       }
     }
+  },
+  "auctions": {
+    "list": {
+      "heading": "İhalelerim",
+      "subHeading": "Ürünlerinizi canlı açık artırmaya çıkarın ve gerçek zamanlı teklifleri takip edin.",
+      "newAuction": "Yeni İhale",
+      "empty": "Henüz hiç ihale oluşturmadınız.",
+      "cancelAction": "İptal Et",
+      "cancelConfirmTitle": "İhaleyi iptal et",
+      "cancelConfirmDesc": "Bu ihaleyi iptal etmek istediğinizden emin misiniz? Mevcut teklif sahibine bildirim gönderilecek."
+    },
+    "form": {
+      "heading": "Yeni İhale Oluştur",
+      "selectProduct": "Ürün Seçin",
+      "selectProductPlaceholder": "Bir ürün seçin",
+      "noActiveProducts": "Aktif ürününüz yok — önce bir ürün yayınlamalısınız.",
+      "startingPrice": "Başlangıç Fiyatı",
+      "endsAt": "Bitiş Tarihi ve Saati",
+      "submit": "İhaleyi Başlat",
+      "submitting": "Oluşturuluyor…",
+      "errorRequired": "Ürün, başlangıç fiyatı ve bitiş tarihi zorunludur.",
+      "errorSave": "İhale oluşturulamadı, lütfen tekrar deneyin.",
+      "back": "İhalelere Dön"
+    },
+    "detail": {
+      "back": "İhalelere Dön",
+      "monitorHeading": "Canlı İzleme",
+      "currentPrice": "Güncel Fiyat",
+      "startingPrice": "Başlangıç Fiyatı",
+      "bidCount": "{count} teklif",
+      "endsIn": "Kalan Süre",
+      "bidHistoryHeading": "Teklif Geçmişi",
+      "noBids": "Henüz teklif verilmedi.",
+      "winnerLabel": "Kazanan",
+      "noBidsEndedLabel": "Bu ihale hiç teklif almadan sona erdi.",
+      "cancelledLabel": "Bu ihaleyi iptal ettiniz."
+    },
+    "status": {
+      "active": "Aktif",
+      "ended": "Sona Erdi",
+      "cancelled": "İptal Edildi"
+    }
   }
 }

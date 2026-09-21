@@ -3,6 +3,7 @@ export type UserRole = 'admin' | 'staff'
 export type ProductStatus = 'active' | 'draft'
 export type QuoteStatus = 'pending' | 'responded' | 'accepted' | 'declined'
 export type OrderStatus = 'pending' | 'confirmed' | 'shipped' | 'delivered'
+export type AuctionStatus = 'active' | 'ended' | 'cancelled'
 
 export interface PriceTier {
   min_qty: number
@@ -76,6 +77,26 @@ export interface OrderItem {
   unit_price: number
 }
 
+export interface Auction {
+  id: string
+  product_id: string
+  starting_price: number
+  current_price: number
+  current_bidder_id: string | null
+  bid_count: number
+  status: AuctionStatus
+  ends_at: string
+  created_at: string
+}
+
+export interface Bid {
+  id: string
+  auction_id: string
+  bidder_id: string
+  amount: number
+  created_at: string
+}
+
 // Joined/enriched types for UI
 
 export interface ProductWithSeller extends Product {
@@ -96,7 +117,7 @@ export interface OrderWithDetails extends Order {
   reviewed_product_ids: string[]
 }
 
-export type NotificationCategory = 'order' | 'quote' | 'system'
+export type NotificationCategory = 'order' | 'quote' | 'system' | 'auction'
 
 export interface Notification {
   id: string

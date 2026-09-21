@@ -4,6 +4,7 @@
     "products": "Products",
     "quotes": "Quote Requests",
     "orders": "Orders",
+    "auctions": "My Auctions",
     "discover": "Market Discovery"
   },
   "buyer": {
@@ -11,6 +12,7 @@
     "cart": "Shopping Cart",
     "orders": "Order History",
     "quotes": "Quote Requests",
+    "auctions": "Live Auctions",
     "approvals": "Pending Approvals"
   },
   "signOut": "Sign Out"

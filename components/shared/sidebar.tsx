@@ -8,7 +8,7 @@ import { logout } from '@/lib/api/auth'
 import {
   IconLogout, IconLayoutGrid, IconPackage, IconFileInvoice, IconShoppingBag,
   IconChartBar, IconSearch, IconShoppingCart, IconHistory, IconMailForward,
-  IconClipboardList,
+  IconClipboardList, IconGavel,
 } from '@tabler/icons-react'
 import type { ElementType } from 'react'
 
@@ -17,6 +17,7 @@ const SELLER_NAV: { href: string; key: string; icon: ElementType }[] = [
   { href: '/seller/products',  key: 'seller.products',  icon: IconPackage },
   { href: '/seller/quotes',    key: 'seller.quotes',    icon: IconFileInvoice },
   { href: '/seller/orders',    key: 'seller.orders',    icon: IconShoppingBag },
+  { href: '/seller/auctions',  key: 'seller.auctions',  icon: IconGavel },
   { href: '/seller/discover',  key: 'seller.discover',  icon: IconChartBar },
 ] as const
 
@@ -25,6 +26,7 @@ const BUYER_NAV: { href: string; key: string; icon: ElementType }[] = [
   { href: '/buyer/cart',       key: 'buyer.cart',       icon: IconShoppingCart },
   { href: '/buyer/orders',     key: 'buyer.orders',     icon: IconHistory },
   { href: '/buyer/quotes',     key: 'buyer.quotes',     icon: IconMailForward },
+  { href: '/buyer/auctions',   key: 'buyer.auctions',   icon: IconGavel },
   { href: '/buyer/approvals',  key: 'buyer.approvals',  icon: IconClipboardList },
 ] as const
 
