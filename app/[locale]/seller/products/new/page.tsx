@@ -90,8 +90,8 @@ export default function NewProductPage() {
         }
       }
       router.push(`/${locale}/seller/products`)
-    } catch (err) {
-      setError(err instanceof Error ? err.message : t('products.form.errorRequired'))
+    } catch {
+      setError(t('products.form.errorSave'))
       setIsSubmitting(false)
     }
   }

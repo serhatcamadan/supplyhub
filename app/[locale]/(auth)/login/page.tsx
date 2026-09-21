@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { useTranslations, useLocale } from 'next-intl'
 import { login } from '@/lib/api/auth'
+import { apiErrorStatus } from '@/lib/api/client'
 import { Button } from '@/components/ui/button'
 import { IconCircleCheck, IconDatabase, IconEye, IconEyeOff } from '@tabler/icons-react'
 
@@ -37,11 +38,12 @@ export default function LoginPage() {
       const res = await fetch('/api/seed', { method: 'POST' })
       const data = await res.json()
       if (!res.ok) {
+        console.error('Seed failed:', data.error)
         setSeedState('error')
-        setSeedMsg(data.error ?? t('login.seedFailed'))
+        setSeedMsg(t('login.seedFailed'))
       } else {
         setSeedState('ok')
-        setSeedMsg(data.message ?? t('login.seedCompleted'))
+        setSeedMsg(t('login.seedCompleted'))
       }
     } catch {
       setSeedState('error')
@@ -60,7 +62,7 @@ export default function LoginPage() {
       router.push(dest)
       router.refresh()
     } catch (err) {
-      setError(err instanceof Error ? err.message : t('login.errorGeneric'))
+      setError(apiErrorStatus(err) === 401 ? t('login.errorGeneric') : t('login.errorNetwork'))
       setLoading(false)
     }
   }

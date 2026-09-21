@@ -10,6 +10,12 @@ export class ApiError extends Error {
   }
 }
 
+// Backend error text is not localized — never render err.message directly to the user.
+// Call sites should switch on this status and pick a translated (t()) string instead.
+export function apiErrorStatus(err: unknown): number | undefined {
+  return err instanceof ApiError ? err.status : undefined
+}
+
 function getAccessToken(): string | null {
   if (typeof document === 'undefined') return null
   const match = document.cookie.match(/(?:^|;\s*)access_token=([^;]*)/)
@@ -30,8 +36,16 @@ export async function apiFetch<T>(path: string, options?: RequestInit): Promise<
   })
 
   if (!res.ok) {
-    const body = await res.text().catch(() => res.statusText)
-    throw new ApiError(res.status, body)
+    const text = await res.text().catch(() => '')
+    let message = res.statusText || `Request failed with status ${res.status}`
+    try {
+      const parsed = JSON.parse(text) as { message?: string | string[] }
+      if (typeof parsed.message === 'string') message = parsed.message
+      else if (Array.isArray(parsed.message) && typeof parsed.message[0] === 'string') message = parsed.message[0]
+    } catch {
+      // Non-JSON error body — keep the statusText fallback above.
+    }
+    throw new ApiError(res.status, message)
   }
 
   if (res.status === 204) return undefined as T

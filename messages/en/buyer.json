@@ -122,7 +122,8 @@
     },
     "checkoutError": {
       "noSeller": "Seller information not found.",
-      "orderFailed": "Could not create order."
+      "orderFailed": "Could not create order.",
+      "stockIssue": "One of the items in your cart is out of stock or below the minimum order quantity. Please update your cart and try again."
     },
     "item": {
       "supplier": "Supplier",

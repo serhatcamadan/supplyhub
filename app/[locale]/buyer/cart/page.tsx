@@ -7,6 +7,7 @@ import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import { createOrder } from '@/lib/api/orders'
 import { getCompany } from '@/lib/api/companies'
+import { apiErrorStatus } from '@/lib/api/client'
 import { useCart, type StoredItem } from '@/lib/hooks/use-cart'
 import { CartItemCard } from '@/components/buyer/cart-item'
 import { OrderSummary } from '@/components/buyer/order-summary'
@@ -82,7 +83,9 @@ export default function BuyerCartPage() {
       clearCart()
       router.push(`/${locale}/buyer/orders`)
     } catch (err) {
-      setCheckoutError(err instanceof Error ? err.message : t('cart.checkoutError.orderFailed'))
+      setCheckoutError(
+        apiErrorStatus(err) === 400 ? t('cart.checkoutError.stockIssue') : t('cart.checkoutError.orderFailed')
+      )
       setIsCheckingOut(false)
     }
   }

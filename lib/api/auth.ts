@@ -1,3 +1,5 @@
+import { ApiError } from './client'
+
 export interface AuthUser {
   id: string
   email: string
@@ -14,7 +16,7 @@ export async function login(email: string, password: string): Promise<{ access_t
   })
   if (!res.ok) {
     const err = await res.json().catch(() => ({}))
-    throw new Error((err as { message?: string }).message ?? 'Login failed')
+    throw new ApiError(res.status, (err as { message?: string }).message ?? 'Login failed')
   }
   return res.json()
 }
