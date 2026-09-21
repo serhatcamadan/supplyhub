@@ -397,5 +397,47 @@
         "fillGas": { "name": "Fill Gas (N₂ — 10L)", "description": "Growing MAP packaging demand in the food sector." }
       }
     }
+  },
+  "auctions": {
+    "list": {
+      "heading": "My Auctions",
+      "subHeading": "Put your products up for live auction and track real-time bids.",
+      "newAuction": "New Auction",
+      "empty": "You haven't created any auctions yet.",
+      "cancelAction": "Cancel",
+      "cancelConfirmTitle": "Cancel auction",
+      "cancelConfirmDesc": "Are you sure you want to cancel this auction? The current highest bidder will be notified."
+    },
+    "form": {
+      "heading": "Create a New Auction",
+      "selectProduct": "Select Product",
+      "selectProductPlaceholder": "Choose a product",
+      "noActiveProducts": "You have no active products — publish a product first.",
+      "startingPrice": "Starting Price",
+      "endsAt": "Ends At",
+      "submit": "Start Auction",
+      "submitting": "Creating…",
+      "errorRequired": "Product, starting price and end time are required.",
+      "errorSave": "Couldn't create the auction. Please try again.",
+      "back": "Back to Auctions"
+    },
+    "detail": {
+      "back": "Back to Auctions",
+      "monitorHeading": "Live Monitor",
+      "currentPrice": "Current Price",
+      "startingPrice": "Starting Price",
+      "bidCount": "{count} bids",
+      "endsIn": "Ends In",
+      "bidHistoryHeading": "Bid History",
+      "noBids": "No bids yet.",
+      "winnerLabel": "Winner",
+      "noBidsEndedLabel": "This auction ended with no bids.",
+      "cancelledLabel": "You cancelled this auction."
+    },
+    "status": {
+      "active": "Active",
+      "ended": "Ended",
+      "cancelled": "Cancelled"
+    }
   }
 }

@@ -8,7 +8,7 @@ import { logout } from '@/lib/api/auth'
 import {
   IconLogout, IconLayoutGrid, IconPackage, IconFileInvoice, IconShoppingBag,
   IconChartBar, IconSearch, IconShoppingCart, IconHistory, IconMailForward,
-  IconClipboardList,
+  IconClipboardList, IconGavel,
 } from '@tabler/icons-react'
 import type { ElementType } from 'react'
 
@@ -17,6 +17,7 @@ const SELLER_NAV: { href: string; key: string; icon: ElementType }[] = [
   { href: '/seller/products',  key: 'seller.products',  icon: IconPackage },
   { href: '/seller/quotes',    key: 'seller.quotes',    icon: IconFileInvoice },
   { href: '/seller/orders',    key: 'seller.orders',    icon: IconShoppingBag },
+  { href: '/seller/auctions',  key: 'seller.auctions',  icon: IconGavel },
   { href: '/seller/discover',  key: 'seller.discover',  icon: IconChartBar },
 ] as const
 
@@ -25,6 +26,7 @@ const BUYER_NAV: { href: string; key: string; icon: ElementType }[] = [
   { href: '/buyer/cart',       key: 'buyer.cart',       icon: IconShoppingCart },
   { href: '/buyer/orders',     key: 'buyer.orders',     icon: IconHistory },
   { href: '/buyer/quotes',     key: 'buyer.quotes',     icon: IconMailForward },
+  { href: '/buyer/auctions',   key: 'buyer.auctions',   icon: IconGavel },
   { href: '/buyer/approvals',  key: 'buyer.approvals',  icon: IconClipboardList },
 ] as const
 
@@ -39,6 +41,7 @@ export function Sidebar({ portal }: SidebarProps) {
   const locale   = useLocale()
 
   const navItems = portal === 'seller' ? SELLER_NAV : BUYER_NAV
+  const homeHref = portal === 'seller' ? `/${locale}/seller/dashboard` : `/${locale}/buyer/discover`
 
   async function handleLogout() {
     await logout()
@@ -68,7 +71,11 @@ export function Sidebar({ portal }: SidebarProps) {
   return (
     <aside className="fixed left-0 top-0 h-screen w-72 bg-primary text-on-primary flex flex-col z-40">
       <div className="p-6 border-b border-primary-container/30">
-        <h1 className="text-xl font-bold tracking-tight">SupplyHub</h1>
+        <h1 className="text-xl font-bold tracking-tight">
+          <Link href={homeHref} className="hover:text-on-primary/80 transition-colors">
+            SupplyHub
+          </Link>
+        </h1>
         <p className="text-xs text-on-primary/50 mt-0.5 capitalize">{portal} Portal</p>
       </div>
 

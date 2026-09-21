@@ -160,12 +160,15 @@ function ResetPasswordForm() {
 
 export default function ResetPasswordPage() {
   const t = useTranslations('auth')
+  const locale = useLocale()
 
   return (
     <div className="min-h-screen flex items-center justify-center px-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <p className="text-2xl font-bold text-primary tracking-tight">SupplyHub</p>
+          <Link href={`/${locale}/login`} className="text-2xl font-bold text-primary tracking-tight">
+            SupplyHub
+          </Link>
           <p className="text-sm text-on-surface-variant mt-1">{t('login.tagline')}</p>
         </div>
         <div className="bg-surface-container-lowest rounded-xl border border-outline-variant shadow-sm p-8 flex flex-col gap-6">

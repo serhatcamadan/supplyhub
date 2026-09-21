@@ -4,6 +4,7 @@
     "products": "Ürünler",
     "quotes": "Teklif Talepleri",
     "orders": "Siparişler",
+    "auctions": "İhalelerim",
     "discover": "Pazar Keşfi"
   },
   "buyer": {
@@ -11,6 +12,7 @@
     "cart": "Sepet",
     "orders": "Sipariş Geçmişi",
     "quotes": "Teklif Talepleri",
+    "auctions": "Canlı İhaleler",
     "approvals": "Onay Bekleyenler"
   },
   "signOut": "Çıkış Yap"

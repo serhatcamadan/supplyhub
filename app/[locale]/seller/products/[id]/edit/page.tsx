@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react'
 import { useRouter, notFound } from 'next/navigation'
 import Link from 'next/link'
 import { useTranslations, useLocale } from 'next-intl'
-import { getProduct, updateProduct } from '@/lib/api/products'
+import { getOwnProduct, updateProduct } from '@/lib/api/products'
 import { ApiError } from '@/lib/api/client'
 import { uploadProductImage } from '@/lib/supabase/storage'
 import type { PriceTier } from '@/types'
@@ -43,7 +43,7 @@ export default function EditProductPage({ params }: { params: Promise<{ id: stri
       const { id } = await params
       setProductId(id)
       try {
-        const data = await getProduct(id)
+        const data = await getOwnProduct(id)
         setName(data.name)
         setCategory(data.category)
         setMinOrderQty(String(data.min_order_qty))

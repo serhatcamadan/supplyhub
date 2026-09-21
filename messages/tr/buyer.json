@@ -411,5 +411,57 @@
         "received": "Alınan Teklifler"
       }
     }
+  },
+  "auctions": {
+    "list": {
+      "heading": "Canlı İhaleler",
+      "subHeading": "Satıcıların açık artırmaya çıkardığı ürünlere gerçek zamanlı teklif verin.",
+      "empty": "Şu anda aktif ihale yok."
+    },
+    "card": {
+      "currentPrice": "Güncel Fiyat",
+      "startingPrice": "Başlangıç",
+      "bidCount": "{count} teklif",
+      "endsIn": "Kalan Süre",
+      "viewAuction": "İhaleye Git"
+    },
+    "detail": {
+      "back": "İhalelere Dön",
+      "heading": "Canlı İhale",
+      "startingPrice": "Başlangıç Fiyatı",
+      "currentPrice": "Güncel Fiyat",
+      "bidCount": "{count} teklif verildi",
+      "endsIn": "Kalan Süre",
+      "bidHistoryHeading": "Teklif Geçmişi",
+      "noBids": "Henüz teklif verilmedi. İlk teklifi siz verin!",
+      "placeBidHeading": "Teklif Ver",
+      "yourBid": "Teklifiniz",
+      "minBidHint": "En az {amount} teklif vermelisiniz",
+      "placeBidButton": "Teklif Ver",
+      "placingBid": "Gönderiliyor…",
+      "bidPlaced": "Teklifiniz kabul edildi!",
+      "connecting": "Bağlanılıyor…",
+      "reconnecting": "Bağlantı koptu, yeniden bağlanılıyor…",
+      "wonBanner": "Bu ihaleyi kazandınız!",
+      "lostBanner": "Bu ihale sona erdi — kazanan başka bir alıcı oldu.",
+      "cancelledBanner": "Bu ihale satıcı tarafından iptal edildi.",
+      "endedNoBidsBanner": "Bu ihale hiç teklif almadan sona erdi.",
+      "errors": {
+        "too_low": "Teklifiniz güncel fiyatı aşmalı.",
+        "stale_price": "Başka bir alıcı sizden önce teklif verdi. Güncel fiyat: {amount}",
+        "not_active": "Bu ihale artık aktif değil.",
+        "own_auction": "Kendi ihalenize teklif veremezsiniz.",
+        "unauthorized": "Teklif vermek için giriş yapmalısınız.",
+        "unknown": "Teklif gönderilemedi. Lütfen tekrar deneyin."
+      }
+    },
+    "countdown": {
+      "ended": "Sona erdi"
+    },
+    "status": {
+      "active": "Aktif",
+      "ended": "Sona Erdi",
+      "cancelled": "İptal Edildi"
+    }
   }
 }
