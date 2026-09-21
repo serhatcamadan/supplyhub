@@ -113,6 +113,31 @@
         "title": "Quote Responded",
         "message": "Your quote request for {productName} has been responded to.",
         "actionLabel": "View My Quotes"
+      },
+      "auction_outbid": {
+        "title": "You've Been Outbid",
+        "message": "Your bid on {productName} has been outbid. Current price: {newPrice}",
+        "actionLabel": "View Auction"
+      },
+      "auction_cancelled": {
+        "title": "Auction Cancelled",
+        "message": "The auction for {productName} was cancelled by the seller.",
+        "actionLabel": "View Auction"
+      },
+      "auction_won": {
+        "title": "You Won the Auction!",
+        "message": "You won the auction for {productName} at {finalPrice}.",
+        "actionLabel": "View Auction"
+      },
+      "auction_ended_with_winner": {
+        "title": "Auction Ended",
+        "message": "Your auction for {productName} ended at {finalPrice}.",
+        "actionLabel": "View Auction"
+      },
+      "auction_ended_no_bids": {
+        "title": "Auction Ended",
+        "message": "Your auction for {productName} received no bids.",
+        "actionLabel": "View Auction"
       }
     },
     "filters": {

@@ -58,7 +58,7 @@ export async function NotFoundContent() {
       </div>
 
       <div className="relative z-10 w-full max-w-3xl flex flex-col items-center text-center gap-8">
-        <Link href={`/${locale}`} className="text-2xl font-bold tracking-tight text-primary">
+        <Link href={homeHref} className="text-2xl font-bold tracking-tight text-primary">
           SupplyHub
         </Link>
 

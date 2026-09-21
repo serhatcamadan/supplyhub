@@ -16,7 +16,8 @@ export function apiErrorStatus(err: unknown): number | undefined {
   return err instanceof ApiError ? err.status : undefined
 }
 
-function getAccessToken(): string | null {
+// Also used by the socket client (lib/sockets/auction-socket.ts) to authenticate the handshake.
+export function getAccessToken(): string | null {
   if (typeof document === 'undefined') return null
   const match = document.cookie.match(/(?:^|;\s*)access_token=([^;]*)/)
   return match?.[1] ?? null

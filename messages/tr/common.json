@@ -113,6 +113,31 @@
         "title": "Teklif Yanıtlandı",
         "message": "{productName} için teklif talebiniz yanıtlandı.",
         "actionLabel": "Tekliflerimi Görüntüle"
+      },
+      "auction_outbid": {
+        "title": "Teklifiniz Geçildi",
+        "message": "{productName} ihalesinde teklifiniz geçildi. Güncel fiyat: {newPrice}",
+        "actionLabel": "İhaleyi Görüntüle"
+      },
+      "auction_cancelled": {
+        "title": "İhale İptal Edildi",
+        "message": "{productName} ihalesi satıcı tarafından iptal edildi.",
+        "actionLabel": "İhaleyi Görüntüle"
+      },
+      "auction_won": {
+        "title": "İhaleyi Kazandınız!",
+        "message": "{productName} ihalesini {finalPrice} ile kazandınız.",
+        "actionLabel": "İhaleyi Görüntüle"
+      },
+      "auction_ended_with_winner": {
+        "title": "İhale Sona Erdi",
+        "message": "{productName} ihaleniz {finalPrice} ile sona erdi.",
+        "actionLabel": "İhaleyi Görüntüle"
+      },
+      "auction_ended_no_bids": {
+        "title": "İhale Sona Erdi",
+        "message": "{productName} ihalenize hiç teklif gelmedi.",
+        "actionLabel": "İhaleyi Görüntüle"
       }
     },
     "filters": {

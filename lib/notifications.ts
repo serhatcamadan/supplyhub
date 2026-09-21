@@ -1,12 +1,13 @@
-import { IconAlertTriangle, IconFileInvoice, IconShoppingBag } from '@tabler/icons-react'
+import { IconAlertTriangle, IconFileInvoice, IconShoppingBag, IconGavel } from '@tabler/icons-react'
 import { formatCurrency } from '@/lib/utils'
 import type { ElementType } from 'react'
 import type { Notification, NotificationCategory } from '@/types'
 
 export const CATEGORY_STYLE: Record<NotificationCategory, { icon: ElementType; bg: string; color: string }> = {
-  order:  { icon: IconShoppingBag,   bg: 'bg-primary-container',   color: 'text-on-primary-container' },
-  quote:  { icon: IconFileInvoice,   bg: 'bg-secondary-container', color: 'text-on-secondary-container' },
-  system: { icon: IconAlertTriangle, bg: 'bg-tertiary-container',  color: 'text-on-tertiary-container' },
+  order:   { icon: IconShoppingBag,   bg: 'bg-primary-container',   color: 'text-on-primary-container' },
+  quote:   { icon: IconFileInvoice,   bg: 'bg-secondary-container', color: 'text-on-secondary-container' },
+  system:  { icon: IconAlertTriangle, bg: 'bg-tertiary-container',  color: 'text-on-tertiary-container' },
+  auction: { icon: IconGavel,         bg: 'bg-secondary-container', color: 'text-on-secondary-container' },
 }
 
 /** Expects `t` scoped to the `common` namespace (i.e. `useTranslations('common')`). */
@@ -18,6 +19,8 @@ export function translateNotification(t: Translate, n: Notification, locale: str
 
   const values: Record<string, string | number> = { ...data }
   if (typeof data.total === 'number') values.total = formatCurrency(data.total, locale)
+  if (typeof data.newPrice === 'number') values.newPrice = formatCurrency(data.newPrice, locale)
+  if (typeof data.finalPrice === 'number') values.finalPrice = formatCurrency(data.finalPrice, locale)
   if (typeof data.status === 'string') values.status = t(`status.${data.status}`)
 
   return {
