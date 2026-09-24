@@ -347,55 +347,128 @@
       "filter": "Filter"
     },
     "trends": {
-      "heading": "Trending Categories",
+      "heading": "Category Trends",
       "viewAll": "View All",
       "demandLabel": "Market Demand",
       "demand": {
         "high": "High",
-        "mediumHigh": "Medium-High"
+        "mediumHigh": "Medium-High",
+        "medium": "Medium",
+        "low": "Low"
       },
-      "items": {
-        "ecoPackaging": { "category": "Eco-Packaging", "subcategory": "Industrial Materials" },
-        "industrialSensors": { "category": "Industrial Sensors", "subcategory": "Electronics & IoT" }
-      }
+      "buyerCountLabel": "{count} distinct buyers",
+      "empty": "No comparable order data in these categories over the last 30-60 days."
     },
     "buyerSearches": {
       "heading": "Buyer Searches",
       "keywordCol": "Keyword",
       "volumeCol": "Volume",
-      "items": {
-        "corrugatedBoxes": "Bulk Corrugated Box",
-        "palletWrap": "Biodegradable Pallet Wrap",
-        "lithiumCell": "Lithium Cell (18650)",
-        "oliveOil5L": "Organic Olive Oil 5L",
-        "branFlour25kg": "Bran Flour 25kg"
-      }
+      "empty": "No buyer searches in the last 14 days yet."
     },
     "priceIndex": {
       "heading": "Competitor Price Index",
-      "subheading": "Your active categories vs. market average · Last 30 days",
+      "subheading": "Your active categories vs. market average",
       "you": "You",
       "market": "Market",
       "unitLabel": "Unit: {unit}",
       "marketLabel": "Market: {price}",
-      "items": {
-        "oliveOil5L": "Organic Olive Oil (5L)",
-        "wheatFlour25kg": "Whole Wheat Flour (25kg)"
-      },
       "units": {
         "piece": "Piece",
-        "sack": "Sack"
-      }
+        "sack": "Sack",
+        "bottle": "Bottle",
+        "pack": "Pack"
+      },
+      "empty": "No other sellers to compare against in your active categories."
     },
     "recommendations": {
-      "heading": "Recommended Products to Add",
-      "marginLabel": "Est. Margin: {margin}",
+      "heading": "Category Opportunities",
+      "buyerCountLabel": "{count} distinct buyers ordered in the last 30 days",
       "createDraft": "Create Draft",
-      "items": {
-        "kraftTape": { "name": "Water-Activated Kraft Tape", "description": "High demand in the Eco-Packaging segment. Low seller competition." },
-        "thermalLabel": { "name": "Thermal Transfer Label (4×6)", "description": "High-volume recurring searches in your region. Fast-moving consumer item." },
-        "fillGas": { "name": "Fill Gas (N₂ — 10L)", "description": "Growing MAP packaging demand in the food sector." }
-      }
+      "empty": "No real order demand in categories you don't currently sell in."
+    }
+  },
+  "auctions": {
+    "list": {
+      "heading": "My Auctions",
+      "subHeading": "Put your products up for live auction and track real-time bids.",
+      "newAuction": "New Auction",
+      "empty": "You haven't created any auctions yet.",
+      "cancelAction": "Cancel",
+      "cancelConfirmTitle": "Cancel auction",
+      "cancelConfirmDesc": "Are you sure you want to cancel this auction? The current highest bidder will be notified."
+    },
+    "form": {
+      "heading": "Create a New Auction",
+      "selectProduct": "Select Product",
+      "selectProductPlaceholder": "Choose a product",
+      "noActiveProducts": "You have no active products — publish a product first.",
+      "startingPrice": "Starting Price",
+      "endsAt": "Ends At",
+      "submit": "Start Auction",
+      "submitting": "Creating…",
+      "errorRequired": "Product, starting price and end time are required.",
+      "errorSave": "Couldn't create the auction. Please try again.",
+      "back": "Back to Auctions"
+    },
+    "detail": {
+      "back": "Back to Auctions",
+      "monitorHeading": "Live Monitor",
+      "currentPrice": "Current Price",
+      "startingPrice": "Starting Price",
+      "bidCount": "{count} bids",
+      "endsIn": "Ends In",
+      "bidHistoryHeading": "Bid History",
+      "noBids": "No bids yet.",
+      "winnerLabel": "Winner",
+      "noBidsEndedLabel": "This auction ended with no bids.",
+      "cancelledLabel": "You cancelled this auction."
+    },
+    "status": {
+      "active": "Active",
+      "ended": "Ended",
+      "cancelled": "Cancelled"
+    }
+  },
+  "auctions": {
+    "list": {
+      "heading": "My Auctions",
+      "subHeading": "Put your products up for live auction and track real-time bids.",
+      "newAuction": "New Auction",
+      "empty": "You haven't created any auctions yet.",
+      "cancelAction": "Cancel",
+      "cancelConfirmTitle": "Cancel auction",
+      "cancelConfirmDesc": "Are you sure you want to cancel this auction? The current highest bidder will be notified."
+    },
+    "form": {
+      "heading": "Create a New Auction",
+      "selectProduct": "Select Product",
+      "selectProductPlaceholder": "Choose a product",
+      "noActiveProducts": "You have no active products — publish a product first.",
+      "startingPrice": "Starting Price",
+      "endsAt": "Ends At",
+      "submit": "Start Auction",
+      "submitting": "Creating…",
+      "errorRequired": "Product, starting price and end time are required.",
+      "errorSave": "Couldn't create the auction. Please try again.",
+      "back": "Back to Auctions"
+    },
+    "detail": {
+      "back": "Back to Auctions",
+      "monitorHeading": "Live Monitor",
+      "currentPrice": "Current Price",
+      "startingPrice": "Starting Price",
+      "bidCount": "{count} bids",
+      "endsIn": "Ends In",
+      "bidHistoryHeading": "Bid History",
+      "noBids": "No bids yet.",
+      "winnerLabel": "Winner",
+      "noBidsEndedLabel": "This auction ended with no bids.",
+      "cancelledLabel": "You cancelled this auction."
+    },
+    "status": {
+      "active": "Active",
+      "ended": "Ended",
+      "cancelled": "Cancelled"
     }
   },
   "auctions": {

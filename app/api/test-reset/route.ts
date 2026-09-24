@@ -87,5 +87,8 @@ export async function POST() {
     ])
   }
 
+  // Reset search_logs — wipe-only, no re-seed needed (empty is the correct steady state)
+  await sb.from('search_logs').delete().in('buyer_id', [cBuyer1, cBuyer2])
+
   return Response.json({ ok: true, message: 'Test data reset to seed state' })
 }
