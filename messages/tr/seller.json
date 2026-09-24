@@ -347,55 +347,44 @@
       "filter": "Filtrele"
     },
     "trends": {
-      "heading": "Yükselen Kategoriler",
+      "heading": "Kategori Trendleri",
       "viewAll": "Tümünü Gör",
       "demandLabel": "Pazar Talebi",
       "demand": {
         "high": "Yüksek",
-        "mediumHigh": "Orta-Yüksek"
+        "mediumHigh": "Orta-Yüksek",
+        "medium": "Orta",
+        "low": "Düşük"
       },
-      "items": {
-        "ecoPackaging": { "category": "Eko-Ambalaj", "subcategory": "Endüstriyel Malzemeler" },
-        "industrialSensors": { "category": "Endüstriyel Sensörler", "subcategory": "Elektronik & IoT" }
-      }
+      "buyerCountLabel": "{count} farklı alıcı",
+      "empty": "Son 30-60 günde bu kategorilerde karşılaştırılabilir sipariş verisi yok."
     },
     "buyerSearches": {
       "heading": "Alıcı Aramaları",
       "keywordCol": "Anahtar Kelime",
       "volumeCol": "Hacim",
-      "items": {
-        "corrugatedBoxes": "Toplu Oluklu Kutu",
-        "palletWrap": "Biyobozunur Palet Sargısı",
-        "lithiumCell": "Lityum Hücre (18650)",
-        "oliveOil5L": "Organik Zeytinyağı 5L",
-        "branFlour25kg": "Kepek Unu 25kg"
-      }
+      "empty": "Son 14 günde alıcılar henüz arama yapmadı."
     },
     "priceIndex": {
       "heading": "Rakip Fiyat Endeksi",
-      "subheading": "Aktif kategorileriniz vs. pazar ortalaması · Son 30 gün",
+      "subheading": "Aktif kategorileriniz vs. pazar ortalaması",
       "you": "Siz",
       "market": "Pazar",
       "unitLabel": "Birim: {unit}",
       "marketLabel": "Pazar: {price}",
-      "items": {
-        "oliveOil5L": "Organik Zeytinyağı (5L)",
-        "wheatFlour25kg": "Tam Buğday Unu (25kg)"
-      },
       "units": {
         "piece": "Adet",
-        "sack": "Çuval"
-      }
+        "sack": "Çuval",
+        "bottle": "Şişe",
+        "pack": "Paket"
+      },
+      "empty": "Aktif kategorilerinizde karşılaştırılacak başka satıcı yok."
     },
     "recommendations": {
-      "heading": "Eklemeniz Önerilen Ürünler",
-      "marginLabel": "Tahmini Kar: {margin}",
+      "heading": "Kategori Fırsatları",
+      "buyerCountLabel": "Son 30 günde {count} farklı alıcı sipariş verdi",
       "createDraft": "Taslak Oluştur",
-      "items": {
-        "kraftTape": { "name": "Su Aktivasyonlu Kraft Bant", "description": "Eko-Ambalaj segmentinde yüksek talep. Düşük satıcı rekabeti." },
-        "thermalLabel": { "name": "Termal Transfer Etiket (4×6)", "description": "Bölgenizde yüksek hacimli sürekli aramalar. Hızlı tüketim ürünü." },
-        "fillGas": { "name": "Dolum Gazı (N₂ — 10L)", "description": "Gıda sektöründe artan MAP ambalaj talebi." }
-      }
+      "empty": "Şu anda satmadığınız kategorilerde gerçek sipariş talebi bulunmuyor."
     }
   },
   "auctions": {

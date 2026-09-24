@@ -1,4 +1,6 @@
 import { getTranslations, getLocale } from 'next-intl/server'
+import { IconScaleOff } from '@tabler/icons-react'
+import { EmptyState } from '@/components/ui/empty-state'
 import { formatCurrency } from '@/lib/utils'
 
 export type PriceComparison = {
@@ -56,28 +58,34 @@ export async function PriceIndex({ comparisons }: { comparisons: PriceComparison
     <section className="flex flex-col gap-4">
       <h2 className="text-xl font-semibold text-on-surface">{t('discover.priceIndex.heading')}</h2>
       <div className="bg-surface-container-lowest rounded-xl shadow-sm p-6 flex flex-col gap-10">
-        <div className="flex items-center justify-between">
-          <p className="text-xs text-on-surface-variant">{t('discover.priceIndex.subheading')}</p>
-          <div className="flex items-center gap-4">
-            <div className="flex items-center gap-1.5">
-              <div className="w-2 h-2 rounded-full bg-primary" />
-              <span className="text-xs text-on-surface-variant">{t('discover.priceIndex.you')}</span>
+        {comparisons.length === 0 ? (
+          <EmptyState icon={IconScaleOff} message={t('discover.priceIndex.empty')} />
+        ) : (
+          <>
+            <div className="flex items-center justify-between">
+              <p className="text-xs text-on-surface-variant">{t('discover.priceIndex.subheading')}</p>
+              <div className="flex items-center gap-4">
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 rounded-full bg-primary" />
+                  <span className="text-xs text-on-surface-variant">{t('discover.priceIndex.you')}</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <div className="w-2 h-2 rounded-full bg-outline-variant" />
+                  <span className="text-xs text-on-surface-variant">{t('discover.priceIndex.market')}</span>
+                </div>
+              </div>
             </div>
-            <div className="flex items-center gap-1.5">
-              <div className="w-2 h-2 rounded-full bg-outline-variant" />
-              <span className="text-xs text-on-surface-variant">{t('discover.priceIndex.market')}</span>
-            </div>
-          </div>
-        </div>
-        {comparisons.map((c) => (
-          <PriceBar
-            key={c.product}
-            item={c}
-            locale={locale}
-            unitLabel={t('discover.priceIndex.unitLabel', { unit: c.unit })}
-            marketLabel={t('discover.priceIndex.marketLabel', { price: formatCurrency(c.marketPrice, locale) })}
-          />
-        ))}
+            {comparisons.map((c) => (
+              <PriceBar
+                key={c.product}
+                item={c}
+                locale={locale}
+                unitLabel={t('discover.priceIndex.unitLabel', { unit: c.unit })}
+                marketLabel={t('discover.priceIndex.marketLabel', { price: formatCurrency(c.marketPrice, locale) })}
+              />
+            ))}
+          </>
+        )}
       </div>
     </section>
   )

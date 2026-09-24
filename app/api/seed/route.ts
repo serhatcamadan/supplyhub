@@ -7,11 +7,14 @@ import type { Database } from '@/lib/supabase/types'
 const C_SELLER = 'c0000001-0000-0000-0000-000000000001'
 const C_BUYER1 = 'c0000002-0000-0000-0000-000000000002'
 const C_BUYER2 = 'c0000003-0000-0000-0000-000000000003'
+const C_SELLER2 = 'c0000004-0000-0000-0000-000000000004'
 
 const P1 = 'f0000001-0000-0000-0000-000000000001'
 const P2 = 'f0000002-0000-0000-0000-000000000002'
 const P3 = 'f0000003-0000-0000-0000-000000000003'
 const P4 = 'f0000004-0000-0000-0000-000000000004'
+const P5 = 'f0000005-0000-0000-0000-000000000005'
+const P6 = 'f0000006-0000-0000-0000-000000000006'
 
 const O1 = 'b0000001-0000-0000-0000-000000000001'
 const O2 = 'b0000002-0000-0000-0000-000000000002'
@@ -21,10 +24,11 @@ const O4 = 'b0000004-0000-0000-0000-000000000004'
 const daysAgo = (n: number) => new Date(Date.now() - n * 86_400_000).toISOString()
 
 const DEMO_USERS = [
-  { email: 'ali@freshfarm.com',    password: 'Demo1234!', name: 'Ali Yılmaz',   company_type: 'seller' as const, role: 'admin' as const, company_id: C_SELLER },
-  { email: 'ayse@gunespazar.com',  password: 'Demo1234!', name: 'Ayşe Demir',   company_type: 'buyer'  as const, role: 'admin' as const, company_id: C_BUYER1 },
-  { email: 'fatma@gunespazar.com', password: 'Demo1234!', name: 'Fatma Çelik',  company_type: 'buyer'  as const, role: 'staff' as const, company_id: C_BUYER1 },
-  { email: 'kemal@lezzet.com',     password: 'Demo1234!', name: 'Kemal Arslan', company_type: 'buyer'  as const, role: 'admin' as const, company_id: C_BUYER2 },
+  { email: 'ali@freshfarm.com',      password: 'Demo1234!', name: 'Ali Yılmaz',      company_type: 'seller' as const, role: 'admin' as const, company_id: C_SELLER },
+  { email: 'ayse@gunespazar.com',    password: 'Demo1234!', name: 'Ayşe Demir',      company_type: 'buyer'  as const, role: 'admin' as const, company_id: C_BUYER1 },
+  { email: 'fatma@gunespazar.com',   password: 'Demo1234!', name: 'Fatma Çelik',     company_type: 'buyer'  as const, role: 'staff' as const, company_id: C_BUYER1 },
+  { email: 'kemal@lezzet.com',       password: 'Demo1234!', name: 'Kemal Arslan',    company_type: 'buyer'  as const, role: 'admin' as const, company_id: C_BUYER2 },
+  { email: 'mehmet@anadolutarim.com', password: 'Demo1234!', name: 'Mehmet Kaya',    company_type: 'seller' as const, role: 'admin' as const, company_id: C_SELLER2 },
 ]
 
 export async function POST() {
@@ -42,9 +46,10 @@ export async function POST() {
 
   // ── 1. Şirketler ─────────────────────────────────────────────
   const { error: companyErr } = await admin.from('companies').insert([
-    { id: C_SELLER, name: 'FreshFarm Gıda A.Ş.',    type: 'seller' },
-    { id: C_BUYER1, name: 'Güneş Market Zinciri',   type: 'buyer'  },
-    { id: C_BUYER2, name: 'Lezzet Restoranları',    type: 'buyer'  },
+    { id: C_SELLER,  name: 'FreshFarm Gıda A.Ş.',        type: 'seller' },
+    { id: C_BUYER1,  name: 'Güneş Market Zinciri',       type: 'buyer'  },
+    { id: C_BUYER2,  name: 'Lezzet Restoranları',        type: 'buyer'  },
+    { id: C_SELLER2, name: 'Anadolu Tarım Ürünleri A.Ş.', type: 'seller' },
   ])
   if (companyErr) return Response.json({ error: `Şirket: ${companyErr.message}` }, { status: 500 })
 
@@ -117,6 +122,26 @@ export async function POST() {
       price_tiers: [
         { min_qty: 24,  max_qty: 119, price: 28 },
         { min_qty: 120, max_qty: null, price: 24 },
+      ],
+    },
+    {
+      id: P5, seller_id: C_SELLER2, name: 'Soğuk Sıkım Zeytinyağı (5L)', status: 'active',
+      description: 'Ayvalık bölgesi zeytinliklerinden, erken hasat soğuk sıkım.',
+      category: 'Yağlar', min_order_qty: 10,
+      price_tiers: [
+        { min_qty: 10,  max_qty: 49,  price: 205 },
+        { min_qty: 50,  max_qty: 199, price: 180 },
+        { min_qty: 200, max_qty: null, price: 160 },
+      ],
+    },
+    {
+      id: P6, seller_id: C_SELLER2, name: 'Ekmeklik Un (25kg)', status: 'active',
+      description: 'Orta Anadolu buğdayından üretilen standart ekmeklik un.',
+      category: 'Tahıllar', min_order_qty: 20,
+      price_tiers: [
+        { min_qty: 20,  max_qty: 99,  price: 39 },
+        { min_qty: 100, max_qty: 499, price: 35 },
+        { min_qty: 500, max_qty: null, price: 31 },
       ],
     },
   ])
