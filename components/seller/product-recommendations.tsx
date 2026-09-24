@@ -1,16 +1,20 @@
 import { getTranslations } from 'next-intl/server'
 import { Button } from '@/components/ui/button'
-import { IconSparkles } from '@tabler/icons-react'
+import { EmptyState } from '@/components/ui/empty-state'
+import { IconSparkles, IconBulbOff } from '@tabler/icons-react'
 import type { ElementType } from 'react'
 
 export type ProductRecommendation = {
-  name: string
-  description: string
-  margin: string
+  category: string
   icon: ElementType
+  buyerCount: number
 }
 
-function RecItem({ rec, marginLabel, createDraftLabel }: { rec: ProductRecommendation; marginLabel: string; createDraftLabel: string }) {
+function RecItem({ rec, buyerCountLabel, createDraftLabel }: {
+  rec: ProductRecommendation
+  buyerCountLabel: string
+  createDraftLabel: string
+}) {
   return (
     <div className="p-5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 hover:bg-surface-container-low transition-colors">
       <div className="flex items-start gap-4">
@@ -18,10 +22,9 @@ function RecItem({ rec, marginLabel, createDraftLabel }: { rec: ProductRecommend
           <rec.icon size={28} className="text-primary" />
         </div>
         <div>
-          <h3 className="text-sm font-semibold text-on-surface">{rec.name}</h3>
-          <p className="text-xs text-on-surface-variant mt-0.5 line-clamp-1">{rec.description}</p>
+          <h3 className="text-sm font-semibold text-on-surface">{rec.category}</h3>
           <span className="inline-block mt-2 px-2 py-0.5 bg-primary/10 text-primary text-xs font-semibold rounded">
-            {marginLabel}
+            {buyerCountLabel}
           </span>
         </div>
       </div>
@@ -42,14 +45,18 @@ export async function ProductRecommendations({ recommendations }: { recommendati
         <h2 className="text-xl font-semibold text-on-surface">{t('discover.recommendations.heading')}</h2>
       </div>
       <div className="bg-surface-container-lowest rounded-xl shadow-sm flex flex-col divide-y divide-surface-container overflow-hidden">
-        {recommendations.map((rec) => (
-          <RecItem
-            key={rec.name}
-            rec={rec}
-            marginLabel={t('discover.recommendations.marginLabel', { margin: rec.margin })}
-            createDraftLabel={t('discover.recommendations.createDraft')}
-          />
-        ))}
+        {recommendations.length === 0 ? (
+          <EmptyState icon={IconBulbOff} message={t('discover.recommendations.empty')} />
+        ) : (
+          recommendations.map((rec) => (
+            <RecItem
+              key={rec.category}
+              rec={rec}
+              buyerCountLabel={t('discover.recommendations.buyerCountLabel', { count: rec.buyerCount })}
+              createDraftLabel={t('discover.recommendations.createDraft')}
+            />
+          ))
+        )}
       </div>
     </section>
   )

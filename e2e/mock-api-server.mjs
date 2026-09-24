@@ -312,6 +312,100 @@ const server = http.createServer(async (req, res) => {
       return
     }
 
+    // ── GET /seller/discover/price-index ──────────────────────────────────────
+    if (req.method === 'GET' && path === '/seller/discover/price-index') {
+      const payload = parseJwtPayload(req.headers['authorization'])
+      if (!payload) { res.writeHead(401); res.end(JSON.stringify({ statusCode: 401 })); return }
+      let result = []
+      if (SUPABASE_URL && SUPABASE_KEY) {
+        const mine = await sbFetch('products', {
+          seller_id: `eq.${payload.companyId}`, status: 'eq.active', select: 'name,category,price_tiers',
+        }) ?? []
+        const categories = [...new Set(mine.map((p) => p.category))]
+        if (mine.length > 0 && categories.length > 0) {
+          const others = await sbFetch('products', {
+            category: `in.(${categories.join(',')})`, status: 'eq.active', 'seller_id': `neq.${payload.companyId}`,
+            select: 'category,price_tiers',
+          }) ?? []
+          const startingPrice = (tiers) => tiers?.length ? [...tiers].sort((a, b) => a.min_qty - b.min_qty)[0]?.price ?? null : null
+          const marketAvg = new Map()
+          for (const category of categories) {
+            const prices = others.filter((p) => p.category === category).map((p) => startingPrice(p.price_tiers)).filter((p) => p !== null)
+            if (prices.length > 0) marketAvg.set(category, prices.reduce((a, b) => a + b, 0) / prices.length)
+          }
+          result = mine
+            .map((p) => ({ product: p.name, category: p.category, myPrice: startingPrice(p.price_tiers), marketPrice: marketAvg.get(p.category) ?? null }))
+            .filter((c) => c.myPrice !== null && c.marketPrice !== null)
+        }
+      }
+      res.writeHead(200)
+      res.end(JSON.stringify(result))
+      return
+    }
+
+    // ── GET /seller/discover/trends ───────────────────────────────────────────
+    // ── GET /seller/discover/recommendations ──────────────────────────────────
+    // Category-level revenue growth / demand-gap analysis needs joined order_items+orders+products
+    // aggregation that isn't worth hand-rolling against the raw Supabase REST API here — an honest
+    // empty state (real backend has no data for these in a fresh E2E run anyway, see CLAUDE.md) beats
+    // a fabricated mock number.
+    if (req.method === 'GET' && (path === '/seller/discover/trends' || path === '/seller/discover/recommendations')) {
+      const payload = parseJwtPayload(req.headers['authorization'])
+      if (!payload) { res.writeHead(401); res.end(JSON.stringify({ statusCode: 401 })); return }
+      res.writeHead(200)
+      res.end(JSON.stringify([]))
+      return
+    }
+
+    // ── GET /seller/discover/buyer-searches ───────────────────────────────────
+    if (req.method === 'GET' && path === '/seller/discover/buyer-searches') {
+      const payload = parseJwtPayload(req.headers['authorization'])
+      if (!payload) { res.writeHead(401); res.end(JSON.stringify({ statusCode: 401 })); return }
+      let result = []
+      if (SUPABASE_URL && SUPABASE_KEY) {
+        const since = new Date(Date.now() - 14 * 86_400_000).toISOString()
+        const rows = await sbFetch('search_logs', { created_at: `gte.${since}`, select: 'keyword,created_at' }) ?? []
+        if (rows.length > 0) {
+          const byKeyword = new Map()
+          const now = Date.now()
+          for (const row of rows) {
+            const key = row.keyword.trim().toLowerCase()
+            const daysAgo = Math.floor((now - new Date(row.created_at).getTime()) / 86_400_000)
+            const dayIndex = 13 - Math.min(Math.max(daysAgo, 0), 13)
+            const dailyCounts = byKeyword.get(key) ?? new Array(14).fill(0)
+            dailyCounts[dayIndex] += 1
+            byKeyword.set(key, dailyCounts)
+          }
+          result = [...byKeyword.entries()]
+            .map(([keyword, dailyCounts]) => {
+              const count = dailyCounts.reduce((a, b) => a + b, 0)
+              const recentWeek = dailyCounts.slice(7).reduce((a, b) => a + b, 0)
+              const priorWeek = dailyCounts.slice(0, 7).reduce((a, b) => a + b, 0)
+              return { keyword, count, dailyCounts, growing: recentWeek > priorWeek }
+            })
+            .sort((a, b) => b.count - a.count)
+            .slice(0, 8)
+        }
+      }
+      res.writeHead(200)
+      res.end(JSON.stringify(result))
+      return
+    }
+
+    // ── POST /search-logs ──────────────────────────────────────────────────────
+    if (req.method === 'POST' && path === '/search-logs') {
+      const payload = parseJwtPayload(req.headers['authorization'])
+      if (!payload) { res.writeHead(401); res.end(JSON.stringify({ statusCode: 401 })); return }
+      const body = await readBody(req)
+      const keyword = (body.keyword ?? '').trim()
+      if (keyword.length >= 2 && SUPABASE_URL && SUPABASE_KEY) {
+        await sbWrite('search_logs', 'POST', {}, { buyer_id: payload.companyId, keyword })
+      }
+      res.writeHead(204)
+      res.end()
+      return
+    }
+
     // ── POST /orders/:id/approve ──────────────────────────────────────────────
     if (req.method === 'POST' && /^\/orders\/[^/]+\/approve$/.test(path)) {
       const id = path.split('/')[2]
@@ -603,6 +697,8 @@ const server = http.createServer(async (req, res) => {
             { order_id: oConfirmed, product_id: p1, quantity:  10, unit_price: 145 },
           ])
         }
+
+        await sbWrite('search_logs', 'DELETE', { buyer_id: `in.(${cBuyer1},${cBuyer2})` })
       }
       res.writeHead(200)
       res.end(JSON.stringify({ ok: true, message: 'Test data reset to seed state' }))

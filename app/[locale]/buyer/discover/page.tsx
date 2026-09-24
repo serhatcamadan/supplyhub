@@ -3,6 +3,9 @@
 import { useState, useEffect, useRef } from 'react'
 import { useTranslations, useLocale } from 'next-intl'
 import { getProducts, type ApiProduct } from '@/lib/api/products'
+import { logSearchKeyword } from '@/lib/api/search-logs'
+import { debounce } from '@/lib/debounce'
+import { CATEGORY_UNIT_KEY, DEFAULT_UNIT_KEY } from '@/lib/category-meta'
 import { useFavorites } from '@/lib/hooks/use-favorites'
 import { Button } from '@/components/ui/button'
 import { CategoryChips } from '@/components/buyer/category-chips'
@@ -16,14 +19,6 @@ const BADGE_BY_CATEGORY: Record<string, { key: string; colorScheme: ProductBadge
   'Doğal Ürünler':         { key: 'natural',     colorScheme: 'secondary' },
   'Tahıllar':              { key: 'fresh',        colorScheme: 'primary' },
   'Baklagiller & Makarna': { key: 'fastDelivery', colorScheme: 'primary' },
-}
-
-// DB category → unit translation key
-const UNIT_KEY_BY_CATEGORY: Record<string, string> = {
-  'Yağlar':                'bottle',
-  'Tahıllar':              'sack',
-  'Doğal Ürünler':         'piece',
-  'Baklagiller & Makarna': 'pack',
 }
 
 export default function BuyerDiscoverPage() {
@@ -42,6 +37,9 @@ export default function BuyerDiscoverPage() {
   const [filterOpen, setFilterOpen] = useState(false)
   const filterRef = useRef<HTMLDivElement>(null)
   const { isFavorited, toggleFavorite } = useFavorites()
+  const logSearchRef = useRef(debounce((keyword: string) => {
+    logSearchKeyword(keyword).catch(console.error)
+  }, 500))
 
   useEffect(() => {
     getProducts()
@@ -111,7 +109,10 @@ export default function BuyerDiscoverPage() {
                 type="text"
                 placeholder={t('discover.searchPlaceholder')}
                 value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                onChange={(e) => {
+                  setSearch(e.target.value)
+                  if (e.target.value.trim().length >= 2) logSearchRef.current(e.target.value)
+                }}
                 className="h-10 pl-9 pr-4 bg-surface border border-outline-variant rounded-lg text-sm text-on-surface focus:outline-none focus:ring-2 focus:ring-primary/60 w-56"
               />
             </div>
@@ -168,7 +169,7 @@ export default function BuyerDiscoverPage() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
           {filtered.map((product) => {
             const badgeDef = BADGE_BY_CATEGORY[product.category]
-            const unitKey = UNIT_KEY_BY_CATEGORY[product.category] ?? 'piece'
+            const unitKey = CATEGORY_UNIT_KEY[product.category] ?? DEFAULT_UNIT_KEY
             return (
               <ProductCard
                 key={product.id}
